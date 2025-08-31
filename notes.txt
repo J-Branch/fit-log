@@ -1,0 +1,22 @@
+// Colors
+night - 0d0a0b
+charcoal - 454955
+magnolia - f3eff5
+apple green - 72b01d
+office green - 3f7d20
+
+secondary colors 
+amaranth purple - 972d43
+burgundy - 800020
+
+// components
+nav bar - list of pages, logout, profile picture, groups
+logout
+
+// pages
+landing page - make people sign up
+dashboard - analytics, challenges, goals, leaderboard   
+workouts - log/add workouts, graphs for each specific exercise, steps, calories
+login 
+sign up
+
