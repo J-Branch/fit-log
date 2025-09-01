@@ -1,4 +1,3 @@
-// src/pages/workout/AddWorkoutButton.js
 import { useState } from 'react';
 import WorkoutForm from './WorkoutForm';
 

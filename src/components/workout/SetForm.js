@@ -1,4 +1,3 @@
-// src/pages/workout/SetForm.js
 import { useState } from 'react';
 
 function SetForm({ onAddSet, onFinish }) {

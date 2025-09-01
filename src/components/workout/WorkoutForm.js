@@ -1,4 +1,3 @@
-// src/pages/workout/WorkoutForm.js
 import { useState } from 'react';
 import ExerciseForm from './ExerciseForm';
 
