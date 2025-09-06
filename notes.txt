@@ -10,15 +10,18 @@ amaranth purple - 972d43
 burgundy - 800020
 
 // components
-nav bar - list of pages, logout, profile picture, groups
-logout
+tbd
 
 // pages
-landing page - make people sign up or log in
-dashboard - analytics, challenges, goals, leaderboard   
-workouts - log/add workouts, graphs for each specific exercise, steps, calories
+Auth 
+Dashboard 
+Workouts 
+Groups 
+Leaderboard 
+Profile 
 
 
 // packages
+react
 react-router-dom // provides routing functionality 
 react-hot-toast // easy to use notifications 
