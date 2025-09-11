@@ -16,15 +16,15 @@ function MainPage() {
             }}>
                 <h2>Fit Tracker</h2>
                 <ul>
-                    <li>Dashboard</li>
-                    <li>Workouts</li>
-                    <li>Analysis</li>
-                    <li>Groups</li>
+                    <li><Link to="/dashboard">Dashboard</Link></li>
+                    <li><Link to="/workouts">Workouts</Link></li>
+                    <li><Link to="/analytics">Analytics</Link></li>
+                    <li><Link to="groups">Groups</Link></li>
                 </ul>
             </nav>
 
             <main style={{ flexGrow: 1, padding: "1rem" }}>
-                <h1>page content will go here</h1>
+                <Outlet />
             </main>
         </div>
     );
