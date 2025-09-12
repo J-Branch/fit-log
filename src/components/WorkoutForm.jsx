@@ -1,5 +1,5 @@
 import { useState } from 'react';
-
+// SubmitWorkout - From WorkoutPage
 function WorkoutForm({ submitWorkout }) {
     // For both workouts
     const [workoutName, setWorkoutName] = useState('');
@@ -22,7 +22,7 @@ function WorkoutForm({ submitWorkout }) {
         // Increment setCounter
         setSet(prev => ({
             ...prev,
-            setCounter: prev.setCounter + 1,
+            setCounter: Number(prev.setCounter) + 1,
         }));
         // Add set to exercise
         const updatedSets = [ ...exercise.sets, set ];
@@ -45,8 +45,8 @@ function WorkoutForm({ submitWorkout }) {
     function handleSubmit(e) {
         e.preventDefault();
         // Saves time in seconds
-        const newTime = (minutes * 60) + seconds;
-        const workoutDate = `${year}-${month}-${day}`;
+        const newTime = Number(minutes * 60) + Number(seconds);
+        const workoutDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
 
         // Creates workout object
         const newWorkout = {
@@ -96,7 +96,7 @@ function WorkoutForm({ submitWorkout }) {
             {workoutType === 'Distance/Time' && (
                 <>
                     <label>Distance (In Miles)</label><br />
-                    <input type="number" min="0" value={distance} onChange={(e) => setDistance(e.target.value)} placeholder="Distance" required></input><br />
+                    <input type="number" min="0" step="0.1" value={distance} onChange={(e) => setDistance(e.target.value)} placeholder="Distance" required></input><br />
 
                     <label>Time Length of Workout</label><br />
                     <input type="number" min="0" step="1" value={minutes} onChange={(e) => setMinutes(e.target.value)} placeholder="minutes" required></input>
