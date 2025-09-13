@@ -1,79 +1,106 @@
 import { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useUserActionsContext } from "../context/user.context";
+
+const config = {
+    login: {
+        header: "Login",
+        submitButtonText: "Log in",
+        toggleAuthModeLink: {
+            to: "/auth/register",
+            text: "/Create a new account",
+        },
+    },
+
+    register: {
+        header: "Create Account",
+        submitButtonText: "Register",
+        toggleAuthModeLink: {
+            to: "/auth/login",
+            text: "Already have an account?",
+        },
+    },
+};
 
 function AuthPage() {
+    const { login, createAccount, setUser } = useUserActionsContext();
+    const [form, setForm] = useState({
+        email: "",
+        password: "",
+    });
 
-    // state for choosing between signup or login form
-    const [isLogin, setIsLogin] = useState(true); 
-    
-    return (
-        <div>
-            <h1>{isLogin ? "Log in" : "Sign up"}</h1>
-            {isLogin ? (
-                <LoginForm onSwitch={() => setIsLogin(false)} />
-            ) : (
-                <SignupForm onSwitch={() => setIsLogin(true)} />
-            )}
-        </div>
-    );
-}
+    const navigate = useNavigate();
+    const [error, setError] = useState(null);
+    const location = useLocation();
+    const isCreateAccountPage = location.pathname.includes("register");
+    const { header, submitButtonText, toggleAuthModeLink } = 
+        config[isCreateAccountPage ? "register" : "login"];
 
-
-function LoginForm({ onSwitch }) {
-    // needs to handle api calls laters
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log("Login submitted!");
+    const onFormChange = key => value => {
+        setForm(state => ({
+            ...state,
+            [key]: value,
+        }));
     };
 
+    async function onFormSubmit(event) {
+        event.preventDefault();
+        const { email, password} = form;
+
+        if(!email) {
+            setError("Please enter your email.");
+            return;
+        }
+
+        if(!password) {
+            setError("Please enter password.");
+            return;
+        }
+
+        try {
+            if(isCreateAccountPage) {
+                await createAccount(email, password);
+            }
+
+            const loginSession = await login(email, password);
+            setUser(loginSession);
+
+            navigate("/dashboard");
+        } catch (error) {
+            console.error(error);
+            setError(error.message);
+        }
+    }
+
     return (
-        <form onSubmit={handleSubmit}>
-            <input type="email" placeholder="enter email" required />
-            <input type="password" placeholder="enter password" required />
-            <button type="submit">Log in</button>
-            <p>
-                No account?{" "}
-                <a 
-                    href="#"
-                    onClick={(e) => {
-                        e.preventDefault();
-                        onSwitch();
-                    }}
-                >
-                    Sign up
-                </a>
-            </p>
+        <form onSubmit={onFormSubmit}>
+            <h1>{header}</h1>
+            <input
+                id="email-field"
+                type="email"
+                value={form.email}
+                onChange={ e => onFormChange("email")(e.target.value)}
+            />
+
+            <input
+                id="password-field"
+                type="password"
+                value={form.password}
+                onChange={ e => onFormChange("password")(e.target.value)}
+            />
+
+            {error ? <p>{error}</p> : null}
+            <button type="submit">
+                {submitButtonText}
+            </button>
+
+            <Link to={toggleAuthModeLink.to}>
+                {toggleAuthModeLink.text}
+            </Link>
         </form>
     );
 }
 
-function SignupForm({ onSwitch }) {
-    // needs to handle api calls later
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log("signup submitted");
-    };
-
-    return (
-        <form onSubmit={handleSubmit}>
-            <input type="email" placeholder="enter email" required />
-            <input type="password" placeholder="enter password" required />
-            <input type="password" placeholder="confirm password" required />
-            <button>Sign up</button>
-            <p>
-                Already have an account?{" "}
-                <a 
-                    href="#"
-                    onClick={(e) => {
-                        e.preventDefault();
-                        onSwitch();
-                    }}
-                    >
-                        Log in
-                    </a>
-            </p> 
-        </form>
-    );
-}
 
 export default function Auth() {
     return <AuthPage />;

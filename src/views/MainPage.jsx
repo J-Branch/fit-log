@@ -19,7 +19,7 @@ function MainPage() {
                     <li><Link to="/dashboard">Dashboard</Link></li>
                     <li><Link to="/workouts">Workouts</Link></li>
                     <li><Link to="/analytics">Analytics</Link></li>
-                    <li><Link to="groups">Groups</Link></li>
+                    <li><Link to="/groups">Groups</Link></li>
                 </ul>
             </nav>
 

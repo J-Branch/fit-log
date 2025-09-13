@@ -1,15 +1,16 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { Outlet } from 'react-router-dom'
 import './App.css'
-import MainPage from './views/MainPage'
+import { Toaster } from "react-hot-toast";
+import { UserContextProvider } from './context/UserContextProvider';
+
 
 function App() {
 
-  return (
-    <>
-      <MainPage />
-    </>
+  return(
+    <UserContextProvider>
+      <Outlet />
+      <Toaster />
+    </UserContextProvider>
   )
 }
 
