@@ -9,7 +9,8 @@ function WorkoutList({ workouts }) {
                     <li key={index}>
                         <div>
                             {workout.name}<br />
-                            {workout.type}
+                            {workout.type}<br />
+                            {/* Add Buttons for edit/delete */}
                         </div>
                     </li>
                 ))}
