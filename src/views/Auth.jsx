@@ -45,7 +45,7 @@ function AuthPage() {
 
     async function onFormSubmit(event) {
         event.preventDefault();
-        const { email, password} = form;
+        const { email, password } = form;
 
         if(!email) {
             setError("Please enter your email.");
