@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { createAccount, getCurrentAuthSession, login } from "../api/appwrite.auth";
-import { UserActionsContext, UserContext } from "../context/user.context";
+import { createAccount, getCurrentAuthSession, login, logout } from "../api/appwrite.auth";
+import { UserActionsContext, UserContext } from "./user.context";
 
 export function UserContextProvider(props) {
     const [user, setUser] = useState(null);
     const [isInitialized, setIsInitialized] = useState(false);
-
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -31,7 +30,17 @@ export function UserContextProvider(props) {
             navigate("/auth/login");
         }
         setIsInitialized(true);
-    }
+    };
+
+    async function handleLogout() {
+        try {
+            await logout();
+            setUser(null);
+            navigate("/auth/login");
+        } catch {
+            console.error("Logout failed:", err);
+        }
+    };
 
     useEffect(() => {
 
@@ -58,6 +67,7 @@ export function UserContextProvider(props) {
         return {
             login,
             createAccount,
+            logout: handleLogout,
             setUser,
         };
     }, []);
@@ -75,4 +85,4 @@ export function UserContextProvider(props) {
             </UserActionsContext.Provider>
         </UserContext.Provider>
     );
-}
+};

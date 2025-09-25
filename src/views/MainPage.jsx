@@ -1,8 +1,19 @@
-import {Outlet, Link} from "react-router-dom"
-import Dashboard from "./Dashboard";
+import {Outlet, Link, useNavigate, replace} from "react-router-dom"
+import { logout } from "../api/appwrite.auth";
+import { useUserActionsContext } from "../context/user.context";
 
 
 function MainPage() {
+    const { logout } = useUserActionsContext();
+
+    async function handleLogout() {
+        try{
+            await logout();
+        } catch (err){
+            console.error("logout failed:", err);
+        } 
+    };
+
     return (
         <div style={{display: "flex", height: "100vh" }}>
             <nav style={{
@@ -21,6 +32,7 @@ function MainPage() {
                     <li><Link to="/analytics">Analytics</Link></li>
                     <li><Link to="/groups">Groups</Link></li>
                 </ul>
+                <button onClick={handleLogout}>Logout</button>
             </nav>
 
             <main style={{ flexGrow: 1, padding: "1rem" }}>
