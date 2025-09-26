@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { ID } from "appwrite";
 import { setUserWorkouts, setUserExercises, setUserSets } from '../api/appwrite.workout.js'
 
 // SubmitWorkout - From WorkoutPage
@@ -57,31 +58,34 @@ function WorkoutForm({ userId, onWorkoutSubmit }) {
         // Creates the date data
         const workoutDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
 
-        const newWorkout = await setUserWorkouts(
+        // Creates unique ID for wid
+        const wid = ID.unique();
+
+        await setUserWorkouts(
             userId,
             workoutName,
             workoutType,
             workoutDate,
             newTime,
-            Number(distance)
+            Number(distance),
+            wid
         );
 
-        const workoutId = newWorkout.$id;
         if (workoutType === "Weightlifting") {
             // Looping through each exercise
             for (const exercise of exercises) {
-                const exerciseDoc = await setUserExercises(
+                const eid = await setUserExercises(
                     userId,
-                    workoutId,
+                    wid,
                     exercise.name
                 );
-                const exerciseId = exerciseDoc.$id;
                 
                 // Looping through each set
                 for (const set of exercise.sets) {
                     await setUserSets(
                         userId,
-                        exerciseId,
+                        wid,
+                        eid,
                         set.setCounter,
                         set.reps,
                         set.weight
@@ -125,7 +129,7 @@ function WorkoutForm({ userId, onWorkoutSubmit }) {
             {workoutType === 'Distance/Time' && (
                 <>
                     <label>Distance (In Miles)</label><br />
-                    <input type="number" min="0" step="0.1" value={distance} onChange={(e) => setDistance(e.target.value)} placeholder="Distance" required></input><br />
+                    <input type="number" min="0" step=".01" value={distance} onChange={(e) => setDistance(e.target.value)} placeholder="Distance" required></input><br />
 
                     <label>Time Length of Workout</label><br />
                     <input type="number" min="0" step="1" value={minutes} onChange={(e) => setMinutes(e.target.value)} placeholder="minutes" required></input>

@@ -7,9 +7,7 @@ import { useUserContext } from '../context/user.context';
 
 function WorkoutPage() {
     const [showForm, setShowForm] = useState(false);
-    const { userId } = useUserContext();    
-
-    
+    const { userId } = useUserContext();   
 
     // Load workouts into workouts array when WorkoutPage is loaded
 

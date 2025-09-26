@@ -15,38 +15,28 @@ export async function getUserWorkouts( userId ) {
 }
 
 export async function getUserExercises( userId ) {
-    const userWorkouts = await getUserWorkouts(userId);
-    const workoutIds = userWorkouts.map(doc => doc.$id);
-
-    if (workoutIds.length === 0) return [];
-
     const userExercises = await tablesdb.listRows({
         databaseId: "68c4350c002ec8a50d2a",
         tableId: "exercises",
         queries: [
-            Query.contains('workoutId', workoutIds)
+            Query.equal('userId', userId)
         ]
     });
     return userExercises.rows;
 }
 
 export async function getUserSets( userId ) {
-    const userExercises = await getUserExercises(userId);
-    const exerciseIds = userExercises.map(doc => doc.$id);
-
-    if (exerciseIds.length === 0) return [];
-
     const userSets = await tablesdb.listRows({
         databaseId: "68c4350c002ec8a50d2a",
         tableId: "sets",
         queries: [
-            Query.contains('exerciseId', exerciseIds)
+            Query.equal('userId', userId)
         ]
     });
     return userSets.rows;
 }
 
-export async function setUserWorkouts( userId, workoutName, workoutType, date, time, distance ) {
+export async function setUserWorkouts( userId, workoutName, workoutType, date, time, distance, wid ) {
     return await tablesdb.createRow({
         databaseId: "68c4350c002ec8a50d2a",
         tableId: "workouts",
@@ -57,7 +47,8 @@ export async function setUserWorkouts( userId, workoutName, workoutType, date, t
             "workoutType": workoutType,
             "date": date,
             "time": time,
-            "distance": distance
+            "distance": distance,
+            "wid": wid
         },
         permissions: [
             Permission.read(Role.user(userId)),
@@ -67,13 +58,17 @@ export async function setUserWorkouts( userId, workoutName, workoutType, date, t
     });
 }
 
-export async function setUserExercises( userId, workoutId, exerciseName ) {
+export async function setUserExercises( userId, wid, exerciseName ) {
+    const eid = ID.unique();
+
     await tablesdb.createRow({
         databaseId: "68c4350c002ec8a50d2a",
         tableId: "exercises",
-        rowId: ID.unique(),
+        rowId: eid,
         data: {
-            "workoutId": workoutId,
+            "userId": userId,
+            "wid": wid,
+            "eid": eid,
             "exerciseName": exerciseName
         },
         permissions: [
@@ -82,14 +77,19 @@ export async function setUserExercises( userId, workoutId, exerciseName ) {
             Permission.delete(Role.user(userId)),
         ]
     });
+
+    return eid;
 }
 
-export async function setUserSets( userId, exerciseId, setCounter, reps, weight ) {
+export async function setUserSets( userId, wid, eid, setCounter, reps, weight ) {
     await tablesdb.createRow({
         databaseId: "68c4350c002ec8a50d2a",
         tableId: "sets",
+        rowId:ID.unique(),
         data: {
-            "exerciseId": exerciseId,
+            "userId": userId,
+            "wid": wid,
+            "eid": eid,
             "setCounter": setCounter,
             "reps": reps,
             "weight": weight

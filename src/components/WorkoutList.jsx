@@ -1,76 +1,81 @@
-import { useState } from 'react';
-import { getUserWorkouts, getUserExercises, getUserSets } from '../api/appwrite.workout.js'
-import { useEffect } from 'react';
-
-// COULD POTENTIALLY ADD EDIT/DELETE FOR THE WORKOUTS, EXERCISES, AND SETS
+import { useState, useEffect } from 'react';
+import { getUserWorkouts, getUserExercises, getUserSets } from '../api/appwrite.workout.js';
 
 function WorkoutList({ userId }) {
     const [workoutList, setWorkoutList] = useState([]);
     const [exerciseList, setExerciseList] = useState([]);
     const [setList, setSetList] = useState([]);
     const [expandedWorkoutId, setExpandedWorkoutId] = useState(null);
-    const [expandedExerciseId, setExpandedExerciseId] = useState(null);
+    const [expandedExerciseId, setExpandedExerciseId] = useState(null); 
 
+    // Load workouts
     useEffect(() => {
-        async function fetchData() {
-            const userWorkouts = await getUserWorkouts(userId);
-            setWorkoutList(userWorkouts);
+        async function fetchWorkouts() {
+            try {
+                const userWorkouts = await getUserWorkouts(userId);
+                setWorkoutList(userWorkouts);
+            } catch (err) {
+                console.error("Failed to fetch workouts:", err.message);
+                setWorkoutList([]);
+            }
         }
+        fetchWorkouts();
+    }, [userId]);
 
-        fetchData();
-    }, []);
-
+    // Load exercises
     useEffect(() => {
-        async function fetchData() {
-            const userExercises = await getUserExercises(userId);
-            setExerciseList(userExercises);
+        async function fetchExercises() {
+            try {
+                const userExercises = await getUserExercises(userId);
+                setExerciseList(userExercises);
+            } catch (err) {
+                console.error("Failed to fetch exercises:", err.message);
+                setExerciseList([]);
+            }
         }
+        fetchExercises();
+    }, [userId]);
 
-        fetchData();
-    }, []);
-
+    // Load sets
     useEffect(() => {
-        async function fetchData() {
-            const userSets = await getUserSets(userId);
-            setSetList(userSets);
+        async function fetchSets() {
+            try {
+                const userSets = await getUserSets(userId);
+                setSetList(userSets);
+            } catch (err) {
+                console.error("Failed to fetch sets:", err.message);
+                setSetList([]);
+            }
         }
+        fetchSets();
+    }, [userId]);
 
-        fetchData();
-    }, []);
-
-    function showExercises(workoutId) {
-        if (expandedWorkoutId === workoutId) {
-            setExpandedWorkoutId(null);
-        } else {
-            setExpandedWorkoutId(workoutId);
-        }
+    // Toggle workout visibility
+    function showExercises(wid) {
+        setExpandedWorkoutId(prev => (prev === wid ? null : wid));
     }
 
-    function showSets(exerciseId) {
-        if (expandedExerciseId === exerciseId) {
-            setExpandedExerciseId(null);
-        } else {
-            setExpandedExerciseId(exerciseId);
-        }
+    // Toggle exercise visibility
+    function showSets(eid) {
+        setExpandedExerciseId(prev => (prev === eid ? null : eid));
     }
 
+    // Utility to format seconds into MM:SS
     function formatSeconds(seconds) {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
-        return `${mins}:${secs < 10 ? '0' : ''}${secs}`
+        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
     }
 
-    // Should return a display of all the users workouts
     return (
         <>
-            <h2>--Previous Workouts--</h2> <br />
-            
+            <h2>--Previous Workouts--</h2>
+
             <ul>
-                {/* Displays each workout */}
                 {workoutList.map(workout => (
-                    <li key={workout.$id}> <br />
+                    <li key={workout.$id}><br />
                         <div>
-                            <strong>{workout.workoutName}</strong> <br />
+                            <strong>{workout.workoutName}</strong><br />
 
                             {workout.workoutType === "Distance/Time" ? (
                                 <div>
@@ -79,43 +84,40 @@ function WorkoutList({ userId }) {
                                 </div>
                             ) : (
                                 <>
-                                    <button onClick={() => showExercises(workout.$id)}>
-                                        {expandedWorkoutId === workout.$id ? 'Hide' : 'Show'} Exercises
+                                    <button onClick={() => showExercises(workout.wid)}>
+                                        {expandedWorkoutId === workout.wid ? 'Hide' : 'Show'} Exercises
                                     </button>
 
-                                    {expandedWorkoutId === workout.$id && (
+                                    {expandedWorkoutId === workout.wid && (
                                         <ul>
                                             {exerciseList
-                                                .filter(exercise => exercise.workoutId === workout.$id)
+                                                .filter(exercise => exercise.wid === workout.wid) 
                                                 .map(exercise => (
-                                                    <li key={exercise.$id}> <br />
+                                                    <li key={exercise.$id}><br />
                                                         <div>
                                                             {exercise.exerciseName}
-
-                                                            <button onClick={() => showSets(exercise.$id)}>
-                                                                {expandedExerciseId === exercise.$id ? 'Hide' : 'Show'} Sets
+                                                            <button onClick={() => showSets(exercise.eid)}>
+                                                                {expandedExerciseId === exercise.eid ? 'Hide' : 'Show'} Sets
                                                             </button>
 
-                                                            {expandedExerciseId === exercise.$id && (
+                                                            {expandedExerciseId === exercise.eid && (
                                                                 <ul>
                                                                     {setList
-                                                                        .filter(set => set.exerciseId === exercise.$id)
+                                                                        .filter(set => set.eid === exercise.eid)
                                                                         .map(set => (
-                                                                            <li key={set.$id}> <br />
+                                                                            <li key={set.$id}><br />
                                                                                 <div>
                                                                                     Set: {set.setCounter} <br />
                                                                                     Reps: {set.reps} <br />
                                                                                     Weight: {set.weight}
                                                                                 </div>
                                                                             </li>
-                                                                        ))
-                                                                    }
+                                                                        ))}
                                                                 </ul>
                                                             )}
                                                         </div>
                                                     </li>
-                                                ))
-                                            }
+                                                ))}
                                         </ul>
                                     )}
                                 </>
@@ -125,7 +127,7 @@ function WorkoutList({ userId }) {
                 ))}
             </ul>
         </>
-    )
+    );
 }
 
 export default WorkoutList;
