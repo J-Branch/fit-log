@@ -79,7 +79,7 @@ function WorkoutList({ userId }) {
 
                             {workout.workoutType === "Distance/Time" ? (
                                 <div>
-                                    Distance: {workout.distance} meters <br />
+                                    Distance: {workout.distance} Miles <br />
                                     Time: {formatSeconds(workout.time)} <br />
                                 </div>
                             ) : (
@@ -95,7 +95,7 @@ function WorkoutList({ userId }) {
                                                 .map(exercise => (
                                                     <li key={exercise.$id}><br />
                                                         <div>
-                                                            {exercise.exerciseName}
+                                                            {exercise.exerciseName} <br />
                                                             <button onClick={() => showSets(exercise.eid)}>
                                                                 {expandedExerciseId === exercise.eid ? 'Hide' : 'Show'} Sets
                                                             </button>
