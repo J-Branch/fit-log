@@ -1,7 +1,13 @@
+import { useState } from 'react';
+import { useUserContext } from '../context/user.context';
 
 function Analytics() {
     return (
-        <div>Place holder</div>
+        <div>
+            <div>
+
+            </div>
+        </div>
     )
 }
 
