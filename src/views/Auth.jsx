@@ -73,7 +73,7 @@ function AuthPage() {
     }
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-[#E63946] via-[#B22234] to-[#800020]">
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-[#B23A48] via-[#972d43] to-[#800020]">
             <div className="flex items-center justify-center w-3/4 mx-8 bg-white md:w-1/2 md:min-h-screen md:ml-auto md:mx-0 max-md:rounded-2x1">
                 <form className="w-full p-8 md:w-96 md:p-4" onSubmit={onFormSubmit}>
                     <h1 className="mb-8 text-2x1 font-semibold text-center">{header}</h1>
