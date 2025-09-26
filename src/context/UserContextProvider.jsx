@@ -60,6 +60,7 @@ export function UserContextProvider(props) {
     const value = useMemo(() => {
         return {
             user,
+            userId: user ? user.$id : null,
         };
     }, [user]);
 

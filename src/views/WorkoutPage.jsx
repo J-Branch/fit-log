@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import WorkoutForm from '../components/WorkoutForm';
 import WorkoutList from '../components/WorkoutList';
+import { useUserContext } from '../context/user.context';
+
+// COULD PROBABLY MAKE THE ADD WORKOUT BUTTON BETTER
 
 function WorkoutPage() {
     const [showForm, setShowForm] = useState(false);
-    const [workouts, setWorkouts] = useState([]);
+    const { userId } = useUserContext();   
 
     // Load workouts into workouts array when WorkoutPage is loaded
 
@@ -12,11 +15,10 @@ function WorkoutPage() {
         setShowForm(!showForm);
     }
 
-    function handleWorkoutSubmit(newWorkout) {
-        // Puts new workout in workout list and hides the form
+    function handleWorkoutSubmit() {
+        // Hides the form
         setShowForm(!showForm);
-        setWorkouts([...workouts, newWorkout]);
-        console.log(newWorkout);
+        alert("Workout has been submitted!");
     }
 
     return (
@@ -26,11 +28,11 @@ function WorkoutPage() {
                     Add Workout
                 </button>
                 { /* Passes handleWorkoutSubmit function to WorkoutForm as submitWorkout */ }
-                {showForm && <WorkoutForm submitWorkout={handleWorkoutSubmit} />}
+                {showForm && <WorkoutForm userId={userId} onWorkoutSubmit={handleWorkoutSubmit} />}
             </div>
             <div>
                 { /* Passes workout list as a prop to WorkoutList */ }
-                <WorkoutList workouts={workouts} />
+                <WorkoutList userId={userId} />
             </div>
         </div>
     );

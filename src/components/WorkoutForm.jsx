@@ -1,6 +1,9 @@
 import { useState } from 'react';
+import { ID } from "appwrite";
+import { setUserWorkouts, setUserExercises, setUserSets } from '../api/appwrite.workout.js'
+
 // SubmitWorkout - From WorkoutPage
-function WorkoutForm({ submitWorkout }) {
+function WorkoutForm({ userId, onWorkoutSubmit }) {
     // For both workouts
     const [workoutName, setWorkoutName] = useState('');
     const [workoutType, setWorkoutType] = useState('');
@@ -19,11 +22,7 @@ function WorkoutForm({ submitWorkout }) {
     const [exercises, setExercises] = useState([]);
 
     function handleAddSet() {
-        // Increment setCounter
-        setSet(prev => ({
-            ...prev,
-            setCounter: Number(prev.setCounter) + 1,
-        }));
+        alert("Set Added!");
         // Add set to exercise
         const updatedSets = [ ...exercise.sets, set ];
         setExercise(prev => ({
@@ -33,36 +32,70 @@ function WorkoutForm({ submitWorkout }) {
     }
 
     function handleAddExercise() {
+        alert("Exercise Added!");
+        // Adds exercise to exercises
         setExercises([...exercises, exercise]);
-
+        // Resets exercise
         setExercise(prev => ({
             ...prev,
             name: '',
             sets: []
         }));
+        // Resets set
+        setSet(prev => ({
+            ...prev,
+            setCounter: '',
+            reps: '',
+            weight: ''
+        }));
     }
 
-    function handleSubmit(e) {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        alert("Submit button pressed");
         // Saves time in seconds
         const newTime = Number(minutes * 60) + Number(seconds);
+        // Creates the date data
         const workoutDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
 
-        // Creates workout object
-        const newWorkout = {
-            name: workoutName,
-            type: workoutType,
-            date: workoutDate,
-            ...(workoutType === 'Distance/Time' && {
-                distance: parseFloat(distance),
-                time: newTime
-            }),
-            ...(workoutType === 'Weightlifting' && {
-                exercises: exercises
-            })
+        // Creates unique ID for wid
+        const wid = ID.unique();
+
+        await setUserWorkouts(
+            userId,
+            workoutName,
+            workoutType,
+            workoutDate,
+            newTime,
+            Number(distance),
+            wid
+        );
+
+        if (workoutType === "Weightlifting") {
+            // Looping through each exercise
+            for (const exercise of exercises) {
+                const eid = await setUserExercises(
+                    userId,
+                    wid,
+                    exercise.name
+                );
+                
+                // Looping through each set
+                for (const set of exercise.sets) {
+                    await setUserSets(
+                        userId,
+                        wid,
+                        eid,
+                        set.setCounter,
+                        set.reps,
+                        set.weight
+                    );
+                }
+            }
         };
-        // Sends newWorkout to parent
-        submitWorkout(newWorkout);
+
+        // Tell parent we submitted
+        onWorkoutSubmit();
 
         // Reset form state
         setWorkoutName('');
@@ -96,7 +129,7 @@ function WorkoutForm({ submitWorkout }) {
             {workoutType === 'Distance/Time' && (
                 <>
                     <label>Distance (In Miles)</label><br />
-                    <input type="number" min="0" step="0.1" value={distance} onChange={(e) => setDistance(e.target.value)} placeholder="Distance" required></input><br />
+                    <input type="number" min="0" step=".01" value={distance} onChange={(e) => setDistance(e.target.value)} placeholder="Distance" required></input><br />
 
                     <label>Time Length of Workout</label><br />
                     <input type="number" min="0" step="1" value={minutes} onChange={(e) => setMinutes(e.target.value)} placeholder="minutes" required></input>
@@ -116,8 +149,8 @@ function WorkoutForm({ submitWorkout }) {
                     <input type="number" min="0" step="1" value={set.reps} onChange={(e) => setSet({ ...set, reps: parseInt(e.target.value) })} placeholder="Number of Reps" required></input>
                     <input type="number" min="0" step="1" value={set.weight} onChange={(e) => setSet({ ...set, weight: parseInt(e.target.value) })} placeholder="Weight" required></input><br />
 
-                    <button onClick={handleAddSet}>Set Complete</button><br />
-                    <button onClick={handleAddExercise}>Exercise Complete</button>
+                    <button type="button" onClick={handleAddSet}>Set Complete</button><br />
+                    <button type="button" onClick={handleAddExercise}>Exercise Complete</button>
                 </>
             )}
                     <br />
