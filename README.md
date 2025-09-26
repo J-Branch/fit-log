@@ -1,12 +1,24 @@
-# React + Vite
+# Fit Tracker (Work in Progress)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A gamified web app to track workouts, analyze progress, and visualize fitness data.
 
-Currently, two official plugins are available:
+![Screenshot](public/Screenshot%202025-09-26%20161700.png)
+![Screenshot](public/Screenshot%202025-09-26%20161939.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Current
+- User authentication (signup/logout)
+- Workout page add and view workouts
+
+### Planned
+- Ability to delete and update workouts, exercises, and sets
+- Analytics and charts for progress
+- Groups, invite friends or family and set challenges 
+
+## Tech Stack
+- React 
+- Tailwind CSS
+- Appwrite (backend)
+- Vercel (hosting in progress)
