@@ -1,5 +1,4 @@
 import {Outlet, Link, useNavigate, replace} from "react-router-dom"
-import { logout } from "../api/appwrite.auth";
 import { useUserActionsContext } from "../context/user.context";
 
 
