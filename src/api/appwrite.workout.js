@@ -1,18 +1,27 @@
-import { tablesdb } from "./appwrite.api";
-import { Permission, Role } from "appwrite";
+import { tablesdb, databaseId } from "./appwrite.api";
+import { ID, Permission, Role } from "appwrite";
 import { Query } from "appwrite";
-import { ID } from "appwrite";
 
-export async function getUserWorkouts( userId ) {
-    const userWorkouts = await tablesdb.listRows({
-        databaseId: '68c4350c002ec8a50d2a',
-        tableId: 'workouts',
+// export async function getUserWorkouts( userId ) {
+//     const userWorkouts = await tablesdb.listRows({
+//         databaseId: '68c4350c002ec8a50d2a',
+//         tableId: 'workouts',
+//         queries: [
+//             Query.equal('userId', userId)
+//         ]
+//     });
+//     return userWorkouts.rows;
+// }
+
+export function getUserWorkouts(userId) {
+    return tablesdb.listRows({
+        databaseId,
+        tableId: "workouts",
         queries: [
-            Query.equal('userId', userId)
+            Query.equal("userId", userId)
         ]
     });
-    return userWorkouts.rows;
-}
+};
 
 export async function getUserExercises( userId ) {
     const userExercises = await tablesdb.listRows({

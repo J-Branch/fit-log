@@ -12,7 +12,7 @@ function WorkoutList({ userId }) {
     useEffect(() => {
         async function fetchWorkouts() {
             try {
-                const userWorkouts = await getUserWorkouts(userId);
+                const userWorkouts = (await getUserWorkouts(userId)).rows;
                 setWorkoutList(userWorkouts);
             } catch (err) {
                 console.error("Failed to fetch workouts:", err.message);

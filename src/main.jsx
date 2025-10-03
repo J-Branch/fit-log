@@ -17,6 +17,7 @@ const routes = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    errorElement: <NotFoundPage />,
     children: [
       { path: "auth/login", element: <Auth />},
       { path: "auth/register", element: <Auth />}, 
@@ -31,8 +32,6 @@ const routes = createBrowserRouter([
           {path:"groups", element: <GroupPage />},
         ],
       },
-
-      { path: "*", element: <NotFoundPage />},
 
     ],
   },
