@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getUserWorkouts, getUserExercises, getUserSets } from '../api/appwrite.workout.js';
+import { listRows } from '../api/appwrite.workout.js';
 
 function WorkoutList({ userId }) {
     const [workoutList, setWorkoutList] = useState([]);
@@ -12,7 +12,7 @@ function WorkoutList({ userId }) {
     useEffect(() => {
         async function fetchWorkouts() {
             try {
-                const userWorkouts = (await getUserWorkouts(userId)).rows;
+                const userWorkouts = (await listRows("workouts")).rows;
                 setWorkoutList(userWorkouts);
             } catch (err) {
                 console.error("Failed to fetch workouts:", err.message);
@@ -26,7 +26,7 @@ function WorkoutList({ userId }) {
     useEffect(() => {
         async function fetchExercises() {
             try {
-                const userExercises = await getUserExercises(userId);
+                const userExercises = (await listRows("exercises")).rows;
                 setExerciseList(userExercises);
             } catch (err) {
                 console.error("Failed to fetch exercises:", err.message);
@@ -40,7 +40,7 @@ function WorkoutList({ userId }) {
     useEffect(() => {
         async function fetchSets() {
             try {
-                const userSets = await getUserSets(userId);
+                const userSets = await listRows("sets").rows;
                 setSetList(userSets);
             } catch (err) {
                 console.error("Failed to fetch sets:", err.message);
