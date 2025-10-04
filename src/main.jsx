@@ -17,6 +17,7 @@ const routes = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    errorElement: <NotFoundPage />,
     children: [
       { path: "auth/login", element: <Auth />},
       { path: "auth/register", element: <Auth />}, 
@@ -27,12 +28,11 @@ const routes = createBrowserRouter([
           { index: true, element: <Dashboard />},
           {path:"dashboard", element: <Dashboard />},
           {path:"workouts", element: <WorkoutPage />},
+          {path:"workouts/id", elemtnet:<WorkoutPage />},
           {path:"analytics", element: <Analytics />},
           {path:"groups", element: <GroupPage />},
         ],
       },
-
-      { path: "*", element: <NotFoundPage />},
 
     ],
   },
