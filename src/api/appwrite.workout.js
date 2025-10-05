@@ -1,8 +1,6 @@
 import { tablesdb, databaseId } from "./appwrite.api";
 import { Permission, Role } from "appwrite";
-import { useUserContext } from "../context/user.context";
 
-// const { user } = useUserContext();
 
 export function getRow(tableId, rowId, query) {
     return tablesdb.getRow({
@@ -13,10 +11,11 @@ export function getRow(tableId, rowId, query) {
     });
 };
 
-export function listRows(tableId) {
+export function listRows(tableId, query) {
     return tablesdb.listRows({
         databaseId,
-        tableId
+        tableId,
+        queries: query
     });
 };
 

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { ID } from "appwrite";
 import { createRow } from '../api/appwrite.workout.js'
-import { tablesdb } from '../api/appwrite.api.js';
 
 // SubmitWorkout - From WorkoutPage
 function WorkoutForm({ userId, onWorkoutSubmit }) {
