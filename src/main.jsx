@@ -28,7 +28,6 @@ const routes = createBrowserRouter([
           { index: true, element: <Dashboard />},
           {path:"dashboard", element: <Dashboard />},
           {path:"workouts", element: <WorkoutPage />},
-          //{path:"workouts/:id", element:<WorkoutDetailPage />},
           {path:"analytics", element: <Analytics />},
           {path:"groups", element: <GroupPage />},
         ],

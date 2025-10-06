@@ -2,8 +2,12 @@ import { useState } from 'react';
 import { ID } from "appwrite";
 import { createRow } from '../api/appwrite.workout.js'
 
+import { useUserContext } from "../context/user.context.js"
+
 // SubmitWorkout - From WorkoutPage
-function WorkoutForm({ userId, onWorkoutSubmit }) {
+function WorkoutForm({ onWorkoutSubmit }) {
+
+    const { user } = useUserContext();
     // For both workouts
     const [workoutName, setWorkoutName] = useState('');
     const [workoutType, setWorkoutType] = useState('');
@@ -96,11 +100,11 @@ function WorkoutForm({ userId, onWorkoutSubmit }) {
         const wid = ID.unique();
 
         await createRow(
-            userId,
+            user.$id,
             "workouts",
             wid,
             {
-                userId: userId,
+                userId: user.$id,
                 workoutName: workoutName,
                 workoutType: workoutType,
                 date: workoutDate,
@@ -115,7 +119,7 @@ function WorkoutForm({ userId, onWorkoutSubmit }) {
             for (const exercise of exercises) {
                 const eid = ID.unique();
                 await createRow(
-                    userId,
+                    user.$id,
                     "exercises",
                     eid,
                     {
@@ -127,7 +131,7 @@ function WorkoutForm({ userId, onWorkoutSubmit }) {
                 // Looping through each set
                 for (const set of exercise.sets) {
                     await createRow(
-                        userId,
+                        user.$id,
                         "sets",
                         ID.unique(),
                         {
