@@ -1,18 +1,20 @@
 import { useState, useEffect } from 'react';
-import { getUserWorkouts, getUserExercises, getUserSets } from '../api/appwrite.workout.js';
+import { listRows } from '../api/appwrite.workout.js';
 
 function WorkoutList({ userId }) {
     const [workoutList, setWorkoutList] = useState([]);
     const [exerciseList, setExerciseList] = useState([]);
     const [setList, setSetList] = useState([]);
     const [expandedWorkoutId, setExpandedWorkoutId] = useState(null);
-    const [expandedExerciseId, setExpandedExerciseId] = useState(null); 
+    // const [expandedExerciseId, setExpandedExerciseId] = useState(null); 
+
+    const [expandedExercises, setExpandedExercises] = useState({});
 
     // Load workouts
     useEffect(() => {
         async function fetchWorkouts() {
             try {
-                const userWorkouts = await getUserWorkouts(userId);
+                const userWorkouts = (await listRows("workouts")).rows;
                 setWorkoutList(userWorkouts);
             } catch (err) {
                 console.error("Failed to fetch workouts:", err.message);
@@ -26,7 +28,7 @@ function WorkoutList({ userId }) {
     useEffect(() => {
         async function fetchExercises() {
             try {
-                const userExercises = await getUserExercises(userId);
+                const userExercises = (await listRows("exercises")).rows;
                 setExerciseList(userExercises);
             } catch (err) {
                 console.error("Failed to fetch exercises:", err.message);
@@ -40,7 +42,7 @@ function WorkoutList({ userId }) {
     useEffect(() => {
         async function fetchSets() {
             try {
-                const userSets = await getUserSets(userId);
+                const userSets = (await listRows("sets")).rows;
                 setSetList(userSets);
             } catch (err) {
                 console.error("Failed to fetch sets:", err.message);
@@ -55,9 +57,16 @@ function WorkoutList({ userId }) {
         setExpandedWorkoutId(prev => (prev === wid ? null : wid));
     }
 
-    // Toggle exercise visibility
-    function showSets(eid) {
-        setExpandedExerciseId(prev => (prev === eid ? null : eid));
+    // // Toggle exercise visibility
+    // function showSets(eid) {
+    //     setExpandedExerciseId(prev => (prev === eid ? null : eid));
+    // }
+
+    function showSets(workoutId, exerciseId) {
+        setExpandedExercises(prev => ({
+            ...prev,
+            [workoutId]: prev[workoutId] === exerciseId ? null : exerciseId
+        }));
     }
 
     // Utility to format seconds into MM:SS
@@ -84,26 +93,26 @@ function WorkoutList({ userId }) {
                                 </div>
                             ) : (
                                 <>
-                                    <button onClick={() => showExercises(workout.wid)}>
-                                        {expandedWorkoutId === workout.wid ? 'Hide' : 'Show'} Exercises
+                                    <button onClick={() => showExercises(workout.$id)}>
+                                        {expandedWorkoutId === workout.$id ? 'Hide' : 'Show'} Exercises
                                     </button>
 
-                                    {expandedWorkoutId === workout.wid && (
+                                    {expandedWorkoutId === workout.$id && (
                                         <ul>
                                             {exerciseList
-                                                .filter(exercise => exercise.wid === workout.wid) 
+                                                .filter(exercise => exercise.wid === workout.$id) 
                                                 .map(exercise => (
                                                     <li key={exercise.$id}><br />
                                                         <div>
                                                             {exercise.exerciseName} <br />
-                                                            <button onClick={() => showSets(exercise.eid)}>
-                                                                {expandedExerciseId === exercise.eid ? 'Hide' : 'Show'} Sets
+                                                            <button onClick={() => showSets(workout.$id, exercise.$id)}>
+                                                                {expandedExercises[workout.$id] === exercise.$id ? 'Hide' : 'Show'} Sets
                                                             </button>
 
-                                                            {expandedExerciseId === exercise.eid && (
+                                                            {expandedExercises[workout.$id] === exercise.$id && (
                                                                 <ul>
                                                                     {setList
-                                                                        .filter(set => set.eid === exercise.eid)
+                                                                        .filter(set => set.eid === exercise.$id)
                                                                         .map(set => (
                                                                             <li key={set.$id}><br />
                                                                                 <div>
