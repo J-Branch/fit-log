@@ -28,7 +28,7 @@ function WorkoutPage() {
                     Add Workout
                 </button>
                 { /* Passes handleWorkoutSubmit function to WorkoutForm as submitWorkout */ }
-                {showForm && <WorkoutForm userId={userId} onWorkoutSubmit={handleWorkoutSubmit} />}
+                {showForm && <WorkoutForm onWorkoutSubmit={handleWorkoutSubmit} />}
             </div>
             <div>
                 { /* Passes workout list as a prop to WorkoutList */ }

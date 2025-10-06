@@ -1,9 +1,13 @@
 import { useState } from 'react';
 import { ID } from "appwrite";
-import { setUserWorkouts, setUserExercises, setUserSets } from '../api/appwrite.workout.js'
+import { createRow } from '../api/appwrite.workout.js'
+
+import { useUserContext } from "../context/user.context.js"
 
 // SubmitWorkout - From WorkoutPage
-function WorkoutForm({ userId, onWorkoutSubmit }) {
+function WorkoutForm({ onWorkoutSubmit }) {
+
+    const { user } = useUserContext();
     // For both workouts
     const [workoutName, setWorkoutName] = useState('');
     const [workoutType, setWorkoutType] = useState('');
@@ -95,34 +99,47 @@ function WorkoutForm({ userId, onWorkoutSubmit }) {
         // Creates unique ID for wid
         const wid = ID.unique();
 
-        await setUserWorkouts(
-            userId,
-            workoutName,
-            workoutType,
-            workoutDate,
-            newTime,
-            Number(distance),
-            wid
+        await createRow(
+            user.$id,
+            "workouts",
+            wid,
+            {
+                userId: user.$id,
+                workoutName: workoutName,
+                workoutType: workoutType,
+                date: workoutDate,
+                time: newTime,
+                distance: Number(distance)
+            },
         );
+
 
         if (workoutType === "Weightlifting") {
             // Looping through each exercise
             for (const exercise of exercises) {
-                const eid = await setUserExercises(
-                    userId,
-                    wid,
-                    exercise.name
+                const eid = ID.unique();
+                await createRow(
+                    user.$id,
+                    "exercises",
+                    eid,
+                    {
+                        wid: wid,
+                        exerciseName: exercise.name
+                    }
                 );
                 
                 // Looping through each set
                 for (const set of exercise.sets) {
-                    await setUserSets(
-                        userId,
-                        wid,
-                        eid,
-                        set.setCounter,
-                        set.reps,
-                        set.weight
+                    await createRow(
+                        user.$id,
+                        "sets",
+                        ID.unique(),
+                        {
+                            eid: eid,
+                            setCounter: set.setCounter,
+                            reps: set.reps,
+                            weight: set.weight
+                        }
                     );
                 }
             }
