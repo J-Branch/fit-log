@@ -24,7 +24,7 @@ export function createRow(userId, tableId, rowId, payload) {
     return tablesdb.createRow({
         databaseId,
         tableId,
-        rowId,
+        rowId: rowId,
         data: payload,
         permissions: [
             Permission.read(ownerRole),
