@@ -1,14 +1,10 @@
-import { useUserContext } from '../context/user.context';
 import WeightliftingGraph from '../components/WeightliftingGraph';
 import DistanceTimeGraph from '../components/DistanceTimeGraph';
-import { useUserData } from '../hooks/useUserData';
+import { useFetchWorkoutData } from '../hooks/useFetchWorkoutData';
 import { useMemo } from 'react';
 
 function Analytics() {
-    const { userId } = useUserContext();
-    const { userWorkouts } = useUserData(userId);
-    const { userExercises } = useUserData(userId);
-    const { userSets } = useUserData(userId);
+    const { userWorkouts, userExercises, userSets } = useFetchWorkoutData();
 
     const weightliftingWorkouts = useMemo(() =>
         userWorkouts.filter(w => w.workoutType === 'Weightlifting'),
@@ -20,13 +16,16 @@ function Analytics() {
 
     return (
         <>
+        
             <div>
                 <WeightliftingGraph workouts={weightliftingWorkouts} exercises={userExercises} sets={userSets} />
             </div>
         
+
             <div>
                 <DistanceTimeGraph workouts={distanceTimeWorkouts} />
             </div>
+        
         </>
     )
 }

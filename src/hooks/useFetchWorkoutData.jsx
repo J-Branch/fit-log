@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { getUserWorkouts, getUserExercises, getUserSets } from '../api/appwrite.workout';
+import { listRows } from '../api/appwrite.workout';
 
-export function useUserData(userId) {
+export function useFetchWorkoutData() {
     const [userWorkouts, setUserWorkouts] = useState([]);
     const [userExercises, setUserExercises] = useState([]);
     const [userSets, setUserSets] = useState([]);
@@ -9,16 +9,16 @@ export function useUserData(userId) {
     useEffect(() => {
         async function fetchData() {
             const [workouts, exercises, sets] = await Promise.all([
-                getUserWorkouts(userId),
-                getUserExercises(userId),
-                getUserSets(userId),
+                listRows("workouts"),
+                listRows("exercises"),
+                listRows("sets"),
             ]);
 
-            setUserWorkouts(workouts);
-            setUserExercises(exercises);
-            setUserSets(sets);
+            setUserWorkouts(workouts.rows);
+            setUserExercises(exercises.rows);
+            setUserSets(sets.rows);
         }
-        if (userId) fetchData();
+        fetchData();
     }, []);
 
     return {

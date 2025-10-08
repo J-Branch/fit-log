@@ -1,16 +1,15 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useState, useMemo } from 'react';
+import { useUniqueWorkoutNames } from '../hooks/useAnalyticsHooks';
 
 function DistanceTimeGraph({ workouts }) {
     const [workoutVariety, setWorkoutVariety] = useState('all');
     const [selectedWorkout, setSelectedWorkout] = useState('');
     const [distOrTime, setDistOrTime] = useState('');
 
-    const workoutOptions = useMemo(() => {
-        const names = workouts.map(w => w.workoutName);
-        return [...new Set(names)];
-    }, [workouts]);
+    const workoutOptions = useUniqueWorkoutNames(workouts);
 
+    // Turns data into (chartData) which will be accepted by recharts
     const chartData = useMemo(() => {
         let filtered = workouts;
 
@@ -44,7 +43,7 @@ function DistanceTimeGraph({ workouts }) {
                 <>
                     <label>Specific Workout:</label>
                     <select value={selectedWorkout} onChange={(e) => setSelectedWorkout(e.target.value)}>
-                        <option value="" disabled>--Select Specific Workout--</option>
+                        <option value="" disabled>-- Select Specific Workout --</option>
                         {workoutOptions.map(name => (
                             <option key={name} value={name}>{name}</option>
                         ))}
