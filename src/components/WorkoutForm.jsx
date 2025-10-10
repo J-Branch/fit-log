@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { ID } from "appwrite";
-import { createRow } from '../api/appwrite.workout.js'
-
-import { useUserContext } from "../context/user.context.js"
+import { createRow } from '../api/appwrite.workout.js';
+import { useUserContext } from "../context/user.context.js";
+import { useWorkoutContext } from "../context/workout.context.js";
 
 // SubmitWorkout - From WorkoutPage
 function WorkoutForm({ onWorkoutSubmit }) {
 
     const { user } = useUserContext();
+    const { setRefreshData } = useWorkoutContext();
+
     // For both workouts
     const [workoutName, setWorkoutName] = useState('');
     const [workoutType, setWorkoutType] = useState('');
@@ -156,7 +158,9 @@ function WorkoutForm({ onWorkoutSubmit }) {
         setSeconds('');
         setSet({ setCounter: 0, reps: 0, weight: 0 });
         setExercise({ name: '', sets: [] });
-        setExercises([])
+        setExercises([]);
+
+        setRefreshData(true);
     }
 
     return (

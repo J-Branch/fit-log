@@ -1,66 +1,16 @@
-import { useState, useEffect } from 'react';
-import { listRows } from '../api/appwrite.workout.js';
+import { useState } from 'react';
+import { useWorkoutContext } from "../context/workout.context";
 
-function WorkoutList({ userId }) {
-    const [workoutList, setWorkoutList] = useState([]);
-    const [exerciseList, setExerciseList] = useState([]);
-    const [setList, setSetList] = useState([]);
+function WorkoutList() {
+    const{ userWorkouts, userExercises, userSets } = useWorkoutContext();
     const [expandedWorkoutId, setExpandedWorkoutId] = useState(null);
-    // const [expandedExerciseId, setExpandedExerciseId] = useState(null); 
 
     const [expandedExercises, setExpandedExercises] = useState({});
-
-    // Load workouts
-    useEffect(() => {
-        async function fetchWorkouts() {
-            try {
-                const userWorkouts = (await listRows("workouts")).rows;
-                setWorkoutList(userWorkouts);
-            } catch (err) {
-                console.error("Failed to fetch workouts:", err.message);
-                setWorkoutList([]);
-            }
-        }
-        fetchWorkouts();
-    }, [userId]);
-
-    // Load exercises
-    useEffect(() => {
-        async function fetchExercises() {
-            try {
-                const userExercises = (await listRows("exercises")).rows;
-                setExerciseList(userExercises);
-            } catch (err) {
-                console.error("Failed to fetch exercises:", err.message);
-                setExerciseList([]);
-            }
-        }
-        fetchExercises();
-    }, [userId]);
-
-    // Load sets
-    useEffect(() => {
-        async function fetchSets() {
-            try {
-                const userSets = (await listRows("sets")).rows;
-                setSetList(userSets);
-            } catch (err) {
-                console.error("Failed to fetch sets:", err.message);
-                setSetList([]);
-            }
-        }
-        fetchSets();
-    }, [userId]);
 
     // Toggle workout visibility
     function showExercises(wid) {
         setExpandedWorkoutId(prev => (prev === wid ? null : wid));
     }
-
-    // // Toggle exercise visibility
-    // function showSets(eid) {
-    //     setExpandedExerciseId(prev => (prev === eid ? null : eid));
-    // }
 
     function showSets(workoutId, exerciseId) {
         setExpandedExercises(prev => ({
@@ -81,7 +31,7 @@ function WorkoutList({ userId }) {
             <h2>--Previous Workouts--</h2>
 
             <ul>
-                {workoutList.map(workout => (
+                {userWorkouts.map(workout => (
                     <li key={workout.$id}><br />
                         <div>
                             <strong>{workout.workoutName}</strong><br />
@@ -99,7 +49,7 @@ function WorkoutList({ userId }) {
 
                                     {expandedWorkoutId === workout.$id && (
                                         <ul>
-                                            {exerciseList
+                                            {userExercises
                                                 .filter(exercise => exercise.wid === workout.$id) 
                                                 .map(exercise => (
                                                     <li key={exercise.$id}><br />
@@ -111,7 +61,7 @@ function WorkoutList({ userId }) {
 
                                                             {expandedExercises[workout.$id] === exercise.$id && (
                                                                 <ul>
-                                                                    {setList
+                                                                    {userSets
                                                                         .filter(set => set.eid === exercise.$id)
                                                                         .map(set => (
                                                                             <li key={set.$id}><br />
