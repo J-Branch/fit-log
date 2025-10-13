@@ -5,6 +5,7 @@ export function useFetchWorkoutData() {
     const [userWorkouts, setUserWorkouts] = useState([]);
     const [userExercises, setUserExercises] = useState([]);
     const [userSets, setUserSets] = useState([]);
+    const [refreshData, setRefreshData] = useState(false);
 
     useEffect(() => {
         async function fetchData() {
@@ -19,11 +20,13 @@ export function useFetchWorkoutData() {
             setUserSets(sets.rows);
         }
         fetchData();
-    }, []);
+        setRefreshData(false);
+    }, [refreshData]);
 
     return {
         userWorkouts,
         userExercises,
-        userSets
+        userSets,
+        setRefreshData
     };
 }
