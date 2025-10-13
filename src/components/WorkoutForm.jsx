@@ -96,7 +96,7 @@ function WorkoutForm({ onWorkoutSubmit }) {
         // Saves time in seconds
         const newTime = Number(minutes * 60) + Number(seconds);
         // Creates the date data
-        const workoutDate = `${month.padStart(2, '0')}-${day.padStart(2, '0')}-${year}`;
+        const workoutDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
 
         // Creates unique ID for wid
         const wid = ID.unique();
