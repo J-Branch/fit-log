@@ -21,4 +21,3 @@ export function useUniqueExerciseNames( exercises ) {
 
     return uniqueExercises;
 }
-

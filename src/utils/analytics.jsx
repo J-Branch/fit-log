@@ -36,3 +36,15 @@ export function filterWorkoutsByDateRange(workouts, range) {
     
     return workouts.filter(workout => new Date(workout.date) >= startDate);
 }
+
+export function getPercentageGrowth( chartData ) {
+    if (!chartData || chartData.length < 2) return null;
+
+    const first = chartData[0].value;
+    const last = chartData[chartData.length - 1].value;
+
+    if (first === 0) return null;
+
+    const change = ((last - first) / first) * 100;
+    return change.toFixed(2);
+}

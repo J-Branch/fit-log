@@ -1,7 +1,7 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useUniqueWorkoutNames, useUniqueExerciseNames } from '../hooks/useAnalyticsHooks';
-import { getWorkoutTotal, filterWorkoutsByDateRange } from '../utils/analytics'
+import { getWorkoutTotal, filterWorkoutsByDateRange, getPercentageGrowth } from '../utils/analytics'
 
 function WeightliftingGraph({ workouts, exercises, sets }) {
     const [workoutVariety, setWorkoutVariety] = useState('all');
@@ -12,7 +12,6 @@ function WeightliftingGraph({ workouts, exercises, sets }) {
     const workoutOptions = useUniqueWorkoutNames(workouts);
     const exerciseOptions = useUniqueExerciseNames(exercises);
 
-    
     // Turns data into (chartData) which will be accepted by recharts
     const chartData = useMemo(() => {
         let filteredWorkouts = filterWorkoutsByDateRange(workouts, selectedRange);
@@ -49,6 +48,10 @@ function WeightliftingGraph({ workouts, exercises, sets }) {
 
         return chartDataArray.sort((a, b) => new Date(a.date) - new Date(b.date));
     }, [workouts, exercises, sets, workoutVariety, selectedWorkout, selectedExercise, selectedRange]);
+
+    const percentageGrowth = useMemo(() => {
+        return getPercentageGrowth(chartData);
+    }, [chartData]);
 
     return (
         <>
@@ -91,6 +94,12 @@ function WeightliftingGraph({ workouts, exercises, sets }) {
                 <option value="1y">1 Year</option>
             </select>
 
+            {percentageGrowth !== null && (
+            <div style={{ margin: '0.5rem 0', fontWeight: 'bold', color: percentageGrowth > 0 ? 'green' : 'red' }}>
+                Growth: {percentageGrowth > 0 ? '+' : ''}{percentageGrowth}% {percentageGrowth > 0 ? '📈' : '📉'}
+            </div>
+            )}
+
             <br />
 
             <ResponsiveContainer width="100%" height={300}>
@@ -103,6 +112,7 @@ function WeightliftingGraph({ workouts, exercises, sets }) {
                     <Line 
                         type="monotone"
                         dataKey="value"
+                        name="Total Weight"
                         stroke="#8884d8"
                         activeDot={{ r:8 }}
                     />
