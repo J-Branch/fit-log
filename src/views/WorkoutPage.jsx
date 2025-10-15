@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import WorkoutForm from '../components/WorkoutForm';
+import WorkoutsForm from '../components/WorkoutsForm';
 import WorkoutList from '../components/WorkoutList';
 
 // COULD PROBABLY MAKE THE ADD WORKOUT BUTTON BETTER
@@ -25,7 +25,7 @@ function WorkoutPage() {
                     Add Workout
                 </button>
                 { /* Passes handleWorkoutSubmit function to WorkoutForm as submitWorkout */ }
-                {showForm && <WorkoutForm onWorkoutSubmit={handleWorkoutSubmit} />}
+                {showForm && <WorkoutsForm onWorkoutSubmit={handleWorkoutSubmit} />}
             </div>
             <div>
                 { /* Passes workout list as a prop to WorkoutList */ }

@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { listRows } from '../api/appwrite.workout';
+import { useUserContext } from '../context/user.context';
 
 export function useFetchWorkoutData() {
     const [userWorkouts, setUserWorkouts] = useState([]);
     const [userExercises, setUserExercises] = useState([]);
     const [userSets, setUserSets] = useState([]);
     const [refreshData, setRefreshData] = useState(false);
+    const { user } = useUserContext();
 
     useEffect(() => {
         async function fetchData() {
@@ -21,7 +23,7 @@ export function useFetchWorkoutData() {
         }
         fetchData();
         setRefreshData(false);
-    }, [refreshData]);
+    }, [refreshData, user]);
 
     return {
         userWorkouts,
