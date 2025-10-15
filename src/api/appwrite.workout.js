@@ -35,7 +35,7 @@ export function createRow(userId, tableId, rowId, payload) {
 };
 
 export function deleteRow(tableId, rowId) {
-    tablesdb.deleteRow({
+    return tablesdb.deleteRow({
         databaseId,
         tableId,
         rowId
@@ -43,8 +43,8 @@ export function deleteRow(tableId, rowId) {
 };
 
 export function updateRow(tableId, rowId, payload) {
-    const ownerRole = Role.user(userId);
-    tablesdb.updateRow({
+   // const ownerRole = Role.user(userId);
+   return tablesdb.updateRow({
         databaseId,
         tableId,
         rowId,

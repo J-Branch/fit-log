@@ -14,7 +14,7 @@ export function useWorkoutForm() {
         exercises: [
             {
                 name: "",
-                sets: [{setCounter: "", reps: "", weight: ""}],
+                sets: [{setCounter: 1, reps: "", weight: ""}],
             },
         ],
     });
