@@ -38,9 +38,9 @@ export function useSubmitWorkout({ form, isEditMode, onSuccess }) {
                 return;
             }
 
-            const workoutDate = `${date.month.padStart(2, "0")}-${date.day.padStart(
+            const workoutDate = `${date.year}-${date.month.padStart(2, "0")}-${date.day.padStart(
                 2, "0"
-            )}-${date.year}`;
+            )}`;
             const totalSeconds = Number(time.minutes) * 60 + Number(time.seconds);
 
             const wid = ID.unique();
