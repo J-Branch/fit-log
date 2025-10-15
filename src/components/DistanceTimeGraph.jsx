@@ -1,15 +1,25 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useUniqueWorkoutNames } from '../hooks/useAnalyticsHooks';
-import { filterWorkoutsByDateRange } from '../utils/analytics';
+import { filterWorkoutsByDateRange, getPercentageGrowth } from '../utils/analytics';
 
 function DistanceTimeGraph({ workouts }) {
     const [workoutVariety, setWorkoutVariety] = useState('all');
     const [selectedWorkout, setSelectedWorkout] = useState('');
     const [distOrTime, setDistOrTime] = useState('');
     const [selectedRange, setSelectedRange] = useState('all');
+    const [graphName, setGraphName] = useState('Total Distance');
 
     const workoutOptions = useUniqueWorkoutNames(workouts);
+
+    useEffect(() => {
+        if (distOrTime === 'distTotal') {
+            setGraphName('Total Distance');
+        }
+        if (distOrTime === 'mileTime') {
+            setGraphName('Average Mile Time');
+        }
+    }, [distOrTime]);
 
     // Turns data into (chartData) which will be accepted by recharts
     const chartData = useMemo(() => {
@@ -33,6 +43,10 @@ function DistanceTimeGraph({ workouts }) {
 
         return chartDataArray.sort((a, b) => new Date(a.date) - new Date(b.date));
     }, [workouts, workoutVariety, selectedWorkout, distOrTime, selectedRange]);
+
+    const percentageGrowth = useMemo(() => {
+        return getPercentageGrowth(chartData);
+    }, [chartData]);
 
     return (
         <>
@@ -68,6 +82,12 @@ function DistanceTimeGraph({ workouts }) {
                 <option value="1y">1 Year</option>
             </select>
 
+            {percentageGrowth !== null && (
+            <div style={{ margin: '0.5rem 0', fontWeight: 'bold', color: percentageGrowth > 0 ? 'green' : 'red' }}>
+                Growth: {percentageGrowth > 0 ? '+' : ''}{percentageGrowth}% {percentageGrowth > 0 ? '📈' : '📉'}
+            </div>
+            )}
+
             <br />
 
             <ResponsiveContainer width="100%" height={300}>
@@ -80,6 +100,7 @@ function DistanceTimeGraph({ workouts }) {
                     <Line 
                         type="monotone"
                         dataKey="value"
+                        name={graphName}
                         stroke="#8884d8"
                         activeDot={{ r:8 }}
                     />
