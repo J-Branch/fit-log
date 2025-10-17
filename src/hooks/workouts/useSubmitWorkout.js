@@ -4,11 +4,11 @@ import { createRow, updateRow } from "../../api/appwrite.workout";
 import toast from "react-hot-toast";
 import { useWorkoutContext } from "../../context/workout.context"
 import { getCurrentAuthSession } from "../../api/appwrite.auth";
-//import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export function useSubmitWorkout({ form, isEditMode, onSuccess }) {
     const { setRefreshData } = useWorkoutContext();
-    //const navigate = useNavigate();
+    const navigate = useNavigate();
     const [submitStatus, setSubmitStatus] = useState("IDLE");
 
     const handleSubmit = async (e) => {
@@ -68,7 +68,6 @@ export function useSubmitWorkout({ form, isEditMode, onSuccess }) {
                     const eid = ID.unique();
 
                     await createRow(currentUser.$id, "exercises", eid, {
-                        //wid: isEditMode ? form.$id : wid,
                         wid: wid,
                         exerciseName: exercise.name,
                     });
@@ -86,6 +85,7 @@ export function useSubmitWorkout({ form, isEditMode, onSuccess }) {
             }
 
             setSubmitStatus("SUCCESS");
+            navigate("/");
             setRefreshData(true);
             onSuccess?.();
 

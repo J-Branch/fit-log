@@ -51,3 +51,27 @@ export function updateRow(tableId, rowId, payload) {
         data: payload,
     });
 };
+
+export async function getWorkout(workoutTableId, exercisesTableId, setsTableId, workoutId) {
+    
+    // get the workout row
+    const workout = await getRow(workoutTableID, workoutId);
+
+    // get all exercises associated with the workout
+    const exercisesToWorkout = await listRows(exercisesTableId, [
+        `equal("workoutId", "${workoutId}")`,
+    ]);
+
+    const exercises = exercisesToWorkout || [];
+
+    // get all sets associated with the exercises
+    for(const exercise of exercises) {
+        const setsToExercise = await listRows(setsTableID, [
+            `equal("exerciseId", "${exercise.$id}")`,
+        ]);
+
+        exercise.sets = setsToExercise.rows || [];
+    }
+
+    return { ...workout, exercises };
+}

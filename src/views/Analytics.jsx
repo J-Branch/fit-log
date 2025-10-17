@@ -1,6 +1,6 @@
 import WeightliftingGraph from '../components/WeightliftingGraph';
 import DistanceTimeGraph from '../components/DistanceTimeGraph';
-import { useFetchWorkoutData } from '../hooks/useFetchWorkoutData';
+import { useFetchWorkoutData } from '../hooks/workouts/useFetchWorkoutData';
 import { useMemo } from 'react';
 
 function Analytics() {
