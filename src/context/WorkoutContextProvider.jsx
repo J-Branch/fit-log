@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useFetchWorkoutData } from "../hooks/useFetchWorkoutData";
+import { useFetchWorkoutData } from "../hooks/workouts/useFetchWorkoutData";
 import { WorkoutContext } from "./workout.context";
 
 export function WorkoutContextProvider(props) {

@@ -32,7 +32,6 @@ const routes = createBrowserRouter([
           {path:"groups", element: <GroupPage />},
         ],
       },
-
     ],
   },
 ]);

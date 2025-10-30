@@ -3,8 +3,8 @@ import { useParams } from "react-router-dom";
 import { produce } from "immer";
 
 export function useWorkoutForm() {
-    //const params = useParams();
-    //const isEditMode = Boolean(params.id);
+    const params = useParams();
+    const isEditMode = Boolean(params.id);
     const [form, setForm] = useState({
         workoutName: "",
         workoutType: "",
@@ -42,6 +42,8 @@ export function useWorkoutForm() {
 
     return {
         form,
-        updateForm
+        setForm,
+        updateForm,
+        isEditMode
     };
 };
