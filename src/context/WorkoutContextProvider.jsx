@@ -5,14 +5,21 @@ import { WorkoutContext } from "./workout.context";
 export function WorkoutContextProvider(props) {
     const { userWorkouts, userExercises, userSets, setRefreshData } = useFetchWorkoutData();
 
-    const lists = useMemo(() => {
-        return {
-            userWorkouts,
-            userExercises,
-            userSets,
-            setRefreshData
-        }
-    }, [userWorkouts, userExercises, userSets, setRefreshData]);
+    // const lists = useMemo(() => {
+    //     return {
+    //         userWorkouts,
+    //         userExercises,
+    //         userSets,
+    //         setRefreshData
+    //     }
+    // }, [userWorkouts, userExercises, userSets, setRefreshData]);
+
+    const lists = {
+        userWorkouts,
+        userExercises,
+        userSets,
+        setRefreshData,
+    };
 
     return (
         <WorkoutContext.Provider value={lists}>

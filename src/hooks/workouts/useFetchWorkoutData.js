@@ -9,8 +9,8 @@ export function useFetchWorkoutData() {
     const [refreshData, setRefreshData] = useState(false);
     const { user } = useUserContext();
 
-    useEffect(() => {
-        async function fetchData() {
+    async function fetchData() {
+        try {
             const [workouts, exercises, sets] = await Promise.all([
                 listRows("workouts"),
                 listRows("exercises"),
@@ -20,10 +20,16 @@ export function useFetchWorkoutData() {
             setUserWorkouts(workouts.rows);
             setUserExercises(exercises.rows);
             setUserSets(sets.rows);
+            setRefreshData(false);
+        } catch (error) {
+            console.error(error);
         }
+    };
+
+    useEffect (() => {
         fetchData();
-        setRefreshData(false);
     }, [refreshData, user]);
+
 
     return {
         userWorkouts,
