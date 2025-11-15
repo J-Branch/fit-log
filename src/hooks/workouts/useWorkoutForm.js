@@ -4,8 +4,13 @@ import { produce } from "immer";
 
 export function useWorkoutForm() {
     const params = useParams();
-    const isEditMode = Boolean(params.id);
+    //const isEditMode = Boolean(params.id);
+    const [updateArray, setUpdateArray] = useState([]);
+    const [deleteArray, setDeleteArray] = useState([]);
     const [form, setForm] = useState({
+        $id: null,
+        toDelete: false,
+        isDirty: false,
         workoutName: "",
         workoutType: "",
         date: {month: "", day: "", year: ""},
@@ -13,8 +18,20 @@ export function useWorkoutForm() {
         distance: "",
         exercises: [
             {
+                $id: null,
+                toDelete: false,
+                isDirty: false,
                 name: "",
-                sets: [{setCounter: 1, reps: "", weight: ""}],
+                sets: [
+                    {
+                        $id: null,
+                        toDelete: false,
+                        isDirty: false,
+                        setCounter: 1,
+                        reps: "",
+                        weight: "",
+                    }
+                ],
             },
         ],
     });
@@ -40,10 +57,52 @@ export function useWorkoutForm() {
         }));
     };
 
+    function trackChange(row, type, checked = true) {
+        if (type === "update") {
+            const updatedRow = { ...row, isDirty: true };
+
+            if (updatedRow.$id === form.$id) {
+                setForm(prev => ({ ...prev, isDirty: true}));
+                return;
+            }
+
+            setUpdateArray(prev => {
+                const index = prev.findIndex(i => i.$id === updatedRow.$id);
+                if (index > -1) {
+                    const copy = [...prev];
+                    copy[index] = updatedRow;
+                    return copy;
+                }
+                return [...prev, updatedRow];
+            });
+        }
+
+        if (type === "delete") {
+            const updatedRow = {...row, toDelete: checked};
+
+            if (updatedRow.$id === form.$id) {
+                setForm(prev => ({...prev, toDelete: checked}));
+                return;
+            }
+
+            setDeleteArray(prev => {
+                const exists = prev.find(i => i.$id === updatedRow.$id);
+                if (checked) {
+                    if (!exists) return [...prev, updatedRow];
+                    return prev;
+                } else {
+                    return prev.filter(i => i.$id !== updatedRow);
+                }
+            });
+        }
+    }
+
     return {
         form,
         setForm,
         updateForm,
-        isEditMode
+        updateArray,
+        deleteArray,
+        trackChange,
     };
 };
