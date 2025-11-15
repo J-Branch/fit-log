@@ -10,6 +10,9 @@ import WorkoutPage from './views/WorkoutPage.jsx'
 import NotFoundPage from './views/NotFoundPage.jsx'
 import Analytics from './views/Analytics.jsx'
 import GroupPage from './views/GroupPage.jsx'
+import ViewWorkouts from './views/test/ViewWorkouts.jsx'
+import CreateWorkout from './views/test/CreateWorkout.jsx'
+import EditWorkout from './views/test/EditWorkout.jsx'
 
 
 // defines all routes in the app
@@ -27,7 +30,9 @@ const routes = createBrowserRouter([
         children: [
           { index: true, element: <Dashboard />},
           {path:"dashboard", element: <Dashboard />},
-          {path:"workouts", element: <WorkoutPage />},
+          {path:"workouts", element: <ViewWorkouts />},
+          {path:"workouts/create", element: <CreateWorkout />},
+          {path:"workout/:id", element: <EditWorkout />},
           {path:"analytics", element: <Analytics />},
           {path:"groups", element: <GroupPage />},
         ],
