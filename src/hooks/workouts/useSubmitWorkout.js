@@ -3,6 +3,7 @@ import { ID } from "appwrite";
 import { createRow, deleteRow, updateRow } from "../../api/appwrite.workout";
 import { useWorkoutContext } from "../../context/workout.context";
 import { useUserContext } from "../../context/user.context";
+// import { getCurrentAuthSession } from "../../api/appwrite.auth";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
