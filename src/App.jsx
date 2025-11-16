@@ -3,6 +3,7 @@ import './App.css'
 import { Toaster } from "react-hot-toast";
 import { UserContextProvider } from './context/UserContextProvider';
 import { WorkoutContextProvider } from './context/WorkoutContextProvider';
+import { Suspense } from 'react';
 
 
 function App() {
@@ -10,7 +11,9 @@ function App() {
   return(
     <UserContextProvider>
       <WorkoutContextProvider>
-        <Outlet />
+        <Suspense loading={<div />}>
+          <Outlet />  
+        </Suspense>
         <Toaster />
       </WorkoutContextProvider>
     </UserContextProvider>

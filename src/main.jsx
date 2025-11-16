@@ -1,15 +1,17 @@
-import { StrictMode } from 'react'
+import { StrictMode, lazy } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Auth from './views/Auth.jsx'
-import Dashboard from './views/Dashboard.jsx'
-import MainPage from './views/MainPage.jsx'
-import WorkoutPage from './views/WorkoutPage.jsx'
-import NotFoundPage from './views/NotFoundPage.jsx'
-import Analytics from './views/Analytics.jsx'
-import GroupPage from './views/GroupPage.jsx'
+
+const Auth = lazy(() => import("./views/Auth.jsx"));
+const Dashboard = lazy(() => import("./views/Dashboard.jsx"));
+const MainPage = lazy(() => import("./views/MainPage.jsx"));
+const NotFoundPage = lazy(() => import("./views/NotFoundPage.jsx"));
+const Analytics = lazy(() => import("./views/Analytics.jsx"));
+const ViewWorkouts = lazy(() => import("./views/ViewWorkouts.jsx"));
+const CreateWorkout = lazy(() => import("./views/CreateWorkout.jsx"));
+const EditWorkout = lazy(() => import("./views/EditWorkout.jsx"));
 
 
 // defines all routes in the app
@@ -27,9 +29,10 @@ const routes = createBrowserRouter([
         children: [
           { index: true, element: <Dashboard />},
           {path:"dashboard", element: <Dashboard />},
-          {path:"workouts", element: <WorkoutPage />},
+          {path:"workouts", element: <ViewWorkouts />},
+          {path:"workouts/create", element: <CreateWorkout />},
+          {path:"workout/:id", element: <EditWorkout />},
           {path:"analytics", element: <Analytics />},
-          {path:"groups", element: <GroupPage />},
         ],
       },
     ],
