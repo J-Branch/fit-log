@@ -42,6 +42,14 @@ export function UserContextProvider(props) {
         }
     };
 
+    async function handleLogin(email, password) {
+        await login(email, password);
+
+        const newUser = await getCurrentAuthSession();
+        setUser(newUser);
+        return newUser;
+    }
+
     useEffect(() => {
 
         /**
@@ -66,7 +74,7 @@ export function UserContextProvider(props) {
 
     const actions = useMemo(() => {
         return {
-            login,
+            login: handleLogin,
             createAccount,
             logout: handleLogout,
             setUser,

@@ -14,23 +14,20 @@ function MainPage() {
     };
 
     return (
-        <div style={{display: "flex", height: "100vh" }}>
-            <nav style={{
-                flexShrink: 0,
-                width: "20%",             
-                maxWidth: "250px",        
-                minWidth: "150px",        
-                background: "#eee",
-                padding: "1rem",
-                boxSizing: "border-box"
-            }}>
+        <div style={{display: "flex", minHeight: "100vh" }}>
+            <nav 
+                className="w-[20%] max-w-[250px] bg-gray-200 p-4 sticky top-0 h-screen flex flex-col gap-4"
+            >
                 <h2>Fit Tracker</h2>
-                <ul>
+                <ul className="flex flex-col gap-2">
                     <li><Link to="/dashboard">Dashboard</Link></li>
                     <li><Link to="/workouts">Workouts</Link></li>
                     <li><Link to="/analytics">Analytics</Link></li>
                 </ul>
-                <button onClick={handleLogout}>Logout</button>
+                <button
+                    onClick={handleLogout}
+                    className="w-full text-left"
+                >Logout</button>
             </nav>
 
             <main style={{ flexGrow: 1, padding: "1rem" }}>
