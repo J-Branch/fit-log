@@ -62,8 +62,9 @@ function AuthPage() {
                 await createAccount(email, password);
             }
 
-            const loginSession = await login(email, password);
-            setUser(loginSession);
+            // const loginSession = await login(email, password);
+            // setUser(loginSession);
+            await login(email, password);
 
             navigate("/dashboard");
         } catch (error) {
