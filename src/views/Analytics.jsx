@@ -17,12 +17,12 @@ function Analytics() {
     return (
         <>
         
-            <div>
+            <div className="bg-primary-white p-4 rounded-md shadow-md">
                 <WeightliftingGraph workouts={weightliftingWorkouts} exercises={userExercises} sets={userSets} />
             </div>
         
 
-            <div>
+            <div className="bg-primary-gray p-4 rounded-md shadow-md">
                 <DistanceTimeGraph workouts={distanceTimeWorkouts} />
             </div>
         
