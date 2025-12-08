@@ -55,7 +55,7 @@ function WeightliftingGraph({ workouts, exercises, sets }) {
 
     return (
         <>
-            <div className="bg-primary-black">
+            <div className="bg-primary-red-one">
                 <label>Workout Variety:</label>
                 <select value={workoutVariety} onChange={(e) => setWorkoutVariety(e.target.value)}>
                     <option value="all">All Workouts</option>
@@ -97,15 +97,15 @@ function WeightliftingGraph({ workouts, exercises, sets }) {
             </div>
 
             {percentageGrowth !== null && (
-            <div style={{ margin: '0.5rem 0', fontWeight: 'bold', color: percentageGrowth > 0 ? 'green' : 'red' }}>
+            <div style={{ margin: '0.5rem 0', fontWeight: 'bold', color: percentageGrowth > 0 ? 'green' : '#800020' }}>
                 Growth: {percentageGrowth > 0 ? '+' : ''}{percentageGrowth}% {percentageGrowth > 0 ? '📈' : '📉'}
             </div>
             )}
 
             <br />
-            <div className="bg-primary-black">
+            <div>
                 <ResponsiveContainer width="100%" height={300}>
-                    <LineChart data={chartData} style={{ backgroundColor: '#F3EFF5'}}>
+                    <LineChart data={chartData}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="date" />
                         <YAxis />
@@ -115,7 +115,7 @@ function WeightliftingGraph({ workouts, exercises, sets }) {
                             type="monotone"
                             dataKey="value"
                             name="Total Weight"
-                            stroke="#800020"
+                            stroke="#972D43"
                             activeDot={{ r:8 }}
                         />
                     </LineChart>

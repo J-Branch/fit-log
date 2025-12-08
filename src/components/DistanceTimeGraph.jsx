@@ -49,7 +49,7 @@ function DistanceTimeGraph({ workouts }) {
     }, [chartData]);
 
     return (
-        <div classname="bg-primary-black">
+        <div className="bg-primary-black">
             <label>Workout Variety:</label>
             <select value={workoutVariety} onChange={(e) => setWorkoutVariety(e.target.value)}>
                 <option value="all">All Workouts</option>
@@ -83,7 +83,7 @@ function DistanceTimeGraph({ workouts }) {
             </select>
 
             {percentageGrowth !== null && (
-            <div style={{ margin: '0.5rem 0', fontWeight: 'bold', color: percentageGrowth > 0 ? 'green' : 'red' }}>
+            <div style={{ margin: '0.5rem 0', fontWeight: 'bold', color: percentageGrowth > 0 ? 'green' : '#800020' }}>
                 Growth: {percentageGrowth > 0 ? '+' : ''}{percentageGrowth}% {percentageGrowth > 0 ? '📈' : '📉'}
             </div>
             )}
@@ -101,7 +101,7 @@ function DistanceTimeGraph({ workouts }) {
                             type="monotone"
                             dataKey="value"
                             name={graphName}
-                            stroke="#8884d8"
+                            stroke="#972D43"
                             activeDot={{ r:8 }}
                         />
                     </LineChart>
