@@ -57,44 +57,19 @@ export function useWorkoutForm() {
         }));
     };
 
-    function trackChange(row, type, checked = true) {
-        if (type === "update") {
-            const updatedRow = { ...row, isDirty: true };
+    function toUpdateArray(obj, id) {
+        setUpdateArray(produce(draft => {
+            // returns index if there otherwise -1
+            const index = draft.findIndex(obj => obj.$id === id);
 
-            if (updatedRow.$id === form.$id) {
-                setForm(prev => ({ ...prev, isDirty: true}));
-                return;
+            // overwrites it if it exists, otherwise push it on
+            if(index !== -1) {
+                draft[index] = obj;
+            } else {
+                draft.push(obj);
             }
 
-            setUpdateArray(prev => {
-                const index = prev.findIndex(i => i.$id === updatedRow.$id);
-                if (index > -1) {
-                    const copy = [...prev];
-                    copy[index] = updatedRow;
-                    return copy;
-                }
-                return [...prev, updatedRow];
-            });
-        }
-
-        if (type === "delete") {
-            const updatedRow = {...row, toDelete: checked};
-
-            if (updatedRow.$id === form.$id) {
-                setForm(prev => ({...prev, toDelete: checked}));
-                return;
-            }
-
-            setDeleteArray(prev => {
-                const exists = prev.find(i => i.$id === updatedRow.$id);
-                if (checked) {
-                    if (!exists) return [...prev, updatedRow];
-                    return prev;
-                } else {
-                    return prev.filter(i => i.$id !== updatedRow);
-                }
-            });
-        }
+        }))
     }
 
     return {
