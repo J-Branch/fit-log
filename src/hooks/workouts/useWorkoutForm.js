@@ -78,6 +78,5 @@ export function useWorkoutForm() {
         updateForm,
         updateArray,
         deleteArray,
-        trackChange,
     };
 };

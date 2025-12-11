@@ -5,6 +5,7 @@ import { useWorkoutForm } from "../hooks/workouts/useWorkoutForm";
 import { FetchWorkout } from "../hooks/workouts/FetchWorkout";
 import { useWorkoutContext } from "../context/workout.context";
 import { useSubmitWorkout } from "../hooks/workouts/useSubmitWorkout";
+import { addExercise, addSet, removeExercise, removeSet } from "../utils/workoutHandlers";
 
 function EditWorkout() {
     const { id: workoutId } = useParams();
@@ -151,7 +152,7 @@ function EditWorkout() {
                         {isEditing && (
                             <button
                                 className="text-red-500"
-                                onClick={() => handleRemoveExercise(exIndex)}
+                                onClick={() => removeExercise(form, updateForm, exIndex)}
                             >
                                 Remove
                             </button>
@@ -204,7 +205,9 @@ function EditWorkout() {
                                         <button
                                             className="text-red-500"
                                             onClick={() =>
-                                                handleRemoveSet(
+                                                removeSet(
+                                                    form,
+                                                    updateForm,
                                                     exIndex,
                                                     setIndex
                                                 )
@@ -226,7 +229,7 @@ function EditWorkout() {
                     {isEditing && (
                         <button
                             className="text-blue-500"
-                            onClick={() => handleAddSet(exIndex)}
+                            onClick={() => addSet(form, updateForm, exIndex)}
                         >
                             + Add Set
                         </button>
@@ -238,7 +241,7 @@ function EditWorkout() {
                 <>
                     <button
                         className="text-green-600"
-                        onClick={handleAddExercise}
+                        onClick={() => addExercise(form, updateForm)}
                     >
                         + Add Exercise
                     </button>
