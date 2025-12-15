@@ -57,10 +57,10 @@ export function useWorkoutForm() {
         }));
     };
 
-    function toUpdateArray(obj, id) {
+    function toUpdateArray(obj) {
         setUpdateArray(produce(draft => {
             // returns index if there otherwise -1
-            const index = draft.findIndex(obj => obj.$id === id);
+            const index = draft.findIndex(item => item.$id === obj.$id);
 
             // overwrites it if it exists, otherwise push it on
             if(index !== -1) {
@@ -78,5 +78,6 @@ export function useWorkoutForm() {
         updateForm,
         updateArray,
         deleteArray,
+        toUpdateArray
     };
 };

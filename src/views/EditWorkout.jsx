@@ -12,7 +12,7 @@ function EditWorkout() {
 
     // --- ALWAYS top-level hooks (never inside conditions) ---
     const { userWorkouts, userExercises, userSets } = useWorkoutContext();
-    const { form, updateForm, setForm } = useWorkoutForm();
+    const { form, updateForm, setForm, updateArray, deleteArray, toUpdateArray} = useWorkoutForm();
     const [isEditing, setIsEditing] = useState(false);
     const [backupForm, setBackupForm] = useState(null);
 
@@ -28,11 +28,11 @@ function EditWorkout() {
         }
     }
 
-    function hendleSave() {
-        onEditSubmit();
-        setBackupForm(null);
-        setIsEditing(false);
-    }    
+    // function handleSave() {
+    //     onEditSubmit();
+    //     setBackupForm(null);
+    //     setIsEditing(false);
+    // }    
 
     // Memoize the fetched workout (safe: won't break hook order)
     const fetchedWorkout = useMemo(() => {
@@ -52,7 +52,7 @@ function EditWorkout() {
         }
     }, [fetchedWorkout]);
 
-    const { onEditSubmit, workoutSubmitStatus } = useSubmitWorkout({ form });
+    const { onEditSubmit, workoutSubmitStatus } = useSubmitWorkout({ form, updateArray, deleteArray });
 
     // -----------------------------
     // LOADING & NOT FOUND
@@ -89,14 +89,13 @@ function EditWorkout() {
                     <input
                         className="border p-2 text-xl font-semibold"
                         value={form.workoutName}
-                        onChange={(e) =>
-                            updateForm(["workoutName"], e.target.value)
-                        }
+                        onChange={(e) => {
+                            updateForm(["workoutName"], e.target.value);
+                            toUpdateArray({...form, workoutName: e.target.value});
+                        }}
                     />
                 ) : (
-                    <h1 className="text-2xl font-semibold">
-                        {form.workoutName}
-                    </h1>
+                    <h1 className="text-2xl font-semibold">{form.workoutName}</h1>
                 )}
             </div>
 
@@ -113,8 +112,23 @@ function EditWorkout() {
                     form={form}
                     updateForm={updateForm}
                     isEditing={isEditing}
+                    updateArray={updateArray}
+                    deleteArray={deleteArray}
+                    toUpdateArray={toUpdateArray}
                 />
             )}
+
+            {isEditing && (
+                <form onSubmit={onEditSubmit} className="space-y-4 mt-4">
+                    <button
+                        type="submit"
+                        className="px-4 py-2 bg-green-600 text-white rounded"
+                    >
+                        save changes
+                    </button>
+                </form>
+            )}
+            
         </div>
     );
 }

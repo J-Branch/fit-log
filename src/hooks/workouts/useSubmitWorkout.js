@@ -7,12 +7,12 @@ import { useUserContext } from "../../context/user.context";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
-export function useSubmitWorkout({ form }) {
+export function useSubmitWorkout({ form, updateArray=[], deleteArray=[]}) {
     const { setRefreshData } = useWorkoutContext();
     const navigate = useNavigate();
     const [workoutSubmitStatus, setWorkoutSubmitStatus] = useState("IDLE");
     const { user } = useUserContext();
-    const { workoutName, workoutType, date, time, distance, exercises, updateArray, deleteArray } = form;
+    const { workoutName, workoutType, date, time, distance, exercises} = form;
 
     const onWorkoutSubmit = async (e) => {
         e.preventDefault();
@@ -137,7 +137,7 @@ export function useSubmitWorkout({ form }) {
             if (updateArray.length > 0) {
                 for(const ex of updateArray.filter(i => i.name)) {
                 await updateRow("exercises", ex.$id, {
-                        name: ex.name
+                        exerciseName: ex.name
                     }); 
                 }
             }
@@ -146,7 +146,7 @@ export function useSubmitWorkout({ form }) {
             for(const ex of form.exercises.filter(i => i.$id === null)) {
                 const eid = ID.unique();
                 await createRow(user.$id, "exercises", eid, {
-                    name: ex.name,
+                    exerciseName: ex.name,
                     wid: form.$id,
                 });
 
@@ -185,6 +185,7 @@ export function useSubmitWorkout({ form }) {
             }
 
             setWorkoutSubmitStatus("SUCCESS");
+            navigate("/workouts")
             toast.success("Workout updated");
             setRefreshData(true);
             // figure out what to navigate to afterwards

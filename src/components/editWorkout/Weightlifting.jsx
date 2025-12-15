@@ -1,6 +1,6 @@
 import { addExercise, addSet, removeExercise, removeSet } from "../../utils/workoutHandlers";
 
-function Weightlifting({form, updateForm, isEditing}) {
+function Weightlifting({form, updateForm, isEditing, updateArray, deleteArray, toUpdateArray}) {
     return (
         <div className="space-y-4">
             {form.exercises.map((exercise, exerciseIndex) => (
@@ -10,7 +10,10 @@ function Weightlifting({form, updateForm, isEditing}) {
                             <input
                                 className="border p=2 font-semibold"
                                 value={exercise.name}
-                                onChange={(e) => updateForm(["exercises", exerciseIndex, "name"], e.target.value)} 
+                                onChange={(e) => {
+                                    updateForm(["exercises", exerciseIndex, "name"], e.target.value);
+                                    toUpdateArray({...exercise, name: e.target.value})
+                                }} 
                             />
                         ) : (
                             <h2 className="text-lg font-semibold">{exercise.name}</h2>
