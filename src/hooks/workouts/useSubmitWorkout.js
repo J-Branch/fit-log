@@ -113,25 +113,23 @@ export function useSubmitWorkout({ form, updateArray=[], deleteArray=[]}) {
                 }
             }
 
-            if (form.isDirty) {
 
-                const workoutDate = `${date.year}-${date.month.padStart(2, "0")}-${date.day.padStart(
-                    2, "0"
-                )}`;
+            // const workoutDate = `${date.year}-${date.month.padStart(2, "0")}-${date.day.padStart(
+            //     2, "0"
+            // )}`;
 
-                const payload = {
-                    workoutName: workoutName,
-                    workoutType: workoutType,
-                    date: workoutDate,
-                }
-
-                if(workoutType === "Distance/Time") {
-                    payload.time = Number(time.minutes) * 60 + Number(time.seconds);
-                    payload.distance = Number(distance);
-                }
-
-                await updateRow("workouts", form.$id, payload);
+            const payload = {
+                workoutName: workoutName,
+                workoutType: workoutType,
+                //date: workoutDate,
             }
+
+            if(workoutType === "Distance/Time") {
+                payload.time = Number(time.minutes) * 60 + Number(time.seconds);
+                payload.distance = Number(distance);
+            }
+
+            await updateRow("workouts", form.$id, payload);
 
             // update for exercise 
             if (updateArray.length > 0) {

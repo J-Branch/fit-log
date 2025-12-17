@@ -4,7 +4,7 @@ function Weightlifting({form, updateForm, isEditing, updateArray, deleteArray, t
     return (
         <div className="space-y-4">
             {form.exercises.map((exercise, exerciseIndex) => (
-                <div key={exercise.$id} className="border p-4 rounded space-y-3">
+                <div key={exercise.$id ?? `new-ex-${exerciseIndex}`} className="border p-4 rounded space-y-3">
                     <div className="flex justify-between">
                         {isEditing ? (
                             <input
@@ -28,7 +28,7 @@ function Weightlifting({form, updateForm, isEditing, updateArray, deleteArray, t
 
                     <div className="space-y-2">
                         {exercise.sets.map((set, setIndex) => (
-                            <div key={set.$id} className="flex items-center justify-between bg-gray-100 p-2 rounded">
+                            <div key={set.$id ?? `new-set-${setIndex}`} className="flex items-center justify-between bg-gray-100 p-2 rounded">
                                 {isEditing ? (
                                     <div className="flex gap-3">
                                         <input
