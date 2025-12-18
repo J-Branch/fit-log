@@ -1,6 +1,7 @@
 import { useWorkoutForm } from "../hooks/workouts/useWorkoutForm";
 import { useSubmitWorkout } from "../hooks/workouts/useSubmitWorkout";
 import { Link } from "react-router-dom";
+import { addExercise, addSet, removeExercise, removeSet } from "../utils/workoutHandlers";
 
 function CreateWorkout() {
     const { form, updateForm } = useWorkoutForm();
@@ -9,32 +10,6 @@ function CreateWorkout() {
         form
     });
 
-    function handleAddExercise() {
-        updateForm(["exercises"], [
-            ...form.exercises,
-            { name: "", sets: [{ setCounter: "", reps: "", weight:"" }] },
-        ]);
-    }
-
-    function handleAddSet(exerciseIndex) {
-        const currentSets = form.exercises[exerciseIndex].sets;
-        updateForm(["exercises", exerciseIndex, "sets"], [
-            ...currentSets,
-            { setCounter: currentSets.length + 1, reps: "", weight: ""},
-        ]);
-    }
-
-    function handleRemoveExercise(exerciseIndex) {
-        updateForm(
-            ["exercises"],
-            form.exercises.filter((_, i) => i !== exerciseIndex)
-        );
-    }
-
-    function handleRemoveSet(exerciseIndex, setIndex) {
-        const newSets = form.exercises[exerciseIndex].sets.filter((_, i) => i !== setIndex);
-        updateForm(["exercises", exerciseIndex, "sets"], newSets);
-    }
 
     return (
         // <div className="min-h-screen px-8 pb-16 bg-white md:w-3/4 md:ml-auto md:pr-0 md:pl-16 md:pb-24">
@@ -147,23 +122,23 @@ function CreateWorkout() {
                                                         updateForm(["exercises", exerciseIndex, "sets", setIndex, "weight"], e.target.value)
                                                     }
                                                 />
-                                                <button onClick={() => handleRemoveSet(exerciseIndex, setIndex)}>
+                                                <button onClick={() => removeSet(form, updateForm, exerciseIndex, setIndex)}>
                                                     Remove Set
                                                 </button>
                                                 <br /><br />
                                             </div>
                                         ))}
 
-                                        <button type="button" onClick={() => handleAddSet(exerciseIndex)}>
+                                        <button type="button" onClick={() => addSet(form, updateForm, exerciseIndex)}>
                                             ➕ Add Set
                                         </button><br />
-                                        <button type="button" onClick={() => handleRemoveExercise(exerciseIndex)}>
+                                        <button type="button" onClick={() => removeExercise(form, updateForm, exerciseIndex)}>
                                             ❌ Remove Exercise
                                         </button>
                                     </div>
                                 ))}
 
-                                <button type="button" onClick={handleAddExercise}>
+                                <button type="button" onClick={() => addExercise(form, updateForm)}>
                                     ➕ Add Exercise
                                 </button><br /><br />
                             </>
