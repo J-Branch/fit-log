@@ -55,7 +55,7 @@ function WeightliftingGraph({ workouts, exercises, sets }) {
 
     return (
         <>
-            <div className="bg-primary-red-one">
+            <div className="bg-primary-white">
                 <label>Workout Variety:</label>
                 <select value={workoutVariety} onChange={(e) => setWorkoutVariety(e.target.value)}>
                     <option value="all">All Workouts</option>
@@ -103,7 +103,7 @@ function WeightliftingGraph({ workouts, exercises, sets }) {
             )}
 
             <br />
-            <div>
+            <div className="w-full h-[400px]">
                 <ResponsiveContainer width="100%" height={300}>
                     <LineChart data={chartData}>
                         <CartesianGrid strokeDasharray="3 3" />

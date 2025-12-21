@@ -49,7 +49,7 @@ function DistanceTimeGraph({ workouts }) {
     }, [chartData]);
 
     return (
-        <div className="bg-primary-black">
+        <div className="">
             <label>Workout Variety:</label>
             <select value={workoutVariety} onChange={(e) => setWorkoutVariety(e.target.value)}>
                 <option value="all">All Workouts</option>
@@ -89,7 +89,7 @@ function DistanceTimeGraph({ workouts }) {
             )}
 
             <br />
-            <div className="h-96">
+            <div className="w-full h-[400px]">
                 <ResponsiveContainer width="100%" height={300}>
                     <LineChart data={chartData}>
                         <CartesianGrid strokeDasharray="3 3" />
