@@ -1,16 +1,11 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
 import { produce } from "immer";
 
 export function useWorkoutForm() {
-    const params = useParams();
-    //const isEditMode = Boolean(params.id);
     const [updateArray, setUpdateArray] = useState([]);
     const [deleteArray, setDeleteArray] = useState([]);
     const [form, setForm] = useState({
         $id: null,
-        toDelete: false,
-        isDirty: false,
         workoutName: "",
         workoutType: "",
         date: {month: "", day: "", year: ""},
@@ -19,14 +14,10 @@ export function useWorkoutForm() {
         exercises: [
             {
                 $id: null,
-                toDelete: false,
-                isDirty: false,
                 name: "",
                 sets: [
                     {
                         $id: null,
-                        toDelete: false,
-                        isDirty: false,
                         setCounter: 1,
                         reps: "",
                         weight: "",
@@ -62,7 +53,7 @@ export function useWorkoutForm() {
             // returns index if there otherwise -1
             const index = draft.findIndex(item => item.$id === obj.$id);
 
-            // overwrites it if it exists, otherwise push it on
+            // overwrites it if it exists, otherwise add it to array
             if(index !== -1) {
                 draft[index] = obj;
             } else {

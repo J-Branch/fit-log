@@ -26,13 +26,7 @@ function EditWorkout() {
             setForm(backupForm);
             setIsEditing(false);
         }
-    }
-
-    // function handleSave() {
-    //     onEditSubmit();
-    //     setBackupForm(null);
-    //     setIsEditing(false);
-    // }    
+    }   
 
     // Memoize the fetched workout (safe: won't break hook order)
     const fetchedWorkout = useMemo(() => {

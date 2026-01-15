@@ -42,13 +42,14 @@ export function UserContextProvider(props) {
         }
     };
 
-    async function handleLogin(email, password) {
-        await login(email, password);
+    // async function handleLogin(email, password) {
+    //     await login(email, password);
 
-        const newUser = await getCurrentAuthSession();
-        setUser(newUser);
-        return newUser;
-    }
+    //     const newUser = await getCurrentAuthSession();
+    //     setUser(newUser);
+    //     console.log("session is now", newUser);
+    //     return newUser;
+    // }
 
     useEffect(() => {
 
@@ -60,6 +61,7 @@ export function UserContextProvider(props) {
             if(!user && !location.pathname.includes("auth")) {
                 navigate("/auth/login");
             }
+
         } else {
             initUserSession();
         }
@@ -68,19 +70,27 @@ export function UserContextProvider(props) {
     const value = useMemo(() => {
         return {
             user,
-            userId: user ? user.$id : null,
         };
     }, [user]);
 
+    // const actions = useMemo(() => {
+    //     return {
+    //         login: handleLogin,
+    //         createAccount,
+    //         logout: handleLogout,
+    //         setUser,
+    //     };
+    // }, []);
+
     const actions = useMemo(() => {
         return {
-            login: handleLogin,
+            login,
             createAccount,
             logout: handleLogout,
             setUser,
         };
     }, []);
-
+    
     return (
         <UserContext.Provider value={value}>
             <UserActionsContext.Provider value={actions}>

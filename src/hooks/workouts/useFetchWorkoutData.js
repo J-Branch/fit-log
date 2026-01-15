@@ -1,14 +1,12 @@
 import { useState, useEffect } from 'react';
 import { listRows } from '../../api/appwrite.workout';
 import { useUserContext } from '../../context/user.context';
-import { getCurrentAuthSession } from '../../api/appwrite.auth';
 
 export function useFetchWorkoutData() {
     const [userWorkouts, setUserWorkouts] = useState([]);
     const [userExercises, setUserExercises] = useState([]);
     const [userSets, setUserSets] = useState([]);
     const [refreshData, setRefreshData] = useState(false);
-    // const user = getCurrentAuthSession();
     const { user } = useUserContext();
 
     useEffect(() => {

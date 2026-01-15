@@ -3,7 +3,6 @@ import { ID } from "appwrite";
 import { createRow, deleteRow, updateRow } from "../../api/appwrite.workout";
 import { useWorkoutContext } from "../../context/workout.context";
 import { useUserContext } from "../../context/user.context";
-// import { getCurrentAuthSession } from "../../api/appwrite.auth";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
@@ -21,8 +20,6 @@ export function useSubmitWorkout({ form, updateArray=[], deleteArray=[]}) {
 
         try {
             setWorkoutSubmitStatus("PENDING");
-
-            // const { workoutName, workoutType, date, time, distance, exercises, updateArray, deleteArray, trackChange } = form;
 
             if (!workoutName || !workoutType || !date.month || !date.year) {
                 toast.error("Please fill out all required fields.");
@@ -113,15 +110,9 @@ export function useSubmitWorkout({ form, updateArray=[], deleteArray=[]}) {
                 }
             }
 
-
-            // const workoutDate = `${date.year}-${date.month.padStart(2, "0")}-${date.day.padStart(
-            //     2, "0"
-            // )}`;
-
             const payload = {
                 workoutName: workoutName,
                 workoutType: workoutType,
-                //date: workoutDate,
             }
 
             if(workoutType === "Distance/Time") {
@@ -186,7 +177,6 @@ export function useSubmitWorkout({ form, updateArray=[], deleteArray=[]}) {
             navigate("/workouts")
             toast.success("Workout updated");
             setRefreshData(true);
-            // figure out what to navigate to afterwards
         } catch (error) {
             console.error(error);
             setWorkoutSubmitStatus("ERROR");
