@@ -1,4 +1,4 @@
-import { Outlet, createBrowserRouter } from "react-router-dom";
+import { Outlet, createBrowserRouter, redirect } from "react-router-dom";
 import App from "../App";
 import MainPage from "../views/MainPage";
 import Auth from "../views/Auth";
@@ -9,28 +9,30 @@ import EditWorkout from "../views/EditWorkout";
 import Analytics from "../views/Analytics";
 import NotFoundPage from "../views/NotFoundPage";
 
+
 import { rootLoader } from "../loaders/root.loader";
 import { protectedLoader } from "../loaders/protected.loader";
 import { authLoader } from "../loaders/auth.loader";
 import { authAction } from "../actions/auth.action";
+import { logoutAction } from "../actions/logout.action";
 
 export const router = createBrowserRouter([
     {
         path: "/",
         element: <App />,
-        loader: rootLoader,
         errorElement: <NotFoundPage />,
         children: [
             {
                 path: "auth",
+                element: <Outlet />,
                 loader: authLoader,
-                action: authAction,
                 children: [
-                    { path: "login", element: <Auth /> },
-                    { path: "register", element: <Auth /> },
+                    { path: "login", element: <Auth />, action: authAction },
+                    { path: "register", element: <Auth />, action: authAction },
                 ],
             },
             {
+                path: "/",
                 element: <MainPage />,
                 loader: protectedLoader,
                 children: [
@@ -46,7 +48,8 @@ export const router = createBrowserRouter([
                             { path: ":id", element: <EditWorkout /> },
                         ]
                     },
-                    { path: "analytics", element: <Analytics /> }
+                    { path: "analytics", element: <Analytics /> },
+                    { path: "logout", action: logoutAction },
                 ]
             }
         ]

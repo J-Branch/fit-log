@@ -1,4 +1,4 @@
-import {Outlet, Link, useNavigate, replace} from "react-router-dom"
+import {Outlet, Link, Form} from "react-router-dom"
 import { useUserActionsContext } from "../context/user.context";
 
 
@@ -24,10 +24,12 @@ function MainPage() {
                     <li><Link to="/workouts">Workouts</Link></li>
                     <li><Link to="/analytics">Analytics</Link></li>
                 </ul>
-                <button
-                    onClick={handleLogout}
-                    className="w-full text-left"
-                >Logout</button>
+
+                <Form method="post" action="/logout">
+                    <button type="submit" className="w-full tesxt-left">
+                        Logout
+                    </button>
+                </Form>
             </nav>
 
             <main style={{ flexGrow: 1, padding: "1rem" }}>
