@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
 import { useWorkoutForm } from "../hooks/workouts/useWorkoutForm";
 import { FetchWorkout } from "../hooks/workouts/FetchWorkout";
-import { useWorkoutContext } from "../context/workout.context";
+// import { useWorkoutContext } from "../context/workout.context";
 import { useSubmitWorkout } from "../hooks/workouts/useSubmitWorkout";
 import Weightlifting from "../components/editWorkout/Weightlifting";
 

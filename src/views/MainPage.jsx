@@ -1,17 +1,17 @@
 import {Outlet, Link, Form} from "react-router-dom"
-import { useUserActionsContext } from "../context/user.context";
+import { useAuthActionsContext } from "../context/auth.context";
 
 
 function MainPage() {
-    const { logout } = useUserActionsContext();
+    const { logout } = useAuthActionsContext();
 
-    async function handleLogout() {
-        try{
-            await logout();
-        } catch (err){
-            console.error("logout failed:", err);
-        } 
-    };
+    // async function handleLogout() {
+    //     try{
+    //         await logout();
+    //     } catch (err){
+    //         console.error("logout failed:", err);
+    //     } 
+    // };
 
     return (
         <div style={{display: "flex", minHeight: "100vh" }}>

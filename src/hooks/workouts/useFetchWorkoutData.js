@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { listRows } from '../../api/appwrite.workout';
-import { useUserContext } from '../../context/user.context';
+// import { useUserContext } from '../../context/user.context';
 
 export function useFetchWorkoutData() {
     const [userWorkouts, setUserWorkouts] = useState([]);

@@ -2,15 +2,12 @@ import { redirect } from "react-router-dom";
 import { getCurrentAuthSession } from "../api/appwrite.auth";
 
 export async function authLoader() {
-    console.log("hello");
-    const user = await getCurrentAuthSession();
+    console.log("auth ran");
+    const user = getCurrentAuthSession().catch(() => null);
 
     if (user) {
-        console.log("this is running");
-        throw redirect("/dashboard");
+        throw redirect("/home");
     }
-
-    console.log("the auth loader is not running");
 
     return null;
 }

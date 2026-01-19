@@ -1,4 +1,4 @@
-import { Outlet, createBrowserRouter, redirect } from "react-router-dom";
+import { Navigate, createBrowserRouter, redirect } from "react-router-dom";
 import App from "../App";
 import MainPage from "../views/MainPage";
 import Auth from "../views/Auth";
@@ -10,11 +10,13 @@ import Analytics from "../views/Analytics";
 import NotFoundPage from "../views/NotFoundPage";
 
 
-import { rootLoader } from "../loaders/root.loader";
+
 import { protectedLoader } from "../loaders/protected.loader";
 import { authLoader } from "../loaders/auth.loader";
 import { authAction } from "../actions/auth.action";
-import { logoutAction } from "../actions/logout.action";
+
+import AuthLayout from "../views/layouts/AuthLayout";
+import AppLayout from "../views/layouts/AppLayout";
 
 export const router = createBrowserRouter([
     {
@@ -23,35 +25,28 @@ export const router = createBrowserRouter([
         errorElement: <NotFoundPage />,
         children: [
             {
-                path: "auth",
-                element: <Outlet />,
-                loader: authLoader,
+                element: <AuthLayout />,
                 children: [
                     { path: "login", element: <Auth />, action: authAction },
                     { path: "register", element: <Auth />, action: authAction },
+                    { index: true, element: <Navigate to="login" /> },
                 ],
             },
             {
-                path: "/",
-                element: <MainPage />,
+                element: <AppLayout />,
                 loader: protectedLoader,
                 children: [
-                    { index: true, element: <Dashboard /> },
-                    { path: "dashboard", element: <Dashboard /> },
                     {
-                        path: "workouts",
-                        //loader: workoutsLoader,
-                        element: <Outlet />,
+                        path: "home",
+                        element: <MainPage />,
                         children: [
-                            { index: true, element: <ViewWorkouts /> },
-                            { path: "create", element: <CreateWorkout /> },
-                            { path: ":id", element: <EditWorkout /> },
-                        ]
+                            { index: true, element: <Dashboard /> },
+                            { path: "workouts", element: <ViewWorkouts /> },
+                            { path: "analytics", element: <Analytics /> },
+                        ],
                     },
-                    { path: "analytics", element: <Analytics /> },
-                    { path: "logout", action: logoutAction },
-                ]
-            }
-        ]
-    }
+                ],
+            },
+        ],
+    },
 ]);

@@ -1,13 +1,11 @@
-//import { useState } from "react";
-import { Form, useLocation } from "react-router-dom";
-//import { useUserActionsContext } from "../context/user.context";
+import { Form, useActionData, useLocation, Link } from "react-router-dom";
 
 const config = {
     login: {
         header: "Login",
         submitButtonText: "Log in",
         toggleAuthModeLink: {
-            to: "/auth/register",
+            to: "/register",
             text: "Create a new account",
         },
     },
@@ -16,19 +14,20 @@ const config = {
         header: "Create Account",
         submitButtonText: "Register",
         toggleAuthModeLink: {
-            to: "/auth/login",
+            to: "/login",
             text: "Already have an account?",
         },
     },
 };
 
 function AuthPage() {
-    //const { setUser } = useUserActionsContext();
 
     const location = useLocation();
     const isCreateAccountPage = location.pathname.includes("register");
     const { header, submitButtonText, toggleAuthModeLink } = 
         config[isCreateAccountPage ? "register" : "login"];
+
+        const error = useActionData();
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-[#B23A48] via-[#972d43] to-[#800020]">

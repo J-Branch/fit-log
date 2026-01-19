@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { ID } from "appwrite";
 import { createRow, deleteRow, updateRow } from "../../api/appwrite.workout";
-import { useWorkoutContext } from "../../context/workout.context";
-import { useUserContext } from "../../context/user.context";
+// import { useWorkoutContext } from "../../context/workout.context";
+// import { useUserContext } from "../../context/user.context";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 

@@ -1,13 +1,13 @@
 import { redirect } from "react-router-dom";
 import { login, createAccount } from "../api/appwrite.auth"
-import { useUserActionsContext } from "../context/user.context";
+import { useAuthActionsContext } from "../context/auth.context";
 
 export async function authAction({ request }) {
     const formData = await request.formData();
     const email = formData.get("email");
     const password = formData.get("password");
     const mode = formData.get("mode");
-    const { setUser } = useUserActionsContext();
+    //const { setUser } = useUserActionsContext();
 
     if (!email || !password) {
         return { error: "Email and password required" };
