@@ -7,19 +7,22 @@ export async function authAction({ request }) {
     const email = formData.get("email");
     const password = formData.get("password");
     const mode = formData.get("mode");
-    //const { setUser } = useUserActionsContext();
 
     if (!email || !password) {
         return { error: "Email and password required" };
     }
 
-    if ( mode === "register") {
-        await createAccount(email, password);
+    try {
+        if (mode === "register") {
+            await createAccount(email, password);
+        }
+
         await login(email, password);
-        
+
+        return redirect("/home");
+    } catch (err) {
+        return {
+            error: err.message || "Authentication failed",
+        };
     }
-
-    await login(email, password);
-
-    return redirect("/dashboard");
 }

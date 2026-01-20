@@ -26,7 +26,7 @@ function MainPage() {
                 </ul>
 
                 <Form method="post" action="/logout">
-                    <button type="submit" className="w-full tesxt-left">
+                    <button type="submit" className="w-full text-left">
                         Logout
                     </button>
                 </Form>

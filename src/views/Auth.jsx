@@ -27,7 +27,8 @@ function AuthPage() {
     const { header, submitButtonText, toggleAuthModeLink } = 
         config[isCreateAccountPage ? "register" : "login"];
 
-        const error = useActionData();
+        const actionData = useActionData();
+        const error = actionData?.error;
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-[#B23A48] via-[#972d43] to-[#800020]">
@@ -39,6 +40,7 @@ function AuthPage() {
                         <input
                             id="email-field"
                             className="w-full px-4 py-2 rounded-md shadow"
+                            name="email"
                             type="email"
                             defaultValue=""  
                         />
@@ -47,8 +49,15 @@ function AuthPage() {
                         <input
                             id="password-field"
                             className="w-full px-4 py-2 rounded-md shadow"
+                            name="password"
                             type="password"
                             defaultValue=""
+                        />
+
+                        <input
+                            type="hidden"
+                            name="mode"
+                            value={isCreateAccountPage ? "register" : "login"}
                         />
                     </div>
 

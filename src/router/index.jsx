@@ -14,6 +14,7 @@ import NotFoundPage from "../views/NotFoundPage";
 import { protectedLoader } from "../loaders/protected.loader";
 import { authLoader } from "../loaders/auth.loader";
 import { authAction } from "../actions/auth.action";
+import { logoutAction } from "../actions/logout.action";
 
 import AuthLayout from "../views/layouts/AuthLayout";
 import AppLayout from "../views/layouts/AppLayout";
@@ -33,9 +34,11 @@ export const router = createBrowserRouter([
                 ],
             },
             {
+                id: "AppLayout",
                 element: <AppLayout />,
                 loader: protectedLoader,
                 children: [
+                    { path: "logout", action: logoutAction },
                     {
                         path: "home",
                         element: <MainPage />,

@@ -3,9 +3,5 @@ import { logout } from "../api/appwrite.auth";
 
 export async function logoutAction() {
     await logout();
-    return redirect("/auth");
-}
-
-export default function Logout() {
-    return null;
+    return redirect("/login");
 }
