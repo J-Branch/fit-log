@@ -1,17 +1,6 @@
 import {Outlet, Link, Form} from "react-router-dom"
-import { useAuthActionsContext } from "../context/auth.context";
-
 
 function MainPage() {
-    const { logout } = useAuthActionsContext();
-
-    // async function handleLogout() {
-    //     try{
-    //         await logout();
-    //     } catch (err){
-    //         console.error("logout failed:", err);
-    //     } 
-    // };
 
     return (
         <div style={{display: "flex", minHeight: "100vh" }}>
@@ -20,9 +9,9 @@ function MainPage() {
             >
                 <h2>Fit Tracker</h2>
                 <ul className="flex flex-col gap-2">
-                    <li><Link to="/dashboard">Dashboard</Link></li>
-                    <li><Link to="/workouts">Workouts</Link></li>
-                    <li><Link to="/analytics">Analytics</Link></li>
+                    <li><Link to="dashboard">Dashboard</Link></li>
+                    <li><Link to="workouts">Workouts</Link></li>
+                    <li><Link to="analytics">Analytics</Link></li>
                 </ul>
 
                 <Form method="post" action="/logout">

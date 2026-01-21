@@ -1,9 +1,9 @@
-// import { useWorkoutContext } from "../context/workout.context";
-import { Link } from "react-router-dom";
+import { Link, useRouteLoaderData } from "react-router-dom";
 
 function ViewWorkouts() {
     // just need the workouts and add a link to click
-    const { userWorkouts } = useWorkoutContext();
+    // const { userWorkouts } = useWorkoutContext();
+    const { userWorkouts } = useRouteLoaderData("AppLayout");
 
     return (
         <div>
