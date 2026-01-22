@@ -27,8 +27,8 @@ function AuthPage() {
     const { header, submitButtonText, toggleAuthModeLink } = 
         config[isCreateAccountPage ? "register" : "login"];
 
-        const actionData = useActionData();
-        const error = actionData?.error;
+    const actionData = useActionData();
+    const error = actionData?.error;
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-[#B23A48] via-[#972d43] to-[#800020]">

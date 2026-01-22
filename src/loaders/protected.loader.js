@@ -6,7 +6,7 @@ export async function protectedLoader() {
     console.log("protected loader ran");
 
     const user = await getCurrentAuthSession().catch(() => null);
-    if (!user) throw redirect("/login");
+    if (!user) return redirect("/login");
 
     console.log("getting stuff from db...");
     console.log("user id is: ", user.$id);
@@ -18,8 +18,8 @@ export async function protectedLoader() {
     ]);
 
     const userWorkouts = workoutsRes.rows;
-    const userExercises = exercisesRes;
-    const userSets = setsRes;
+    const userExercises = exercisesRes.rows;
+    const userSets = setsRes.rows;
 
     return {
         userWorkouts,

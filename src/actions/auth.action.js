@@ -1,6 +1,5 @@
 import { redirect } from "react-router-dom";
 import { login, createAccount } from "../api/appwrite.auth"
-import { useAuthActionsContext } from "../context/auth.context";
 
 export async function authAction({ request }) {
     const formData = await request.formData();
@@ -18,7 +17,6 @@ export async function authAction({ request }) {
         }
 
         await login(email, password);
-
         return redirect("/home");
     } catch (err) {
         return {

@@ -17,7 +17,7 @@ import AppLayout from "../views/layouts/AppLayout";
 
 // Loaders 
 import { protectedLoader } from "../loaders/protected.loader";
-import { mainPageLoader } from "../loaders/mainPage.loader";
+import { authLoader } from "../loaders/auth.loader";
 
 // Actions 
 import { authAction } from "../actions/auth.action";
@@ -31,6 +31,7 @@ export const router = createBrowserRouter([
         children: [
             {
                 element: <AuthLayout />,
+                loader: authLoader,
                 children: [
                     { path: "login", element: <Auth />, action: authAction },
                     { path: "register", element: <Auth />, action: authAction },
@@ -51,6 +52,8 @@ export const router = createBrowserRouter([
                             { index: true, element: <Dashboard /> },
                             { path: "dashboard", element: <Dashboard /> },
                             { path: "workouts", element: <ViewWorkouts /> },
+                            { path: "workouts/create", element: <CreateWorkout /> },
+                            { path: "workout/:id", element: <EditWorkout />},
                             { path: "analytics", element: <Analytics /> },
                         ],
                     },

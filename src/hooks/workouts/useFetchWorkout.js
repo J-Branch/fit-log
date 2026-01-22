@@ -1,9 +1,11 @@
-export function FetchWorkout({ workoutId, userWorkouts, userExercises, userSets }) {
+import { useRouteLoaderData } from "react-router-dom";
+
+export function useFetchWorkout(workoutId) {
+    const { userWorkouts, userExercises, userSets } = useRouteLoaderData("AppLayout");
 
     const workout = userWorkouts.find(workout => workout.$id === workoutId);
-
     const exercises = userExercises.filter(exercise => exercise.wid === workoutId);
-
+    
     const fullExercises = exercises.map(exercise => {
         const setsOfExercise = userSets
         .filter(set => set.eid === exercise.$id)
@@ -30,5 +32,4 @@ export function FetchWorkout({ workoutId, userWorkouts, userExercises, userSets 
         distance: workout.distance,
         exercises: fullExercises,
     };
-
 }

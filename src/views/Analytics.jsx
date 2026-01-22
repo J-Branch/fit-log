@@ -1,10 +1,10 @@
 import WeightliftingGraph from '../components/WeightliftingGraph';
 import DistanceTimeGraph from '../components/DistanceTimeGraph';
-import { useFetchWorkoutData } from '../hooks/workouts/useFetchWorkoutData';
+import { useRouteLoaderData } from 'react-router-dom';
 import { useMemo } from 'react';
 
 function Analytics() {
-    const { userWorkouts, userExercises, userSets } = useFetchWorkoutData();
+    const { userWorkouts, userExercises, userSets } = useRouteLoaderData();
 
     const weightliftingWorkouts = useMemo(() =>
         userWorkouts.filter(w => w.workoutType === 'Weightlifting'),

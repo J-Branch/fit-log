@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { AuthActionsContext, AuthContext } from "./auth.context";
+import { AuthActionsContext, AuthContext } from "./user.context";
 import { login, logout, createAccount } from "../api/appwrite.auth";
 
 export function AuthContextProvider(props) {

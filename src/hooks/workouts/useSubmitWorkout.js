@@ -7,10 +7,10 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 export function useSubmitWorkout({ form, updateArray=[], deleteArray=[]}) {
-    const { setRefreshData } = useWorkoutContext();
+    // const { setRefreshData } = useWorkoutContext();
     const navigate = useNavigate();
     const [workoutSubmitStatus, setWorkoutSubmitStatus] = useState("IDLE");
-    const { user } = useUserContext();
+    // const { user } = useUserContext();
     const { workoutName, workoutType, date, time, distance, exercises} = form;
 
     const onWorkoutSubmit = async (e) => {
