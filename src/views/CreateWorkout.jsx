@@ -1,12 +1,24 @@
 import { useWorkoutForm } from "../hooks/workouts/useWorkoutForm";
 // import { useSubmitWorkout } from "../hooks/workouts/useSubmitWorkout";
-import { Link, Form, useNavigation } from "react-router-dom";
+import { Link, Form, useNavigation, useActionData } from "react-router-dom";
 import { addExercise, addSet, removeExercise, removeSet } from "../utils/workoutHandlers";
+import { useEffect } from "react";
+import toast, { Toast } from "react-hot-toast";
 
 function CreateWorkout() {
     const { form, updateForm } = useWorkoutForm();
     const navigation = useNavigation();
     const isSubmitting = navigation.state === "submitting";
+
+    // used for errors for the toast popups
+    const actionData = useActionData();
+    const error = actionData?.error;
+
+    useEffect(() => {
+        if (error) {
+            toast.error(error);
+        }
+    }, [error]);
 
     return (
         // <div className="min-h-screen px-8 pb-16 bg-white md:w-3/4 md:ml-auto md:pr-0 md:pl-16 md:pb-24">
@@ -150,6 +162,11 @@ function CreateWorkout() {
                                 ➕ Add Exercise
                             </button><br /><br />
                         </>
+                    )}
+
+                    {/* hidden input for heavily nested exercises object */}
+                    {form.workoutType === "Weightlifting" && (
+                        <input type="hidden" name="exercises" value={JSON.stringify(form.exercises)} />
                     )}
 
                     <button type="submit" disabled={isSubmitting}>
