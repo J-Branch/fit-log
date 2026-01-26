@@ -4,7 +4,7 @@ import { useRouteLoaderData } from 'react-router-dom';
 import { useMemo } from 'react';
 
 function Analytics() {
-    const { userWorkouts, userExercises, userSets } = useRouteLoaderData();
+    const { userWorkouts, userExercises, userSets } = useRouteLoaderData("AppLayout");
 
     const weightliftingWorkouts = useMemo(() =>
         userWorkouts.filter(w => w.workoutType === 'Weightlifting'),

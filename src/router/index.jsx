@@ -1,4 +1,4 @@
-import { Navigate, createBrowserRouter, redirect } from "react-router-dom";
+import { Navigate, createBrowserRouter } from "react-router-dom";
 import App from "../App";
 
 // Pages
@@ -22,6 +22,7 @@ import { authLoader } from "../loaders/auth.loader";
 // Actions 
 import { authAction } from "../actions/auth.action";
 import { logoutAction } from "../actions/logout.action";
+import { workoutSubmit } from "../actions/workoutSubmit.action";
 
 export const router = createBrowserRouter([
     {
@@ -52,7 +53,7 @@ export const router = createBrowserRouter([
                             { index: true, element: <Dashboard /> },
                             { path: "dashboard", element: <Dashboard /> },
                             { path: "workouts", element: <ViewWorkouts /> },
-                            { path: "workouts/create", element: <CreateWorkout /> },
+                            { path: "workouts/create", element: <CreateWorkout />, action: workoutSubmit },
                             { path: "workout/:id", element: <EditWorkout />},
                             { path: "analytics", element: <Analytics /> },
                         ],
