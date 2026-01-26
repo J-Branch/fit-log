@@ -38,7 +38,7 @@ function ViewWorkouts() {
 
                     </div>
                 ) : (
-                    <Link to="/workout/create">
+                    <Link to="/workouts/create">
                         You have no workouts. Create One!
                     </Link>
                 )
