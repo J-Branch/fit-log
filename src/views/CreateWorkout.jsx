@@ -3,7 +3,7 @@ import { useWorkoutForm } from "../hooks/workouts/useWorkoutForm";
 import { Link, Form, useNavigation, useActionData } from "react-router-dom";
 import { addExercise, addSet, removeExercise, removeSet } from "../utils/workoutHandlers";
 import { useEffect } from "react";
-import toast, { Toast } from "react-hot-toast";
+import Toast from "react-hot-toast";
 
 function CreateWorkout() {
     const { form, updateForm } = useWorkoutForm();
@@ -16,7 +16,7 @@ function CreateWorkout() {
 
     useEffect(() => {
         if (error) {
-            toast.error(error);
+            Toast.error(error);
         }
     }, [error]);
 
