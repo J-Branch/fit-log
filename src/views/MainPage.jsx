@@ -1,17 +1,6 @@
-import {Outlet, Link, useNavigate, replace} from "react-router-dom"
-import { useUserActionsContext } from "../context/user.context";
-
+import {Outlet, Link, Form} from "react-router-dom"
 
 function MainPage() {
-    const { logout } = useUserActionsContext();
-
-    async function handleLogout() {
-        try{
-            await logout();
-        } catch (err){
-            console.error("logout failed:", err);
-        } 
-    };
 
     return (
         <div style={{display: "flex", minHeight: "100vh" }}>
@@ -20,14 +9,16 @@ function MainPage() {
             >
                 <h2>Fit Tracker</h2>
                 <ul className="flex flex-col gap-2">
-                    <li><Link to="/dashboard">Dashboard</Link></li>
-                    <li><Link to="/workouts">Workouts</Link></li>
-                    <li><Link to="/analytics">Analytics</Link></li>
+                    <li><Link to="dashboard">Dashboard</Link></li>
+                    <li><Link to="workouts">Workouts</Link></li>
+                    <li><Link to="analytics">Analytics</Link></li>
                 </ul>
-                <button
-                    onClick={handleLogout}
-                    className="w-full text-left"
-                >Logout</button>
+
+                <Form method="post" action="/logout">
+                    <button type="submit" className="w-full text-left">
+                        Logout
+                    </button>
+                </Form>
             </nav>
 
             <main style={{ flexGrow: 1, padding: "1rem" }}>

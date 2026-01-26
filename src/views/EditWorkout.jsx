@@ -1,20 +1,24 @@
-// EditWorkout.jsx
-import { useParams, Link } from "react-router-dom";
-import { useEffect, useState, useMemo } from "react";
+import { Link, useParams} from "react-router-dom";
+import { useState, useEffect } from "react";
 import { useWorkoutForm } from "../hooks/workouts/useWorkoutForm";
-import { FetchWorkout } from "../hooks/workouts/FetchWorkout";
-import { useWorkoutContext } from "../context/workout.context";
 import { useSubmitWorkout } from "../hooks/workouts/useSubmitWorkout";
 import Weightlifting from "../components/editWorkout/Weightlifting";
+import { useFetchWorkout } from "../hooks/workouts/useFetchWorkout";
 
 function EditWorkout() {
-    const { id: workoutId } = useParams();
+    const params = useParams();
+    const workoutId = params.id;
 
-    // --- ALWAYS top-level hooks (never inside conditions) ---
-    const { userWorkouts, userExercises, userSets } = useWorkoutContext();
+    const fetchedWorkout = useFetchWorkout(workoutId);
     const { form, updateForm, setForm, updateArray, deleteArray, toUpdateArray} = useWorkoutForm();
     const [isEditing, setIsEditing] = useState(false);
     const [backupForm, setBackupForm] = useState(null);
+
+    useEffect(() => {
+        if (fetchedWorkout && !form.$id) {
+            setForm(fetchedWorkout);
+        }
+    }, [fetchedWorkout]);
 
     function handleEditToggle() {
         if (!isEditing) {
@@ -26,40 +30,17 @@ function EditWorkout() {
             setForm(backupForm);
             setIsEditing(false);
         }
-    }
+    }   
 
-    // function handleSave() {
-    //     onEditSubmit();
-    //     setBackupForm(null);
-    //     setIsEditing(false);
-    // }    
-
-    // Memoize the fetched workout (safe: won't break hook order)
-    const fetchedWorkout = useMemo(() => {
-        if (!userWorkouts.length) return null; // data not loaded yet
-        return FetchWorkout({
-            workoutId,
-            userWorkouts,
-            userExercises,
-            userSets,
-        });
-    }, [workoutId, userWorkouts, userExercises, userSets]);
-
-    // Sync fetched workout into form ONLY when it becomes available
-    useEffect(() => {
-        if (fetchedWorkout && form.$id !== fetchedWorkout.$id) {
-            setForm(fetchedWorkout);
-        }
-    }, [fetchedWorkout]);
 
     const { onEditSubmit, workoutSubmitStatus } = useSubmitWorkout({ form, updateArray, deleteArray });
 
     // -----------------------------
     // LOADING & NOT FOUND
     // -----------------------------
-    if (!userWorkouts.length) {
-        return <div>Loading workout...</div>;
-    }
+    // if (!userWorkouts.length) {
+    //     return <div>Loading workout...</div>;
+    // }
 
     if (!fetchedWorkout) {
         return (
@@ -79,7 +60,7 @@ function EditWorkout() {
     // -----------------------------
     return (
         <div className="space-y-4">
-            <Link to="/workouts" className="text-blue-500">
+            <Link to="../workouts" className="text-blue-500">
                 Back to workouts
             </Link>
 
