@@ -1,46 +1,41 @@
 import { Link, useParams} from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useWorkoutForm } from "../hooks/workouts/useWorkoutForm";
-import { useSubmitWorkout } from "../hooks/workouts/useSubmitWorkout";
 import Weightlifting from "../components/editWorkout/Weightlifting";
+import DistanceTime from "../components/editWorkout/DistanceTime";
 import { useFetchWorkout } from "../hooks/workouts/useFetchWorkout";
+import { useWorkoutArrays } from "../hooks/workouts/useWorkoutArrays";
 
 function EditWorkout() {
     const params = useParams();
     const workoutId = params.id;
 
     const fetchedWorkout = useFetchWorkout(workoutId);
-    const { form, updateForm, setForm, updateArray, deleteArray, toUpdateArray} = useWorkoutForm();
+    // const { form, updateForm, setForm, updateArray, deleteArray, toUpdateArray} = useWorkoutForm();
+    const { form, updateForm, setForm } = useWorkoutForm();
+    const { upArr, delArr, toUpArr, toDelArr } = useWorkoutArrays();
     const [isEditing, setIsEditing] = useState(false);
     const [backupForm, setBackupForm] = useState(null);
 
+    // populate the form with the workout the user editing
     useEffect(() => {
         if (fetchedWorkout && !form.$id) {
             setForm(fetchedWorkout);
         }
     }, [fetchedWorkout]);
 
+    // keep a backup up of the form in case of cancel
     function handleEditToggle() {
         if (!isEditing) {
-            // ENTER edit mode → take snapshot
-            setBackupForm(structuredClone(form)); // safest deep clone
+            // ENTER edit mode keep a copy of workout
+            setBackupForm(structuredClone(fetchedWorkout));
             setIsEditing(true);
         } else {
-            // CANCEL edit → restore snapshot
+            // CANCEL edit restore copy
             setForm(backupForm);
             setIsEditing(false);
         }
     }   
-
-
-    const { onEditSubmit, workoutSubmitStatus } = useSubmitWorkout({ form, updateArray, deleteArray });
-
-    // -----------------------------
-    // LOADING & NOT FOUND
-    // -----------------------------
-    // if (!userWorkouts.length) {
-    //     return <div>Loading workout...</div>;
-    // }
 
     if (!fetchedWorkout) {
         return (
@@ -72,7 +67,7 @@ function EditWorkout() {
                         value={form.workoutName}
                         onChange={(e) => {
                             updateForm(["workoutName"], e.target.value);
-                            toUpdateArray({...form, workoutName: e.target.value});
+                            toUpArr({...form, workoutName: e.target.value});
                         }}
                     />
                 ) : (
@@ -93,13 +88,22 @@ function EditWorkout() {
                     form={form}
                     updateForm={updateForm}
                     isEditing={isEditing}
-                    updateArray={updateArray}
-                    deleteArray={deleteArray}
-                    toUpdateArray={toUpdateArray}
+                    toUpArr={toUpArr}
+                    toDelArr={toDelArr}
                 />
             )}
 
-            {isEditing && (
+            {form.workoutType === "Distance/Time" && (
+                <DistanceTime
+                    form={form}
+                    updateForm={updateForm}
+                    isEditing={isEditing}
+                    toUpArr={toUpArr}
+                    toDelArr={toDelArr}
+                />
+            )}
+
+            {/* {isEditing && (
                 <form onSubmit={onEditSubmit} className="space-y-4 mt-4">
                     <button
                         type="submit"
@@ -108,7 +112,7 @@ function EditWorkout() {
                         save changes
                     </button>
                 </form>
-            )}
+            )} */}
             
         </div>
     );
