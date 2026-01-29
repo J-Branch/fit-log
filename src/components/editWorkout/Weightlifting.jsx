@@ -1,7 +1,7 @@
 import { addExercise, addSet, removeExercise, removeSet } from "../../utils/workoutHandlers";
 import { Form } from "react-router-dom";
 
-function Weightlifting({form, updateForm, isEditing, toUpArr}) {
+function Weightlifting({form, updateForm, isEditing, toUpArr, toDelArr}) {
     return (
         <>
             <Form method="post">

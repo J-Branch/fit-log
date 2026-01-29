@@ -98,8 +98,6 @@ function EditWorkout() {
                     form={form}
                     updateForm={updateForm}
                     isEditing={isEditing}
-                    toUpArr={toUpArr}
-                    toDelArr={toDelArr}
                 />
             )}
 
