@@ -6,6 +6,7 @@ export function useWorkoutForm() {
     const [deleteArray, setDeleteArray] = useState([]);
     const [form, setForm] = useState({
         $id: null,
+        delete: null,
         workoutName: "",
         workoutType: "",
         date: {month: "", day: "", year: ""},
