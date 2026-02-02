@@ -1,4 +1,4 @@
-import { Client, TablesDB } from "node-appwrite";
+import { Client, TablesDB, Query } from "node-appwrite";
 
 export default async ({ req, res, log, error }) => {
   const DATABASE_ID = process.env.APPWRITE_DATABASE_ID;
@@ -21,9 +21,16 @@ export default async ({ req, res, log, error }) => {
     const quoteList = await db.listRows({
       databaseId: DATABASE_ID,
       tableId: QUOTES_TABLE_ID,
-      limit: 1,
-      offset: randomIndex
+      queries: [
+        Query.orderAsc("$id"),
+        Query.limit(1),
+        Query.offset(randomIndex)
+      ]
     });
+
+    log(`Quote ID returned: ${quoteList.rows[0].$id}`);
+
+    
     
     if (!quoteList.rows.length) throw new Error("No quote found at that index.");
     
