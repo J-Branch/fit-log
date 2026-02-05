@@ -32,7 +32,7 @@ function MainPage() {
                 >Logout</button>
             </NavWrapper>
 
-            <main style={{ flexGrow: 1, padding: "1rem" }}>
+            <main style={{ flexGrow: 1 }}>
                 <Outlet />
             </main>
         </div>

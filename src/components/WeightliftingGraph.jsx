@@ -55,69 +55,72 @@ function WeightliftingGraph({ workouts, exercises, sets }) {
 
     return (
         <>
-            <label>Workout Variety:</label>
-            <select value={workoutVariety} onChange={(e) => setWorkoutVariety(e.target.value)}>
-                <option value="all">All Workouts</option>
-                <option value="specificWorkout">Specific Workouts</option>
-                <option value="specificExercise">Specific Exercises</option>
-            </select>
+            <div className="bg-primary-white">
+                <label>Workout Variety:</label>
+                <select value={workoutVariety} onChange={(e) => setWorkoutVariety(e.target.value)}>
+                    <option value="all">All Workouts</option>
+                    <option value="specificWorkout">Specific Workouts</option>
+                    <option value="specificExercise">Specific Exercises</option>
+                </select>
 
-            {workoutVariety === 'specificWorkout' && (
-                <>
-                    <label>Specific Workout:</label>
-                    <select value={selectedWorkout} onChange={(e) => setSelectedWorkout(e.target.value)}>
-                        <option value="" disabled>-- Select Specific Workout --</option>
-                        {workoutOptions.map(name => (
-                            <option key={name} value={name}>{name}</option>
-                        ))}
-                    </select>
-                </>
-            )}
+                {workoutVariety === 'specificWorkout' && (
+                    <>
+                        <label>Specific Workout:</label>
+                        <select value={selectedWorkout} onChange={(e) => setSelectedWorkout(e.target.value)}>
+                            <option value="" disabled>-- Select Specific Workout --</option>
+                            {workoutOptions.map(name => (
+                                <option key={name} value={name}>{name}</option>
+                            ))}
+                        </select>
+                    </>
+                )}
 
-            {workoutVariety === 'specificExercise' && (
-                <>
-                    <label>Specific Exercise:</label>
-                    <select value={selectedExercise} onChange={(e) => setSelectedExercise(e.target.value)}>
-                        <option value="" disabled>-- Select Specific Exercise --</option>
-                        {exerciseOptions.map(name => (
-                            <option key={name} value={name}>{name}</option>
-                        ))}
-                    </select>
-                </>
-            )}
+                {workoutVariety === 'specificExercise' && (
+                    <>
+                        <label>Specific Exercise:</label>
+                        <select value={selectedExercise} onChange={(e) => setSelectedExercise(e.target.value)}>
+                            <option value="" disabled>-- Select Specific Exercise --</option>
+                            {exerciseOptions.map(name => (
+                                <option key={name} value={name}>{name}</option>
+                            ))}
+                        </select>
+                    </>
+                )}
 
-            <label>Time Range:</label>
-            <select value={selectedRange} onChange={(e) => setSelectedRange(e.target.value)}>
-                <option value="all">All Time</option>
-                <option value="1m">1 Month</option>
-                <option value="6m">6 Months</option>
-                <option value="1y">1 Year</option>
-            </select>
+                <label>Time Range:</label>
+                <select value={selectedRange} onChange={(e) => setSelectedRange(e.target.value)}>
+                    <option value="all">All Time</option>
+                    <option value="1m">1 Month</option>
+                    <option value="6m">6 Months</option>
+                    <option value="1y">1 Year</option>
+                </select>
+            </div>
 
             {percentageGrowth !== null && (
-            <div style={{ margin: '0.5rem 0', fontWeight: 'bold', color: percentageGrowth > 0 ? 'green' : 'red' }}>
+            <div style={{ margin: '0.5rem 0', fontWeight: 'bold', color: percentageGrowth > 0 ? 'green' : '#800020' }}>
                 Growth: {percentageGrowth > 0 ? '+' : ''}{percentageGrowth}% {percentageGrowth > 0 ? '📈' : '📉'}
             </div>
             )}
 
             <br />
-
-            <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="date" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Line 
-                        type="monotone"
-                        dataKey="value"
-                        name="Total Weight"
-                        stroke="#8884d8"
-                        activeDot={{ r:8 }}
-                    />
-                </LineChart>
-            </ResponsiveContainer>
+            <div className="w-full h-[400px]">
+                <ResponsiveContainer width="100%" height={300}>
+                    <LineChart data={chartData}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="date" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Line 
+                            type="monotone"
+                            dataKey="value"
+                            name="Total Weight"
+                            stroke="#972D43"
+                            activeDot={{ r:8 }}
+                        />
+                    </LineChart>
+                </ResponsiveContainer>
+            </div>
         </>
     )
 }
