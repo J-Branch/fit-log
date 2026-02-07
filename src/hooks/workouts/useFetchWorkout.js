@@ -11,6 +11,7 @@ export function useFetchWorkout(workoutId) {
         .filter(set => set.eid === exercise.$id)
         .map((set, i) => ({
             $id: set.$id,
+            eid: set.eid,
             setCounter: i + 1,
             reps: set.reps,
             weight: set.weight,
@@ -18,7 +19,7 @@ export function useFetchWorkout(workoutId) {
 
         return {
             $id: exercise.$id,
-            name: exercise.exerciseName,
+            exerciseName: exercise.exerciseName,
             sets: setsOfExercise,
         };
     });

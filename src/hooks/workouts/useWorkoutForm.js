@@ -7,6 +7,7 @@ export function useWorkoutForm() {
     const [form, setForm] = useState({
         $id: null,
         delete: null,
+        table: "workouts",
         workoutName: "",
         workoutType: "",
         date: {month: "", day: "", year: ""},
@@ -15,10 +16,13 @@ export function useWorkoutForm() {
         exercises: [
             {
                 $id: null,
-                name: "",
+                table: "exercises",
+                exerciseName: "",
                 sets: [
                     {
                         $id: null,
+                        table: "sets",
+                        eid: null,
                         setCounter: 1,
                         reps: "",
                         weight: "",

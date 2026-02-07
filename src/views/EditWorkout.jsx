@@ -4,18 +4,21 @@ import { useWorkoutForm } from "../hooks/workouts/useWorkoutForm";
 import Weightlifting from "../components/editWorkout/Weightlifting";
 import DistanceTime from "../components/editWorkout/DistanceTime";
 import { useFetchWorkout } from "../hooks/workouts/useFetchWorkout";
-import { useWorkoutArrays } from "../hooks/workouts/useWorkoutArrays";
 
 function EditWorkout() {
     const params = useParams();
     const workoutId = params.id;
 
     const fetchedWorkout = useFetchWorkout(workoutId);
-    // const { form, updateForm, setForm, updateArray, deleteArray, toUpdateArray} = useWorkoutForm();
     const { form, updateForm, setForm } = useWorkoutForm();
-    const { upArr, delArr, toUpArr, toDelArr } = useWorkoutArrays();
-    const [isEditing, setIsEditing] = useState(false);
+    const [mode, setMode] = useState("view");
     const [backupForm, setBackupForm] = useState(null);
+    const [selectedForDelete, setSelectedForDelete] = useState({
+        workout: null,
+        exercises: new Set(),
+        sets: new Set()
+    });
+    const [toUpArr, setToUpArr] = useState({});
 
     // populate the form with the workout the user editing
     useEffect(() => {
@@ -26,14 +29,20 @@ function EditWorkout() {
 
     // keep a backup up of the form in case of cancel
     function handleEditToggle() {
-        if (!isEditing) {
+        if (mode === "view") {
             // ENTER edit mode keep a copy of workout
             setBackupForm(structuredClone(fetchedWorkout));
-            setIsEditing(true);
+            setMode("edit");
         } else {
             // CANCEL edit restore copy
             setForm(backupForm);
-            setIsEditing(false);
+            setToUpArr({});
+            setSelectedForDelete({
+                workout: null,
+                exercises: new Set(),
+                sets: new Set()
+            });
+            setMode("view");
         }
     }   
 
@@ -61,13 +70,12 @@ function EditWorkout() {
 
             {/* Workout Name */}
             <div>
-                {isEditing ? (
+                {mode === "edit" ? (
                     <input
                         className="border p-2 text-xl font-semibold"
                         value={form.workoutName}
                         onChange={(e) => {
                             updateForm(["workoutName"], e.target.value);
-                            toUpArr({...form, workoutName: e.target.value});
                         }}
                     />
                 ) : (
@@ -80,16 +88,16 @@ function EditWorkout() {
                 onClick={handleEditToggle}
                 className="px-4 py-2 bg-gray-800 text-white rounded"
             >
-                {isEditing ? "Cancel" : "Edit Workout"}
+                {mode === "edit" ? "Cancel" : "Edit Workout"}
             </button>
 
             {form.workoutType === "Weightlifting" && (
                 <Weightlifting
                     form={form}
                     updateForm={updateForm}
-                    isEditing={isEditing}
-                    toUpArr={toUpArr}
-                    toDelArr={toDelArr}
+                    mode={mode}
+                    setToUpArr={setToUpArr}
+                    
                 />
             )}
 
@@ -97,21 +105,10 @@ function EditWorkout() {
                 <DistanceTime
                     form={form}
                     updateForm={updateForm}
-                    isEditing={isEditing}
+                    mode={mode}
                 />
             )}
 
-            {/* {isEditing && (
-                <form onSubmit={onEditSubmit} className="space-y-4 mt-4">
-                    <button
-                        type="submit"
-                        className="px-4 py-2 bg-green-600 text-white rounded"
-                    >
-                        save changes
-                    </button>
-                </form>
-            )} */}
-            
         </div>
     );
 }

@@ -12,14 +12,14 @@ function Weightlifting({form, updateForm, isEditing, toUpArr, toDelArr}) {
                                 {isEditing ? (
                                     <input
                                         className="border p=2 font-semibold"
-                                        value={exercise.name}
+                                        value={exercise.exerciseName}
                                         onChange={(e) => {
-                                            updateForm(["exercises", exerciseIndex, "name"], e.target.value);
-                                            toUpArr({...exercise, name: e.target.value})
+                                            updateForm(["exercises", exerciseIndex, "exerciseName"], e.target.value);
+                                            toUpArr({...exercise, exerciseName: e.target.value})
                                         }} 
                                     />
                                 ) : (
-                                    <h2 className="text-lg font-semibold">{exercise.name}</h2>
+                                    <h2 className="text-lg font-semibold">{exercise.exerciseName}</h2>
                                 )}
 
                                 {isEditing && (
