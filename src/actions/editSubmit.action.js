@@ -7,17 +7,27 @@ export async function editSubmit({ request }) {
     try {
         const user = await getCurrentAuthSession();
         const formData = await request.formData();
+        const form = JSON.parse(formData.get("payload"));
 
-        const workoutName = formData.get("workoutName");
-        const workoutType = formData.get("workoutType");
-        const dateMonth = formData.get("dateMonth");
-        const dateDay = formData.get("dateDay");
-        const dateYear = formData.get("dateYear");
+        // will recursively walk through the form and call update on anything that needs to be updated
+        async function updateWorkout(node) {
+            if (node.isDirty && node.$id) {
+                await updateRow(node.table, node.$id, node);
+            }
 
-        const minutes = formData.get("durationMinutes");
-        const seconds = formData.get("durationSeconds");
-        const distance = formData.get("distance");
+            if (Array.isArray(node.exercises)) {
+                for (const exercise of node.exercises) {
+                    await updateWorkout(exercise);
+                }
+            }
 
+            if(Array.isArray(node.sets)) {
+                for (const set of node.sets) {
+                    await updateWorkout(set);
+                }
+            }
+        }
+ 
     } catch (error) {
         return {error: error};
     }

@@ -1,7 +1,7 @@
 import { addExercise, addSet, removeExercise, removeSet } from "../../utils/workoutHandlers";
 import { Form } from "react-router-dom";
 
-function Weightlifting({form, updateForm, isEditing, toUpArr, toDelArr}) {
+function Weightlifting({form, updateForm, mode}) {
     return (
         <>
             <Form method="post">
@@ -9,7 +9,7 @@ function Weightlifting({form, updateForm, isEditing, toUpArr, toDelArr}) {
                     {form.exercises.map((exercise, exerciseIndex) => (
                         <div key={exercise.$id ?? `new-ex-${exerciseIndex}`} className="border p-4 rounded space-y-3">
                             <div className="flex justify-between">
-                                {isEditing ? (
+                                {mode === "edit" ? (
                                     <input
                                         className="border p=2 font-semibold"
                                         value={exercise.exerciseName}
@@ -22,7 +22,7 @@ function Weightlifting({form, updateForm, isEditing, toUpArr, toDelArr}) {
                                     <h2 className="text-lg font-semibold">{exercise.exerciseName}</h2>
                                 )}
 
-                                {isEditing && (
+                                {mode === "edit" && (
                                     <button className="text-red-500" onClick={() => removeExercise(form, updateForm, exerciseIndex)}>
                                         Remove
                                     </button>
@@ -32,7 +32,7 @@ function Weightlifting({form, updateForm, isEditing, toUpArr, toDelArr}) {
                             <div className="space-y-2">
                                 {exercise.sets.map((set, setIndex) => (
                                     <div key={set.$id ?? `new-set-${setIndex}`} className="flex items-center justify-between bg-gray-100 p-2 rounded">
-                                        {isEditing ? (
+                                        {mode === "edit" ? (
                                             <div className="flex gap-3">
                                                 <input
                                                     type="number"
@@ -92,7 +92,7 @@ function Weightlifting({form, updateForm, isEditing, toUpArr, toDelArr}) {
                                 ))}
                             </div>
 
-                            {isEditing && (
+                            {mode === "edit" && (
                                 <button
                                     className="text-blue-500"
                                     onClick={() => addSet(form, updateForm, exerciseIndex)}
@@ -103,7 +103,7 @@ function Weightlifting({form, updateForm, isEditing, toUpArr, toDelArr}) {
                         </div> 
                     ))}
 
-                    {isEditing && (
+                    {mode === "edit" && (
                         <>
                             <button
                                 className="text-green-600"
@@ -114,6 +114,12 @@ function Weightlifting({form, updateForm, isEditing, toUpArr, toDelArr}) {
                         </>
                     )}
                 </div>
+
+                <input
+                    type="hidden"
+                    name="payload"
+                    value={JSON.stringify(form)}
+                />
             </Form>
         </>
     );

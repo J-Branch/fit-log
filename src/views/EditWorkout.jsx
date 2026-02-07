@@ -18,7 +18,6 @@ function EditWorkout() {
         exercises: new Set(),
         sets: new Set()
     });
-    const [toUpArr, setToUpArr] = useState({});
 
     // populate the form with the workout the user editing
     useEffect(() => {
@@ -36,7 +35,6 @@ function EditWorkout() {
         } else {
             // CANCEL edit restore copy
             setForm(backupForm);
-            setToUpArr({});
             setSelectedForDelete({
                 workout: null,
                 exercises: new Set(),
@@ -96,7 +94,7 @@ function EditWorkout() {
                     form={form}
                     updateForm={updateForm}
                     mode={mode}
-                    setToUpArr={setToUpArr}
+                    selectedForDelete={selectedForDelete}
                     
                 />
             )}
