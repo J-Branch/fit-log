@@ -10,20 +10,32 @@ function Weightlifting({form, updateForm, mode}) {
                         <div key={exercise.$id ?? `new-ex-${exerciseIndex}`} className="border p-4 rounded space-y-3">
                             <div className="flex justify-between">
                                 {mode === "edit" ? (
-                                    <input
-                                        className="border p=2 font-semibold"
-                                        value={exercise.exerciseName}
-                                        onChange={(e) => {
-                                            updateForm(["exercises", exerciseIndex, "exerciseName"], e.target.value);
-                                            toUpArr({...exercise, exerciseName: e.target.value})
-                                        }} 
-                                    />
+                                    <div className="flex items-center space-x-4">
+                                        <input
+                                            type="checkbox"
+                                            onClick={(e) => {
+                                                toggleDelete();
+                                            }} 
+                                        />
+                                        <input
+                                            className="border p=2 font-semibold"
+                                            value={exercise.exerciseName}
+                                            onChange={(e) => {
+                                                updateForm(["exercises", exerciseIndex, "exerciseName"], e.target.value);
+                                            }} 
+                                        />
+
+                                    </div>
                                 ) : (
                                     <h2 className="text-lg font-semibold">{exercise.exerciseName}</h2>
                                 )}
 
-                                {mode === "edit" && (
-                                    <button className="text-red-500" onClick={() => removeExercise(form, updateForm, exerciseIndex)}>
+                                {mode === "edit" && !exercise.$id && (
+                                    <button 
+                                        type="button"
+                                        className="text-red-500"
+                                        onClick={() => removeExercise(form, updateForm, exerciseIndex)}
+                                    >
                                         Remove
                                     </button>
                                 )}
@@ -68,19 +80,7 @@ function Weightlifting({form, updateForm, mode}) {
                                                         )
                                                     }
                                                 />
-                                                <button
-                                                    className="text-red-500"
-                                                    onClick={() =>
-                                                        removeSet(
-                                                            form,
-                                                            updateForm,
-                                                            exerciseIndex,
-                                                            setIndex
-                                                        )
-                                                    }
-                                                >
-                                                    ✕
-                                                </button>
+                                                
                                             </div>
                                         ): (
                                             <span>
@@ -88,12 +88,23 @@ function Weightlifting({form, updateForm, mode}) {
                                                 {set.weight} lbs
                                             </span>
                                         )}
+
+                                        {mode === "edit" && !set.$id && (
+                                            <button 
+                                                type="button"
+                                                className="text-red-500"
+                                                onClick={() => removeSet(form, updateForm, exerciseIndex, setIndex)}
+                                            >
+                                                ✕
+                                            </button>
+                                        )}
                                     </div>
                                 ))}
                             </div>
 
                             {mode === "edit" && (
                                 <button
+                                    type="button"
                                     className="text-blue-500"
                                     onClick={() => addSet(form, updateForm, exerciseIndex)}
                                 >
@@ -106,6 +117,7 @@ function Weightlifting({form, updateForm, mode}) {
                     {mode === "edit" && (
                         <>
                             <button
+                                type="button"
                                 className="text-green-600"
                                 onClick={() => addExercise(form, updateForm)}
                             >

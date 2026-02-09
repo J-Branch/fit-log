@@ -24,7 +24,7 @@ function EditWorkout() {
         if (fetchedWorkout && !form.$id) {
             setForm(fetchedWorkout);
         }
-    }, [fetchedWorkout]);
+    }, [fetchedWorkout, form.$id]);
 
     // keep a backup up of the form in case of cancel
     function handleEditToggle() {
