@@ -2,11 +2,10 @@ import { useState } from "react";
 import { produce } from "immer";
 
 export function useWorkoutForm() {
-    const [updateArray, setUpdateArray] = useState([]);
-    const [deleteArray, setDeleteArray] = useState([]);
     const [form, setForm] = useState({
         $id: null,
-        delete: null,
+        toDelete: false,
+        isDirty: false,
         table: "workouts",
         workoutName: "",
         workoutType: "",
@@ -16,11 +15,15 @@ export function useWorkoutForm() {
         exercises: [
             {
                 $id: null,
+                toDelete: false,
+                isDirty: false,
                 table: "exercises",
                 exerciseName: "",
                 sets: [
                     {
                         $id: null,
+                        toDelete: false,
+                        isDirty: false,
                         table: "sets",
                         eid: null,
                         setCounter: 1,
@@ -53,27 +56,9 @@ export function useWorkoutForm() {
         }));
     };
 
-    function toUpdateArray(obj) {
-        setUpdateArray(produce(draft => {
-            // returns index if there otherwise -1
-            const index = draft.findIndex(item => item.$id === obj.$id);
-
-            // overwrites it if it exists, otherwise add it to array
-            if(index !== -1) {
-                draft[index] = obj;
-            } else {
-                draft.push(obj);
-            }
-
-        }))
-    }
-
     return {
         form,
         setForm,
         updateForm,
-        updateArray,
-        deleteArray,
-        toUpdateArray
     };
 };

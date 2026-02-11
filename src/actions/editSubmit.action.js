@@ -9,6 +9,8 @@ export async function editSubmit({ request }) {
         const formData = await request.formData();
         const form = JSON.parse(formData.get("payload"));
 
+        
+
         // will recursively walk through the form and call update on anything that needs to be updated
         async function updateWorkout(node) {
             if (node.isDirty && node.$id) {

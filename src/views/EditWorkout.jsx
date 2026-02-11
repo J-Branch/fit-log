@@ -13,13 +13,8 @@ function EditWorkout() {
     const { form, updateForm, setForm } = useWorkoutForm();
     const [mode, setMode] = useState("view");
     const [backupForm, setBackupForm] = useState(null);
-    const [selectedForDelete, setSelectedForDelete] = useState({
-        workout: null,
-        exercises: new Set(),
-        sets: new Set()
-    });
 
-    // populate the form with the workout the user editing
+    // call setform to get the actual workout
     useEffect(() => {
         if (fetchedWorkout && !form.$id) {
             setForm(fetchedWorkout);
@@ -35,11 +30,6 @@ function EditWorkout() {
         } else {
             // CANCEL edit restore copy
             setForm(backupForm);
-            setSelectedForDelete({
-                workout: null,
-                exercises: new Set(),
-                sets: new Set()
-            });
             setMode("view");
         }
     }   
@@ -56,6 +46,7 @@ function EditWorkout() {
             </div>
         );
     }
+    console.log(form);
 
     // -----------------------------
     // RENDER
@@ -67,15 +58,23 @@ function EditWorkout() {
             </Link>
 
             {/* Workout Name */}
-            <div>
+            <div className="flex justify-between">
                 {mode === "edit" ? (
-                    <input
-                        className="border p-2 text-xl font-semibold"
-                        value={form.workoutName}
-                        onChange={(e) => {
-                            updateForm(["workoutName"], e.target.value);
-                        }}
-                    />
+                    <div className="flex items-center space-x-4">
+                        <input
+                            type="checkbox"
+                            onClick={(e) => {
+                                toggleDelete();
+                            }} 
+                        />
+                        <input
+                            className="border p-2 text-xl font-semibold"
+                            value={form.workoutName}
+                            onChange={(e) => {
+                                updateForm(["workoutName"], e.target.value);
+                            }}
+                        />
+                    </div>
                 ) : (
                     <h1 className="text-2xl font-semibold">{form.workoutName}</h1>
                 )}
@@ -94,7 +93,6 @@ function EditWorkout() {
                     form={form}
                     updateForm={updateForm}
                     mode={mode}
-                    selectedForDelete={selectedForDelete}
                     
                 />
             )}
