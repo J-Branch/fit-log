@@ -46,7 +46,7 @@ function EditWorkout() {
             </div>
         );
     }
-    console.log(form);
+    // console.log(form);
 
     // -----------------------------
     // RENDER

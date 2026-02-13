@@ -12,23 +12,24 @@ export async function editSubmit({ request }) {
         
 
         // will recursively walk through the form and call update on anything that needs to be updated
-        async function updateWorkout(node) {
+        async function updateWorkoutRow(node) {
             if (node.isDirty && node.$id) {
                 await updateRow(node.table, node.$id, node);
             }
 
             if (Array.isArray(node.exercises)) {
                 for (const exercise of node.exercises) {
-                    await updateWorkout(exercise);
+                    await updateWorkoutRow(exercise);
                 }
             }
 
             if(Array.isArray(node.sets)) {
                 for (const set of node.sets) {
-                    await updateWorkout(set);
+                    await updateWorkoutRow(set);
                 }
             }
         }
+
  
     } catch (error) {
         return {error: error};

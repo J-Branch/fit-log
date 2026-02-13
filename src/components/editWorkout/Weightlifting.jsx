@@ -1,7 +1,45 @@
 import { addExercise, addSet, removeExercise, removeSet } from "../../utils/workoutHandlers";
 import { Form } from "react-router-dom";
+import { useState } from "react";
 
 function Weightlifting({form, updateForm, mode}) {
+
+    const [uiSelection, setUiSelection] = useState({
+        exercises: {},
+        sets: {}
+    });
+
+    function toggleExerciseUI(exercise) {
+        setUiSelection(prev => {
+            const newValue = !prev.exercises[exercise.$id];
+
+            const updated = {
+                ...prev,
+                exercises: {
+                    ...prev.exercises,
+                    [exercise.$id]: newValue
+                },
+                sets: {...prev.sets}
+            };
+
+            exercise.sets.forEach(set => {
+                updated.sets[set.$id] = newValue;
+            });
+
+            return updated;
+        });
+    }
+
+    function toggleSetUI(set) {
+        setUiSelection(prev => ({
+            ...prev,
+            sets: {
+                ...prev.sets,
+                [set.$id]: !prev.sets[set.$id]
+            }
+        }));
+    }
+
     return (
         <>
             <Form method="post">
@@ -11,12 +49,14 @@ function Weightlifting({form, updateForm, mode}) {
                             <div className="flex justify-between">
                                 {mode === "edit" ? (
                                     <div className="flex items-center space-x-4">
-                                        <input
-                                            type="checkbox"
-                                            onClick={(e) => {
-                                                toggleDelete();
-                                            }} 
-                                        />
+                                        {exercise.$id && (
+                                            <input
+                                                type="checkbox"
+                                                checked={!!uiSelection.exercises[exercise.$id]}
+                                                onChange={() => toggleExerciseUI(exercise)}
+                                            />
+                                        )}
+                                        
                                         <input
                                             className="border p=2 font-semibold"
                                             value={exercise.exerciseName}
@@ -46,6 +86,14 @@ function Weightlifting({form, updateForm, mode}) {
                                     <div key={set.$id ?? `new-set-${setIndex}`} className="flex items-center justify-between bg-gray-100 p-2 rounded">
                                         {mode === "edit" ? (
                                             <div className="flex gap-3">
+                                                {set.$id && (
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={!!uiSelection.sets[set.$id]}
+                                                        onChange={() => toggleSetUI(set)}
+                                                    />
+                                                )}
+                                            
                                                 <input
                                                     type="number"
                                                     className="border p-1 w-20"
