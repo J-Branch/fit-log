@@ -44,6 +44,10 @@ export const router = createBrowserRouter([
                 id: "AppLayout",
                 element: <AppLayout />,
                 loader: protectedLoader,
+                shouldRevalidate: ({ formMethod }) => {
+                    if (formMethod) return true;
+                    return false;
+                },
                 children: [
                     { path: "logout", action: logoutAction },
                     {

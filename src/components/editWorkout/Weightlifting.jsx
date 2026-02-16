@@ -63,6 +63,10 @@ function Weightlifting({form, updateForm, mode}) {
                                             onChange={(e) => {
                                                 updateForm(["exercises", exerciseIndex, "exerciseName"], e.target.value);
                                             }} 
+                                            onBlur={(e) => {
+                                                console.log("I am setting the update flag");
+                                                updateForm(["exercises", exerciseIndex, "isDirty"], true);
+                                            }}
                                         />
 
                                     </div>
