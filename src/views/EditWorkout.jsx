@@ -73,6 +73,11 @@ function EditWorkout() {
                             onChange={(e) => {
                                 updateForm(["workoutName"], e.target.value);
                             }}
+
+                            onBlur={(e) => {
+                                console.log("setting the flag for workoutName");
+                                updateForm(["isDirty"], true);
+                            }}
                         />
                     </div>
                 ) : (

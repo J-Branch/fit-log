@@ -1,14 +1,17 @@
 import { addExercise, addSet, removeExercise, removeSet } from "../../utils/workoutHandlers";
 import { Form } from "react-router-dom";
 import { useState } from "react";
+import { produce } from "immer";
 
 function Weightlifting({form, updateForm, mode}) {
 
+    // tracking what in the ui the user has selected, only deletes
     const [uiSelection, setUiSelection] = useState({
         exercises: {},
         sets: {}
     });
 
+    // if exercise checkbox is toggled add to exrcises set. will be set to true or false
     function toggleExerciseUI(exercise) {
         setUiSelection(prev => {
             const newValue = !prev.exercises[exercise.$id];
@@ -30,6 +33,7 @@ function Weightlifting({form, updateForm, mode}) {
         });
     }
 
+    // if set checkbox is toggles add to sets set. will be set true or false
     function toggleSetUI(set) {
         setUiSelection(prev => ({
             ...prev,
@@ -39,6 +43,32 @@ function Weightlifting({form, updateForm, mode}) {
             }
         }));
     }
+
+    // go through and compare ui deletes to the form and mark them for deletion
+    function prepareFormDeletes(form, uiSelection) {
+        return produce(form, draft => {
+            for (const exercise of draft.exercises) {
+                const exerciseSelected = !!uiSelection.exercises[exercise.$id];
+                
+                // exercise is marked for delete
+                if (exerciseSelected) {
+                    exercise.toDelete = true;
+
+                    // make sure every set in the exercise is not marked for delete
+                    for ( const set of exercise.sets) {
+                        set.toDelete = false;
+                    }
+                } else {
+                    // this means the exercise of the set is not marked for deletion
+                    for ( const set of exercise.sets) {
+                        set.toDelete = !!uiSelection.sets[set.$id];
+                    }
+                }
+            }
+        });
+    }
+
+    const finalForm = prepareFormDeletes(form, uiSelection);
 
     return (
         <>
@@ -114,6 +144,20 @@ function Weightlifting({form, updateForm, mode}) {
                                                             e.target.value
                                                         )
                                                     }
+
+                                                    onBlur={(e) => {
+                                                        console.log("i am setting the flag for reps");
+                                                        updateForm(
+                                                            [
+                                                                "exercises",
+                                                                exerciseIndex,
+                                                                "sets",
+                                                                setIndex,
+                                                                "isDirty",
+                                                            ],
+                                                            true
+                                                        )
+                                                    }}
                                                 />
                                                 <input
                                                     type="number"
@@ -131,6 +175,20 @@ function Weightlifting({form, updateForm, mode}) {
                                                             e.target.value
                                                         )
                                                     }
+
+                                                    onBlur={(e) => {
+                                                        console.log("i am setting the flag for weight");
+                                                        updateForm(
+                                                            [
+                                                                "exercises",
+                                                                exerciseIndex,
+                                                                "sets",
+                                                                setIndex,
+                                                                "isDirty",
+                                                            ],
+                                                            true
+                                                        )
+                                                    }}
                                                 />
                                                 
                                             </div>
@@ -182,7 +240,7 @@ function Weightlifting({form, updateForm, mode}) {
                 <input
                     type="hidden"
                     name="payload"
-                    value={JSON.stringify(form)}
+                    value={JSON.stringify(finalForm)}
                 />
             </Form>
         </>
