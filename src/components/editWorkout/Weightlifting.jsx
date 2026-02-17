@@ -88,6 +88,7 @@ function Weightlifting({form, updateForm, mode}) {
                                         )}
                                         
                                         <input
+                                            name="exerciseName"
                                             className="border p=2 font-semibold"
                                             value={exercise.exerciseName}
                                             onChange={(e) => {
@@ -129,6 +130,7 @@ function Weightlifting({form, updateForm, mode}) {
                                                 )}
                                             
                                                 <input
+                                                    name="setReps"
                                                     type="number"
                                                     className="border p-1 w-20"
                                                     value={set.reps}
@@ -160,6 +162,7 @@ function Weightlifting({form, updateForm, mode}) {
                                                     }}
                                                 />
                                                 <input
+                                                    name="setWeight"
                                                     type="number"
                                                     className="border p-1 w-20"
                                                     value={set.weight}

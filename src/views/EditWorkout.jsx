@@ -1,9 +1,10 @@
-import { Link, useParams} from "react-router-dom";
+import { Link, useParams, Form, useActionData} from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useWorkoutForm } from "../hooks/workouts/useWorkoutForm";
 import Weightlifting from "../components/editWorkout/Weightlifting";
 import DistanceTime from "../components/editWorkout/DistanceTime";
 import { useFetchWorkout } from "../hooks/workouts/useFetchWorkout";
+import toast from "react-hot-toast";
 
 function EditWorkout() {
     const params = useParams();
@@ -14,12 +15,21 @@ function EditWorkout() {
     const [mode, setMode] = useState("view");
     const [backupForm, setBackupForm] = useState(null);
 
+    const actionData = useActionData();
+
+    useEffect(() => {
+        if (actionData?.error) {
+            toast.error(actionData.error)
+        }
+    }, [actionData]);
+
     // call setform to get the actual workout
     useEffect(() => {
         if (fetchedWorkout && !form.$id) {
             setForm(fetchedWorkout);
         }
     }, [fetchedWorkout, form.$id]);
+
 
     // keep a backup up of the form in case of cancel
     function handleEditToggle() {
@@ -62,12 +72,6 @@ function EditWorkout() {
                 {mode === "edit" ? (
                     <div className="flex items-center space-x-4">
                         <input
-                            type="checkbox"
-                            onClick={(e) => {
-                                toggleDelete();
-                            }} 
-                        />
-                        <input
                             className="border p-2 text-xl font-semibold"
                             value={form.workoutName}
                             onChange={(e) => {
@@ -79,6 +83,18 @@ function EditWorkout() {
                                 updateForm(["isDirty"], true);
                             }}
                         />
+
+                        <Form method="post" action="/deleteWorkout">
+                            <input type="hidden" name="workoutId" value={form.$id} />
+                            <input type="hidden" name="tableId" value={form.table} />
+
+                            <button
+                                type="submit"
+                                className="px-4 py-2 bg-gray-800 text-white rounded"
+                            >
+                                Delete Workout
+                            </button>
+                        </Form>
                     </div>
                 ) : (
                     <h1 className="text-2xl font-semibold">{form.workoutName}</h1>
