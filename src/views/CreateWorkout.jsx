@@ -115,9 +115,9 @@ function CreateWorkout() {
                                     <input
                                         name="exerciseName"
                                         type="text"
-                                        value={exercise.name}
+                                        value={exercise.exerciseName}
                                         onChange={(e) =>
-                                            updateForm(["exercises", exerciseIndex, "name"], e.target.value)
+                                            updateForm(["exercises", exerciseIndex, "exerciseName"], e.target.value)
                                         }
                                     /><br /><br />
 

@@ -84,9 +84,9 @@ function EditWorkout() {
                             }}
                         />
 
-                        <Form method="post" action="/deleteWorkout">
-                            <input type="hidden" name="workoutId" value={form.$id} />
-                            <input type="hidden" name="tableId" value={form.table} />
+                        <Form method="post">
+                            <input type="hidden" name="payload" value={JSON.stringify(form)}/>
+                            <input type="hidden" name="deleteWorkout" value="true"/>
 
                             <button
                                 type="submit"

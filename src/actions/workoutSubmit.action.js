@@ -65,12 +65,12 @@ export async function workoutSubmit({ request }) {
             const exercises = formData.get("exercises");
             const exerciseArray = JSON.parse(exercises);
             for (const exercise of exerciseArray) {
-                if (!exercise.name) continue;
+                if (!exercise.exerciseName) continue;
                 const eid = ID.unique();
                 
                 await createRow(user.$id, "exercises", eid, {
                     wid: wid,
-                    exerciseName: exercise.name,
+                    exerciseName: exercise.exerciseName,
                 });
 
                 for(const set of exercise.sets) {
@@ -89,6 +89,6 @@ export async function workoutSubmit({ request }) {
 
 
     } catch (error) {
-        return {error: error};
+        return {error: "failed to upload workout"};
     }
 }
