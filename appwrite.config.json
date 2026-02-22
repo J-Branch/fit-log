@@ -1,7 +1,7 @@
 {
     "projectId": "68c434df00341f7fc2ee",
-    "endpoint": "https://nyc.cloud.appwrite.io/v1",
     "projectName": "fit-log",
+    "endpoint": "https://nyc.cloud.appwrite.io/v1",
     "settings": {
         "services": {
             "account": true,
@@ -39,6 +39,52 @@
             }
         }
     },
+    "functions": [
+        {
+            "$id": "6905192e0005505cdf01",
+            "name": "daily-quote",
+            "runtime": "node-22",
+            "specification": "s-0.5vcpu-512mb",
+            "execute": [
+                "any"
+            ],
+            "events": [],
+            "scopes": [
+                "users.read"
+            ],
+            "schedule": "",
+            "timeout": 15,
+            "enabled": true,
+            "logging": true,
+            "entrypoint": "src/main.js",
+            "commands": "npm install",
+            "path": "functions/daily-quote"
+        },
+        {
+            "$id": "699b843500280508f58e",
+            "name": "writes-db",
+            "runtime": "node-25",
+            "specification": "s-0.5vcpu-512mb",
+            "execute": [
+                "any"
+            ],
+            "events": [],
+            "scopes": [
+                "users.read"
+            ],
+            "schedule": "",
+            "timeout": 15,
+            "enabled": true,
+            "logging": true,
+            "entrypoint": "src/main.js",
+            "commands": "npm install",
+            "ignore": [
+                "node_modules",
+                ".npm"
+            ],
+            "path": "functions/writes-db"
+        }
+    ],
     "tablesDB": [
         {
             "$id": "68c4350c002ec8a50d2a",
@@ -107,8 +153,8 @@
                     "type": "double",
                     "required": false,
                     "array": false,
-                    "min": -1.7976931348623157e+308,
-                    "max": 1.7976931348623157e+308,
+                    "min": -179769313486231570000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+                    "max": 179769313486231570000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
                     "default": null
                 }
             ],
@@ -228,28 +274,6 @@
                 }
             ],
             "indexes": []
-        }
-    ],
-    "functions": [
-        {
-            "$id": "6905192e0005505cdf01",
-            "name": "daily-quote",
-            "runtime": "node-22",
-            "specification": "s-0.5vcpu-512mb",
-            "execute": [
-                "any"
-            ],
-            "events": [],
-            "scopes": [
-                "users.read"
-            ],
-            "schedule": "",
-            "timeout": 15,
-            "enabled": true,
-            "logging": true,
-            "entrypoint": "src/main.js",
-            "commands": "npm install",
-            "path": "functions/daily-quote"
         }
     ]
 }
