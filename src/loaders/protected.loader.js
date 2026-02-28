@@ -11,20 +11,23 @@ export async function protectedLoader() {
     console.log("getting stuff from db...");
     console.log("user id is: ", user.$id);
 
-    const [workoutsRes, exercisesRes, setsRes] = await Promise.all([
+    const [workoutsRes, exercisesRes, setsRes, quotesRes] = await Promise.all([
         listRows("workouts"),
         listRows("exercises"),
         listRows("sets"),
+        listRows("daily_quote"),
     ]);
 
     const userWorkouts = workoutsRes.rows;
     const userExercises = exercisesRes.rows;
     const userSets = setsRes.rows;
+    const dailyQuote = quotesRes.rows;
 
     return {
         userWorkouts,
         userExercises,
         userSets,
         user,
+        dailyQuote,
     };
 }
