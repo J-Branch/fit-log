@@ -1,4 +1,4 @@
-import { Client, Users } from 'node-appwrite';
+import { Client, Users, TablesDB } from 'node-appwrite';
 
 // This Appwrite function will be executed every time your function is triggered
 export default async ({ req, res, log, error }) => {
@@ -7,7 +7,7 @@ export default async ({ req, res, log, error }) => {
   const client = new Client()
     .setEndpoint(process.env.APPWRITE_FUNCTION_API_ENDPOINT)
     .setProject(process.env.APPWRITE_FUNCTION_PROJECT_ID)
-    .setKey(req.headers['x-appwrite-key'] ?? '');
+    .setKey(process.env.APPWRITE_API_KEY);
   const users = new Users(client);
 
   try {
