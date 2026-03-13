@@ -1,72 +1,291 @@
-import { Client, TablesDB } from 'node-appwrite';
+import { Client, TablesDB, ID, Permission, Role } from "node-appwrite";
 
-// This Appwrite function will be executed every time your function is triggered
 export default async ({ req, res, log, error }) => {
-  // You can use the Appwrite SDK to interact with other services
-  // For this example, we're using the Users service
+
   const client = new Client()
     .setEndpoint(process.env.APPWRITE_FUNCTION_API_ENDPOINT)
     .setProject(process.env.APPWRITE_FUNCTION_PROJECT_ID)
     .setKey(process.env.APPWRITE_API_KEY);
 
   const tablesdb = new TablesDB(client);
+
   const DATABASE_ID = process.env.APPWRITE_DATABASE_ID;
   const WORKOUTS_ID = process.env.APPWRITE_WORKOUTS_ID;
   const EXERCISES_ID = process.env.APPWRITE_EXERCISES_ID;
   const SETS_ID = process.env.APPWRITE_SETS_ID;
 
-  // try {
-  //   const response = await users.list();
-  //   // Log messages and errors to the Appwrite Console
-  //   // These logs won't be seen by your end users
-  //   log(`Total users: ${response.total}`);
-  // } catch(err) {
-  //   error("Could not list users: " + err.message);
-  // }
+  // const USER_ID = process.env.APPWRITE_FUNCTION_USER_ID;
 
+  const USER_ID = req.headers['x-appwrite-user-id'];
 
+  const ownerRole = Role.user(USER_ID);
 
-  // // The req object contains the request data
-  // if (req.path === "/ping") {
-  //   // Use res object to respond with text(), json(), or binary()
-  //   // Don't forget to return a response!
-  //   return res.text("Pong");
-  // }
+  const ownerPermissions = [
+    Permission.read(ownerRole),
+    Permission.update(ownerRole),
+    Permission.delete(ownerRole),
+  ];
 
-  async function deleteRow(node) {
+  async function deleteWorkoutRow(node) {
+
+    // base case for if the workout is marked, delete and return
     if (node.table === "workouts" && node.toDelete === true) {
-
+      await tablesdb.deleteRow({
+        databaseId: DATABASE_ID,
+        tableId: WORKOUTS_ID,
+        rowId: node.$id
+      });
+      return;
     }
+
+    // base case for anything else marked for delete
+    if (node.toDelete === true) {
+      await tablesdb.deleteRow({
+        databaseId: DATABASE_ID,
+        tableId: node.table,
+        rowId: node.$id
+      });
+      return;
+    }
+
+    const promises = [];
+
+    if (Array.isArray(node.exercises)) {
+      promises.push(
+        ...node.exercises.map(ex => deleteWorkoutRow(ex))
+      );
+    }
+
+    if (Array.isArray(node.sets)) {
+      promises.push(
+        ...node.sets.map(set => deleteWorkoutRow(set))
+      );
+    }
+
+    await Promise.all(promises);
   }
 
-  async function updateRow(node) {
+  async function updateWorkoutRow(node) {
 
-  }
+    const promises = [];
 
-  async function createRow(node) {
+    if (node.isDirty && node.$id) {
+      promises.push(
+        tablesdb.updateRow({
+          databaseId: DATABASE_ID,
+          tableId: node.table,
+          rowId: node.$id,
+          data: node
+        })
+      );
+    }
 
+    if (Array.isArray(node.exercises)) {
+      promises.push(
+        ...node.exercises.map(ex => updateWorkoutRow(ex))
+      );
+    }
+
+    if (Array.isArray(node.sets)) {
+      promises.push(
+        ...node.sets.map(set => updateWorkoutRow(set))
+      );
+    }
+
+    await Promise.all(promises);
   }
 
   try {
-    const payload = JSON.parse(req.body)
 
-    // check for deletes first
-    deleteRow
+    const form = JSON.parse(req.body);
+    const type = req.headers["x-action-type"];
 
-    // check for updates second
+    if (type === "create") {
 
-    // check for creates
+      const workoutName = form.workoutName;
+      const workoutType = form.workoutType;
 
+      const dateMonth = form.date.month;
+      const dateDay = form.date.day;
+      const dateYear = form.date.year;
 
-    return res.json({sucess: true})
+      const minutes = form.time.minutes;
+      const seconds = form.time.seconds;
+
+      const distance = form.distance;
+
+      const workoutDate = `${dateYear}-${dateMonth.toString().padStart(2, "0")}-${dateDay.toString().padStart(2, "0")}`;
+
+      const wid = ID.unique();
+
+      const payload = {
+        userId: USER_ID,
+        workoutName,
+        workoutType,
+        date: workoutDate,
+      };
+
+      // logic for distance/time workouts
+      if (workoutType === "Distance/Time") {
+
+        const totalTime = Number(minutes) * 60 + Number(seconds);
+
+        await tablesdb.createRow({
+          databaseId: DATABASE_ID,
+          tableId: WORKOUTS_ID,
+          rowId: wid,
+          data: {
+            ...payload,
+            time: totalTime,
+            distance: Number(distance)
+          },
+          permissions: ownerPermissions
+        });
+
+      } else {
+
+        // if not distance/time then it is weightlifting 
+        await tablesdb.createRow({
+          databaseId: DATABASE_ID,
+          tableId: WORKOUTS_ID,
+          rowId: wid,
+          data: payload,
+          permissions: ownerPermissions
+        });
+
+        const exercises = form.exercises;
+
+        const exercisePromises = exercises.map(async (exercise) => {
+
+          if (!exercise.exerciseName) return;
+
+          const eid = ID.unique();
+
+          await tablesdb.createRow({
+            databaseId: DATABASE_ID,
+            tableId: EXERCISES_ID,
+            rowId: eid,
+            data: {
+              wid,
+              exerciseName: exercise.exerciseName
+            },
+            permissions: ownerPermissions
+          });
+
+          const setPromises = exercise.sets.map(set => {
+
+            if (!set.reps && !set.weight) return;
+
+            return tablesdb.createRow({
+              databaseId: DATABASE_ID,
+              tableId: SETS_ID,
+              rowId: ID.unique(),
+              data: {
+                eid,
+                setCounter: Number(set.setCounter),
+                reps: Number(set.reps),
+                weight: Number(set.weight)
+              },
+              permissions: ownerPermissions
+            });
+
+          });
+
+          await Promise.all(setPromises);
+
+        });
+
+        await Promise.all(exercisePromises);
+      }
+    }
+
+    if (type === "edit") {
+
+      await deleteWorkoutRow(form);
+
+      await updateWorkoutRow(form);
+
+      const wid = form.$id;
+
+      if (form.workoutType === "Weightlifting") {
+
+        const newExercises = form.exercises.filter(ex => ex.$id === null);
+
+        await Promise.all(newExercises.map(async exercise => {
+
+          const eid = ID.unique();
+
+          await tablesdb.createRow({
+            databaseId: DATABASE_ID,
+            tableId: EXERCISES_ID,
+            rowId: eid,
+            data: {
+              wid,
+              exerciseName: exercise.exerciseName
+            },
+            permissions: ownerPermissions
+          });
+
+          const setPromises = exercise.sets.map(set => {
+            return tablesdb.createRow({
+              databaseId: DATABASE_ID,
+              tableId: SETS_ID,
+              rowId: ID.unique(),
+              data: {
+                eid,
+                setCounter: Number(set.setCounter),
+                reps: Number(set.reps),
+                weight: Number(set.weight)
+              },
+              permissions: ownerPermissions
+            });
+          });
+
+          await Promise.all(setPromises);
+
+        }));
+
+        const setPromises = [];
+
+        for (const exercise of form.exercises) {
+
+          for (const set of exercise.sets) {
+
+            if (set.$id !== null) continue;
+
+            setPromises.push(
+              tablesdb.createRow({
+                databaseId: DATABASE_ID,
+                tableId: SETS_ID,
+                rowId: ID.unique(),
+                data: {
+                  eid: exercise.$id,
+                  setCounter: Number(set.setCounter),
+                  reps: Number(set.reps),
+                  weight: Number(set.weight)
+                },
+                permissions: ownerPermissions
+              })
+            );
+
+          }
+
+        }
+
+        await Promise.all(setPromises);
+
+      }
+    }
+
+    return res.json({ success: true });
+
   } catch (err) {
-    return res.json({sucess: false, message: err.message});
+
+    return res.json({
+      success: false,
+      message: err.message
+    });
+
   }
 
-  return res.json({
-    motto: "Build like a team of hundreds_",
-    learn: "https://appwrite.io/docs",
-    connect: "https://appwrite.io/discord",
-    getInspired: "https://builtwith.appwrite.io",
-  });
 };
