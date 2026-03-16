@@ -1,47 +1,25 @@
-// src/utils/fitnessLogic.js
-import { WEIGHT_CONFIG, DISTANCE_CONFIG } from "./gamificationConstants";
+export const calculateLevel = ( totalWeight, totalDistance ) => {
+    const totalXP = (totalWeight * .10) + (totalDistance * 500);
 
-const calculateStats = (totalValue, config) => {
-  const { milestones, maxLevel } = config;
+    const BASE_XP = 100;
+    const GROWTH = 1.1;
 
-  // 1. Find the current and next milestones from your array
-  let currentMilestone = milestones[0];
-  let nextMilestone = milestones[milestones.length - 1];
-
-  for (let i = 0; i < milestones.length; i++) {
-    if (totalValue >= milestones[i].threshold) {
-      currentMilestone = milestones[i];
-    } else {
-      nextMilestone = milestones[i];
-      break;
+    // Base Case for New User
+    if (totalXP < BASE_XP) {
+        return {
+            level: 1,
+            progress: (totalXP / BASE_XP) * 100
+        };
     }
-  }
 
-  // 2. Calculate the specific Level
-  // If they are between milestones (e.g., between Lvl 15 and 30), 
-  // we calculate exactly where they are in that range.
-  let level = currentMilestone.level;
-  let progress = 0;
+    const level = Math.floor(Math.log(totalXP / BASE_XP) / Math.log(GROWTH)) + 1;
+    const xpAtLevelStart = BASE_XP * Math.pow(GROWTH, level - 1);
+    const xpAtLevelNext = BASE_XP * Math.pow(GROWTH, level);
+    const progress = ((totalXP - xpAtLevelStart) / (xpAtLevelNext - xpAtLevelStart)) * 100;
 
-  if (totalValue < milestones[milestones.length - 1].threshold) {
-    const rangeValue = nextMilestone.threshold - currentMilestone.threshold;
-    const progressInThreshold = totalValue - currentMilestone.threshold;
-    const levelRange = nextMilestone.level - currentMilestone.level;
 
-    progress = progressInThreshold / rangeValue;
-    level = Math.floor(currentMilestone.level + (progress * levelRange));
-  } else {
-    level = maxLevel;
-    progress = 1;
-  }
-
-  return {
-    level: Math.min(level, maxLevel),
-    label: currentMilestone.comparison,
-    nextLabel: nextMilestone.comparison,
-    progress: Math.min(Math.max(progress, 0), 1)
-  };
+    return {
+        level,
+        progress: Math.min(progress, 99.9)
+    };
 };
-
-export const getWeightStats = (totalLbs) => calculateStats(totalLbs, WEIGHT_CONFIG);
-export const getDistanceStats = (totalMiles) => calculateStats(totalMiles, DISTANCE_CONFIG);

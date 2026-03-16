@@ -2,7 +2,7 @@ import {Outlet, Link, Form} from "react-router-dom"
 import DashboardIcon from "../assets/icons/dashboardIcon.svg";
 import WorkoutsIcon from "../assets/icons/workoutsIcon.svg";
 import AnalyticsIcon from "../assets/icons/analyticsIcon.svg";
-import { SidebarLink, NavWrapper } from "../utils/mainPageUtils/sidebar";
+import { SidebarLink, NavWrapper } from "../components/Sidebar";
 
 
 function MainPage() {

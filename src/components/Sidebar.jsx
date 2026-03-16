@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 export function SidebarLink({ to, icon, text }) {
     return (
         <li className="h-full">
-            <Link
-                to={to} 
-                className="flex items-center gap-2 py-10 w-[100%] h-[100%] rounded-md hover:bg-primary-gray-three"
+            <Link 
+            to={to} 
+            className="flex items-center gap-2 py-10 w-[100%] h-[100%] rounded-md hover:bg-primary-gray-three"
             >
                 {icon}
                 {text}

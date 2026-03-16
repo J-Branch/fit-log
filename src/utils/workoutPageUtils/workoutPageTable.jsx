@@ -15,7 +15,7 @@ export function WorkoutRow({ workout }) {
     return (
         <li className="px-4 py-2 lg:p-0 max-lg:my-4 max-lg:bg-primary-white-two/60">
             <Link
-                to={`/workout/${$id}`}
+                to={`../workout/${$id}`}
                 className="block h-full rounded-xl
                     border border-primary-white-two
                     bg-primary-gray-one
