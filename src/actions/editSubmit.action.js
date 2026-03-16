@@ -1,10 +1,8 @@
 import { redirect } from "react-router-dom";
-import { getCurrentAuthSession } from "../api/appwrite.auth";
 import { functions, account } from "../api/appwrite.api";
 
 export async function editSubmit({ request }) {
     try {
-        const user = await getCurrentAuthSession();
         const formData = await request.formData();
         const form = JSON.parse(formData.get("payload"));
 
@@ -15,7 +13,6 @@ export async function editSubmit({ request }) {
             body: JSON.stringify(form),
             headers: {
                 "x-action-type": "edit",
-                "Authorization": `Bearer ${jwt}`
             }
         });
 
