@@ -1,7 +1,7 @@
 export function addExercise(form, updateForm) {
     updateForm(["exercises"], [
         ...form.exercises,
-        {name: "", sets:[]}
+        {exerciseName: "", sets:[]}
     ]);
 }
 

@@ -23,6 +23,7 @@ import { authLoader } from "../loaders/auth.loader";
 import { authAction } from "../actions/auth.action";
 import { logoutAction } from "../actions/logout.action";
 import { workoutSubmit } from "../actions/workoutSubmit.action";
+import { editSubmit } from "../actions/editSubmit.action"; 
 
 export const router = createBrowserRouter([
     {
@@ -43,6 +44,10 @@ export const router = createBrowserRouter([
                 id: "AppLayout",
                 element: <AppLayout />,
                 loader: protectedLoader,
+                shouldRevalidate: ({ nextUrl }) => {
+                    const success = nextUrl.searchParams.get("success");
+                    return success === "true";
+                },
                 children: [
                     { path: "logout", action: logoutAction },
                     {
@@ -54,7 +59,7 @@ export const router = createBrowserRouter([
                             { path: "dashboard", element: <Dashboard /> },
                             { path: "workouts", element: <ViewWorkouts /> },
                             { path: "workouts/create", element: <CreateWorkout />, action: workoutSubmit },
-                            { path: "workout/:id", element: <EditWorkout />},
+                            { path: "workout/:id", element: <EditWorkout />, action: editSubmit },
                             { path: "analytics", element: <Analytics /> },
                         ],
                     },
