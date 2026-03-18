@@ -1,16 +1,24 @@
-import { Link, useParams, Form, useActionData} from "react-router-dom";
+import { Link, useParams, Form, useActionData, useLoaderData, useRouteLoaderData} from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useWorkoutForm } from "../hooks/workouts/useWorkoutForm";
 import Weightlifting from "../components/editWorkout/Weightlifting";
 import DistanceTime from "../components/editWorkout/DistanceTime";
-import { useFetchWorkout } from "../hooks/workouts/useFetchWorkout";
+// import { useFetchWorkout } from "../hooks/workouts/useFetchWorkout";
 import toast from "react-hot-toast";
 
 function EditWorkout() {
     const params = useParams();
     const workoutId = params.id;
 
-    const fetchedWorkout = useFetchWorkout(workoutId);
+    const { userWorkouts } = useRouteLoaderData("AppLayout");
+    const exercises = useLoaderData();
+    const workout = userWorkouts.find(workout => workout.$id === workoutId);
+
+    console.log("workout structure: ", workout);
+    console.log("exercises: ", exercises);
+
+
+    // const fetchedWorkout = useFetchWorkout(workoutId);
     const { form, updateForm, setForm } = useWorkoutForm();
     const [mode, setMode] = useState("view");
     const [backupForm, setBackupForm] = useState(null);
@@ -25,17 +33,18 @@ function EditWorkout() {
 
     // call setform to get the actual workout
     useEffect(() => {
-        if (fetchedWorkout && !form.$id) {
-            setForm(fetchedWorkout);
+        if (workout && exercises && !form.$id) {
+            setForm({ ...workout, exercises});
+            console.log("full form: ", form)
         }
-    }, [fetchedWorkout, form.$id]);
+    }, [workout, exercises, form.$id]);
 
 
     // keep a backup up of the form in case of cancel
     function handleEditToggle() {
         if (mode === "view") {
             // ENTER edit mode keep a copy of workout
-            setBackupForm(structuredClone(fetchedWorkout));
+            setBackupForm(structuredClone(form));
             setMode("edit");
         } else {
             // CANCEL edit restore copy
@@ -44,7 +53,7 @@ function EditWorkout() {
         }
     }   
 
-    if (!fetchedWorkout) {
+    if (!workout) {
         return (
             <div>
                 <h1 className="text-xl font-semibold text-red-600">
