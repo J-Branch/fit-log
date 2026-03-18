@@ -18,6 +18,7 @@ import AppLayout from "../views/layouts/AppLayout";
 // Loaders 
 import { protectedLoader } from "../loaders/protected.loader";
 import { authLoader } from "../loaders/auth.loader";
+import { editWorkoutLoader } from "../loaders/edit.workout.loader";
 
 // Actions 
 import { authAction } from "../actions/auth.action";
@@ -59,7 +60,7 @@ export const router = createBrowserRouter([
                             { path: "dashboard", element: <Dashboard /> },
                             { path: "workouts", element: <ViewWorkouts /> },
                             { path: "workouts/create", element: <CreateWorkout />, action: workoutSubmit },
-                            { path: "workout/:id", element: <EditWorkout />, action: editSubmit },
+                            { path: "workout/:id", element: <EditWorkout />, action: editSubmit, loader: editWorkoutLoader },
                             { path: "analytics", element: <Analytics /> },
                         ],
                     },
