@@ -1,19 +1,24 @@
-// src/utils/fitnessLogic.js
 export const getCurrentMilestone = ( totalValue, milestones ) => {
-  const currentMilestone = milestones.find(milestone => milestone.threshold >= totalValue);
+  const nextMilestone = milestones.find(m => m.threshold > totalValue);
 
-  if (!currentMilestone) {
-    return {}
-  } 
+  const currentMilestone = [...milestones]
+    .reverse()
+    .find(m => m.threshold <= totalValue) || milestones[0];
 
-  const progress = totalValue / currentMilestone.threshold;
+  // If Max Level is Reached
+  if (!nextMilestone) {
+    return {
+      currentLevel: currentMilestone.level,
+      nextLevel: "MAX",
+      progress: 100
+    };
+  }
 
-  /* 
-    RETURN - 
-    Milestone that you are currently on
-    Progress for that milestone
-  */
+  const progress = (totalValue / currentMilestone.threshold) * 100;
+
   return {
+    currentLevel: currentMilestone.level,
+    nextLevel: nextMilestone.level,
     progress: Math.min(progress, 99.9)
   };
 };

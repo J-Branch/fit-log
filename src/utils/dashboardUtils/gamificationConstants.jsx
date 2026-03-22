@@ -12,7 +12,6 @@ export const WEIGHT_MILESTONES = [
         { level: 11, threshold: 162240000, comparison: "The Washington Monument" },
         { level: 12, threshold: 12000000000, comparison: "The Great Pyramid of Khufu" },
         { level: 13, threshold: 116000000000, comparison: "The Great Wall of China" }
-  
 ];
 
 export const DISTANCE_MILESTONES = [
