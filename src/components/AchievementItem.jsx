@@ -2,7 +2,8 @@ import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-pro
 import 'react-circular-progressbar/dist/styles.css';
 
 export const AchievementItem = ({ threshold, total, label }) => {
-    const percentage = Math.floor((total / threshold) * 100);
+    const rawPercentage = (total / threshold) * 100;
+    const displayPercentage = rawPercentage.toFixed(1);
     const isCompleted = total >= threshold;
 
     return (
