@@ -37,7 +37,7 @@ function Dashboard() {
                         </div>
                         <div className="h-[80%] text-center">
                             <h1>{quote?.text}</h1>
-                            <h2>{quote?.author}</h2>
+                            <h2>- {quote?.author}</h2>
                         </div>
                     </div>
                 </div>
