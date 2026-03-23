@@ -49,7 +49,7 @@ function DistanceTimeGraph({ workouts }) {
     }, [chartData]);
 
     return (
-        <>
+        <div className="">
             <label>Workout Variety:</label>
             <select value={workoutVariety} onChange={(e) => setWorkoutVariety(e.target.value)}>
                 <option value="all">All Workouts</option>
@@ -83,30 +83,31 @@ function DistanceTimeGraph({ workouts }) {
             </select>
 
             {percentageGrowth !== null && (
-            <div style={{ margin: '0.5rem 0', fontWeight: 'bold', color: percentageGrowth > 0 ? 'green' : 'red' }}>
+            <div style={{ margin: '0.5rem 0', fontWeight: 'bold', color: percentageGrowth > 0 ? 'green' : '#800020' }}>
                 Growth: {percentageGrowth > 0 ? '+' : ''}{percentageGrowth}% {percentageGrowth > 0 ? '📈' : '📉'}
             </div>
             )}
 
             <br />
-
-            <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="date" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Line 
-                        type="monotone"
-                        dataKey="value"
-                        name={graphName}
-                        stroke="#8884d8"
-                        activeDot={{ r:8 }}
-                    />
-                </LineChart>
-            </ResponsiveContainer>
-        </>
+            <div className="w-full h-[400px]">
+                <ResponsiveContainer width="100%" height={300}>
+                    <LineChart data={chartData}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="date" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Line 
+                            type="monotone"
+                            dataKey="value"
+                            name={graphName}
+                            stroke="#972D43"
+                            activeDot={{ r:8 }}
+                        />
+                    </LineChart>
+                </ResponsiveContainer>
+            </div>
+        </div>
     )
 }
 

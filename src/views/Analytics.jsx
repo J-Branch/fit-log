@@ -15,18 +15,16 @@ function Analytics() {
     [userWorkouts]);
 
     return (
-        <>
-        
-            <div>
+        <div className="w-full min-h-screen bg-primary-white-two p-4">
+            <div className="bg-primary-white p-4 rounded-md shadow-md mb-6">
                 <WeightliftingGraph workouts={weightliftingWorkouts} exercises={userExercises} sets={userSets} />
             </div>
         
 
-            <div>
+            <div className="bg-primary-white p-4 rounded-md shadow-md">
                 <DistanceTimeGraph workouts={distanceTimeWorkouts} />
             </div>
-        
-        </>
+        </div>
     )
 }
 
