@@ -27,13 +27,10 @@ export async function protectedLoader() {
 
     return {
         userWorkouts,
-<<<<<<< HEAD
         userExercises,
         userSets,
         user,
         dailyQuote,
-=======
         totalRows
->>>>>>> 63027bd (wip saving before rebase)
     };
 }
