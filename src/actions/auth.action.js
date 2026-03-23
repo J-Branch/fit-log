@@ -1,5 +1,5 @@
 import { redirect } from "react-router-dom";
-import { login, createAccount } from "../api/appwrite.auth"
+import { login, createAccount, createAggregateRow, getCurrentAuthSession } from "../api/appwrite.auth"
 
 export async function authAction({ request }) {
     const formData = await request.formData();
@@ -14,10 +14,17 @@ export async function authAction({ request }) {
     try {
         if (mode === "register") {
             await createAccount(email, password);
+            await login(email, password);
+            const user = await getCurrentAuthSession();
+            await createAggregateRow(user.$id);
+            return redirect("/home");
+        } else {
+            await login(email, password);
+            return redirect("/home");
         }
 
-        await login(email, password);
-        return redirect("/home");
+        // await login(email, password);
+        // return redirect("/home");
     } catch (err) {
         return {
             error: err.message || "Authentication failed",
