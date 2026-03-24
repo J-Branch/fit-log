@@ -5,9 +5,8 @@ import { calculateLevel } from "../utils/dashboardUtils/levelCalculator";
 import { WEIGHT_MILESTONES, DISTANCE_MILESTONES } from "../utils/dashboardUtils/gamificationConstants";
 import { getCurrentMilestone } from "../utils/dashboardUtils/achievementCalculator";
 import { WorkoutRow } from '../utils/workoutPageUtils/workoutPageTable';
-import AchievementIcon from '../assets/icons/achievementIcon.svg';
-import CompletedAchievementIcon from '../assets/icons/completedAchievementIcon.svg';
 import { AchievementItem } from '../components/AchievementItem';
+
 
 function Dashboard() {
     const { dailyQuote, userSets, userWorkouts } = useRouteLoaderData("AppLayout");
@@ -24,6 +23,8 @@ function Dashboard() {
     const { level, progress } = useMemo(() => {
         return calculateLevel(totalWeight, totalDistance)
     }, [totalWeight, totalDistance]);
+
+    const nextWeightGoal = WEIGHT_MILESTONES.find(m => m.threshold > totalWeight);
 
     return (
         <>
@@ -49,23 +50,26 @@ function Dashboard() {
                     Want to fill this up with previous Workouts.
                     But need to fix backend issues first.
                     */}
+                    Total Weight = {totalWeight}
                 </div>
 
                 {/* Container for the bottom part of dashboard */}
                 <div className="h-[25%] flex flex-row bg-primary-white">
-                    <div className="w-[50%] text-center overflow-y-auto">
+                    <div className="w-[40%] text-center overflow-y-auto">
                         Weightlifting Achievements
 
-                        {WEIGHT_MILESTONES.map((milestone) => (
-                            <AchievementItem 
-                                key={milestone.level}
-                                threshold={milestone.threshold}
-                                total={totalWeight}
-                            />
-                        ))}
+                        <AchievementItem 
+                        threshold={nextWeightGoal.threshold} 
+                        total={totalWeight} 
+                        label={nextWeightGoal.comparison} 
+                        />
+
                     </div>
-                    <div className="w-[50%] text-center overflow-y-auto">
+                    <div className="w-[40%] text-center overflow-y-auto">
                         Distance Achievements
+                    </div>
+                    <div className="w-[20%] text-center overflow-y-auto">
+                        Achivements Button
                     </div>
                 </div>
             </div>
