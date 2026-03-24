@@ -11,19 +11,22 @@ export async function protectedLoader() {
     console.log("getting stuff from db...");
     console.log("user id is: ", user.$id);
 
-    const [workoutsRes, exercisesRes, setsRes, quotesRes] = await Promise.all([
+    const [workoutsRes, exercisesRes, setsRes, quotesRes, aggregateRes] = await Promise.all([
         listRows("workouts"),
         listRows("exercises"),
         listRows("sets"),
         listRows("daily_quote"),
+        listRows("aggregate"),
     ]);
 
     const userWorkouts = workoutsRes.rows;
     const userExercises = exercisesRes.rows;
     const userSets = setsRes.rows;
     const dailyQuote = quotesRes.rows;
+    const userAggregate = aggregateRes.rows;
 
     const totalRows = workoutsRes.total;
+    console.log("here is aggregate data: ", userAggregate);
 
     return {
         userWorkouts,
@@ -31,6 +34,7 @@ export async function protectedLoader() {
         userSets,
         user,
         dailyQuote,
-        totalRows
+        userAggregate,
+        totalRows,
     };
 }
