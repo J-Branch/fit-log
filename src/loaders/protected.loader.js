@@ -28,8 +28,6 @@ export async function protectedLoader() {
     const totalRows = workoutsRes.total;
     console.log("here is aggregate data: ", userAggregate);
 
-    const totalRows = workoutsRes.total;
-
     return {
         userWorkouts,
         userExercises,
