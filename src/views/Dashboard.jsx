@@ -1,11 +1,13 @@
 import { useEffect, useMemo } from 'react';
 import { Link, useRouteLoaderData } from "react-router-dom";
-import { ProgressBar } from '../components/LevelBar';
+import { ProgressBar } from '../components/dashboard/LevelBar';
 import { calculateLevel } from "../utils/dashboardUtils/levelCalculator";
 import { WEIGHT_MILESTONES, DISTANCE_MILESTONES } from "../utils/dashboardUtils/gamificationConstants";
 import { getCurrentMilestone } from "../utils/dashboardUtils/achievementCalculator";
 import { WorkoutRow } from '../utils/workoutPageUtils/workoutPageTable';
-import { AchievementItem } from '../components/AchievementItem';
+import { AchievementItem } from '../components/dashboard/AchievementItem';
+import AchievementIcon from "../assets/icons/achievementIcon.svg";
+import { AchievementPageLink } from "../components/dashboard/AchievementButton.jsx";
 
 
 function Dashboard() {
@@ -25,12 +27,13 @@ function Dashboard() {
     }, [totalWeight, totalDistance]);
 
     const nextWeightGoal = WEIGHT_MILESTONES.find(m => m.threshold > totalWeight);
+    const nextDistanceGoal = DISTANCE_MILESTONES.find(m => m.threshold > totalDistance);
 
     return (
         <>
             <div className="flex flex-col h-screen w-full">
                 {/* Container for the top part of dashboard */}
-                <div className="h-[15%]">
+                <div className="h-[15%] bg-primary-white border-l-1">
                     <div className="flex flex-col">
                         <div className="h-[20%] text-center ml-10 mr-10">
                             Current Level: {level}
@@ -44,19 +47,18 @@ function Dashboard() {
                 </div>
 
                 {/* Container for the middle part of dashboard */}
-                <div className="h-[60%] bg-primary-gray">
+                <div className="h-[60%] bg-primary-white border-1 text-center">
                     Middle Content
                     {/* 
                     Want to fill this up with previous Workouts.
                     But need to fix backend issues first.
                     */}
-                    Total Weight = {totalWeight}
                 </div>
 
                 {/* Container for the bottom part of dashboard */}
-                <div className="h-[25%] flex flex-row bg-primary-white">
+                <div className="h-[25%] flex flex-row bg-primary-white border-l-1">
                     <div className="w-[40%] text-center overflow-y-auto">
-                        Weightlifting Achievements
+                        Next Weightlifting Achievement
 
                         <AchievementItem 
                         threshold={nextWeightGoal.threshold} 
@@ -66,10 +68,20 @@ function Dashboard() {
 
                     </div>
                     <div className="w-[40%] text-center overflow-y-auto">
-                        Distance Achievements
+                        Next Distance Achievement
+
+                        <AchievementItem 
+                        threshold={nextDistanceGoal.threshold}
+                        total={totalDistance}
+                        label={nextDistanceGoal.comparison}
+                        />
                     </div>
                     <div className="w-[20%] text-center overflow-y-auto">
-                        Achivements Button
+                        Go To Achievements
+
+                        {/* Add Button to go to Achievements Page */}
+                        <AchievementPageLink to="achievements" icon={<img src={AchievementIcon} className="w-40 h-30"></img>} />
+                        
                     </div>
                 </div>
             </div>
