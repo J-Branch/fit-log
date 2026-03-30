@@ -25,6 +25,7 @@ export async function protectedLoader() {
     const dailyQuote = quotesRes.rows;
     const userAggregate = aggregateRes.rows;
 
+    const totalRows = workoutsRes.total;
     console.log("here is aggregate data: ", userAggregate);
 
     const totalRows = workoutsRes.total;
