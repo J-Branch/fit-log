@@ -40,7 +40,7 @@ export async function workoutSubmit({ request }) {
             return {error: result.message}
         }
 
-        return redirect("../workouts?success=true");
+        return redirect("../workouts?toast=created");
 
     } catch (error) {
         return {error: error.message};

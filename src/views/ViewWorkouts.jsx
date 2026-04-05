@@ -1,6 +1,6 @@
-import { Link, useLoaderData } from "react-router-dom";
+import { Link, useLoaderData, useNavigate, useSearchParams} from "react-router-dom";
 import { WorkoutRow } from "../utils/workoutPageUtils/workoutPageTable";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 
 function getPagination(currentPage, totalPages) {
@@ -48,6 +48,9 @@ function ViewWorkouts() {
 
     const { workouts, page, totalPages, total, error } = useLoaderData();
     const pages = getPagination(page, totalPages);
+    const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
+    const toastShown = useRef(false);
 
     useEffect(() => {
         if (error === "rate_limit") {
@@ -55,11 +58,37 @@ function ViewWorkouts() {
         }
     }, [error]);
 
+    useEffect(() => {
+        if (toastShown.current) return;
+
+        const toastType = searchParams.get("toast");
+        if (!toastType) return;
+
+        // toast message if user created new workout
+        if (toastType === "created") {
+            toast.success("Workout Created!");
+        }
+
+        // toast message if user edited workout
+        if (toastType === "edited") {
+            toast.success("Workout Updated!");
+        }
+
+        // toast message if user deleted workout
+        if (toastType === "deleted") {
+            toast.success("Workout Deleted!");
+        }
+
+        toastShown.current = true;
+
+        navigate(".", {replace: true});
+    }, [searchParams, navigate]);
+
     return (
         <div>
             <div>
                 <h1></h1>
-                <Link></Link>
+                <Link to="../workouts/create">Create Workout</Link>
             </div>
 
             {workouts.length ? (
