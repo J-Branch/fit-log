@@ -14,6 +14,7 @@ export async function workoutsLoader({ request }) {
             databaseId,
             tableId: "workouts",
             queries: [
+                Query.orderDesc("$createdAt"),
                 Query.limit(limit),
                 Query.offset(offset),
             ]

@@ -22,7 +22,7 @@ export async function editSubmit({ request }) {
             return {error: result.message}
         }
 
-        return redirect("../workouts?success=true");
+        return redirect("../workouts?toast=edited");
  
     } catch (error) {
         return {error: error.message};

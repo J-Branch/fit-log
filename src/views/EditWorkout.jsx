@@ -95,7 +95,6 @@ function EditWorkout() {
 
                         <Form method="post">
                             <input type="hidden" name="payload" value={JSON.stringify(form)}/>
-                            <input type="hidden" name="deleteWorkout" value="true"/>
 
                             <button
                                 type="submit"
