@@ -1,4 +1,4 @@
-import { Client, TablesDB, ID, Permission, Role } from "node-appwrite";
+import { Account, Client, TablesDB, ID, Permission, Role } from "node-appwrite";
 
 export default async ({ req, res, log, error }) => {
 
@@ -8,15 +8,21 @@ export default async ({ req, res, log, error }) => {
     .setKey(process.env.APPWRITE_API_KEY);
 
   const tablesdb = new TablesDB(client);
+  const account = new Account(client);
 
   const DATABASE_ID = process.env.APPWRITE_DATABASE_ID;
   const WORKOUTS_ID = process.env.APPWRITE_WORKOUTS_ID;
   const EXERCISES_ID = process.env.APPWRITE_EXERCISES_ID;
   const SETS_ID = process.env.APPWRITE_SETS_ID;
 
+  const AGGREGATE_ID = process.env.APPWRITE_AGGREGATE_ID;
+
   // const USER_ID = process.env.APPWRITE_FUNCTION_USER_ID;
 
-  const USER_ID = req.headers['x-appwrite-user-id'];
+  // const USER_ID = req.headers['x-appwrite-user-id'];
+  const user = await account.get();
+  const USER_ID = user.$id;
+
 
   const ownerRole = Role.user(USER_ID);
 
@@ -97,6 +103,14 @@ export default async ({ req, res, log, error }) => {
 
   try {
 
+    const aggregteRow = await tablesdb.listRows({
+      databaseId: DATABASE_ID,
+      tableId: AGGREGATE_ID,
+      queries: [`userId=${USER_ID}`]
+    });
+
+    const aggregateRowId = aggregteRow.rows[0].$id;
+
     const form = JSON.parse(req.body);
     const type = req.headers["x-action-type"];
 
@@ -142,6 +156,14 @@ export default async ({ req, res, log, error }) => {
           permissions: ownerPermissions
         });
 
+        await tablesdb.incrementRowColumn({
+          databaseId: DATABASE_ID,
+          tableId: AGGREGATE_ID,
+          rowId: aggregateRowId,
+          column: 'TotalDistance',
+          value: Number(distance),
+        });
+
       } else {
 
         // if not distance/time then it is weightlifting 
@@ -153,11 +175,16 @@ export default async ({ req, res, log, error }) => {
           permissions: ownerPermissions
         });
 
+        let exerciseWeight = 0;
+
         const exercises = form.exercises;
 
         const exercisePromises = exercises.map(async (exercise) => {
 
           if (!exercise.exerciseName) return;
+
+          // adds up all of the exercises total weight
+          exerciseWeight += Number(exercise.totalWeight)
 
           const eid = ID.unique();
 
@@ -172,16 +199,22 @@ export default async ({ req, res, log, error }) => {
             permissions: ownerPermissions
           });
 
+          let setWeight = 0;
+
           const setPromises = exercise.sets.map(set => {
 
             if (!set.reps && !set.weight) return;
+
+            // adds up each set's weight
+            setWeight += Number(set.weight);
 
             return tablesdb.createRow({
               databaseId: DATABASE_ID,
               tableId: SETS_ID,
               rowId: ID.unique(),
               data: {
-                eid,
+                eid: eid,
+                wid: wid,
                 setCounter: Number(set.setCounter),
                 reps: Number(set.reps),
                 weight: Number(set.weight)
@@ -193,9 +226,38 @@ export default async ({ req, res, log, error }) => {
 
           await Promise.all(setPromises);
 
+          // updates the exercise totalWeight after all the sets have been created and added up
+          await tablesdb.updateRow({
+            databaseId: DATABASE_ID,
+            tableId: EXERCISES_ID,
+            rowId: eid,
+            data: {
+              totalWeight: setWeight
+            }
+          });
+
         });
 
         await Promise.all(exercisePromises);
+
+        // updates the workout totalWeight after all of the exercise's total weight has been added up
+        await tablesdb.updateRow({
+          databaseId: DATABASE_ID,
+          tableId: WORKOUTS_ID,
+          rowId: wid,
+          data: {
+            totalWeight: exerciseWeight
+          }
+        });
+
+        // add the workout total weight to the current aggregate table weight
+        await tablesdb.incrementRowColumn({
+          databaseId: DATABASE_ID,
+          tableId: AGGREGATE_ID,
+          rowId: aggregateRowId,
+          column: 'totalWeight',
+          value: exerciseWeight
+        })
       }
     }
 

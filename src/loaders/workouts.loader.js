@@ -38,8 +38,6 @@ export async function workoutsLoader({ request }) {
             };
         }
 
-        return redirect("/dashboard", {
-            state: { error: "Failed to load workouts"}
-        });
+        return redirect("/dashboard");
     }
 }
