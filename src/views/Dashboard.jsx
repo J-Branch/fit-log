@@ -31,9 +31,9 @@ function Dashboard() {
 
     return (
         <>
-            <div className="flex flex-col h-screen w-full">
+            <div className="flex flex-col h-screen w-full overflow-hidden">
                 {/* Container for the top part of dashboard */}
-                <div className="h-[15%] bg-primary-white border-l-1">
+                <div className="flex-none bg-primary-white">
                     <div className="flex flex-col">
                         <div className="h-[20%] text-center ml-10 mr-10">
                             Current Level: {level}
@@ -47,7 +47,7 @@ function Dashboard() {
                 </div>
 
                 {/* Container for the middle part of dashboard */}
-                <div className="h-[60%] bg-primary-white border-1 text-center">
+                <div className="flex-1 bg-primary-white text-center pt-8">
                     Middle Content
                     {/* 
                     Want to fill this up with previous Workouts.
@@ -56,8 +56,8 @@ function Dashboard() {
                 </div>
 
                 {/* Container for the bottom part of dashboard */}
-                <div className="h-[25%] flex flex-row bg-primary-white border-l-1">
-                    <div className="w-[40%] text-center overflow-y-auto">
+                <div className="flex-none flex flex-row bg-primary-white pb-3">
+                    <div className="flex-1 text-center overflow-hidden">
                         Next Weightlifting Achievement
 
                         <AchievementItem 
@@ -67,7 +67,7 @@ function Dashboard() {
                         />
 
                     </div>
-                    <div className="w-[40%] text-center overflow-y-auto">
+                    <div className="flex-1 text-center overflow-hidden">
                         Next Distance Achievement
 
                         <AchievementItem 
@@ -76,11 +76,11 @@ function Dashboard() {
                         label={nextDistanceGoal.comparison}
                         />
                     </div>
-                    <div className="w-[20%] text-center overflow-y-auto">
+                    <div className="flex-1 text-center overflow-hidden">
                         Go To Achievements
 
                         {/* Add Button to go to Achievements Page */}
-                        <AchievementPageLink to="achievements" icon={<img src={AchievementIcon} className="w-40 h-30"></img>} />
+                        <AchievementPageLink to="achievements" icon={<img src={AchievementIcon} className="w-60 h-40"></img>} />
                         
                     </div>
                 </div>

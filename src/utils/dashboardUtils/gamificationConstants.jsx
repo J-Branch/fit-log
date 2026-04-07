@@ -16,7 +16,7 @@ export const WEIGHT_MILESTONES = [
 
 export const DISTANCE_MILESTONES = [
       { level: 1, threshold: 1, comparison: "The First Mile" },
-      { level: 2, threshold: 5.4984, comparison: "The height of Everest" },
+      { level: 2, threshold: 5.4984, comparison: "Height of Everest" },
       { level: 3, threshold: 13.1, comparison: "Half Marathon Length" },
       { level: 4, threshold: 26.2, comparison: "Full Marathon Length" },
       { level: 5, threshold: 277, comparison: "Length of the Grand Canyon" },
