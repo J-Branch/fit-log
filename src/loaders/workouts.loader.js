@@ -38,6 +38,6 @@ export async function workoutsLoader({ request }) {
             };
         }
 
-        return redirect("/dashboard");
+        return redirect("../dashboard");
     }
 }

@@ -1,4 +1,4 @@
-import { Account, Client, TablesDB, ID, Permission, Role } from "node-appwrite";
+import { Client, TablesDB, ID, Permission, Role, Query } from "node-appwrite";
 
 export default async ({ req, res, log, error }) => {
 
@@ -8,7 +8,6 @@ export default async ({ req, res, log, error }) => {
     .setKey(process.env.APPWRITE_API_KEY);
 
   const tablesdb = new TablesDB(client);
-  const account = new Account(client);
 
   const DATABASE_ID = process.env.APPWRITE_DATABASE_ID;
   const WORKOUTS_ID = process.env.APPWRITE_WORKOUTS_ID;
@@ -19,9 +18,10 @@ export default async ({ req, res, log, error }) => {
 
   // const USER_ID = process.env.APPWRITE_FUNCTION_USER_ID;
 
-  // const USER_ID = req.headers['x-appwrite-user-id'];
-  const user = await account.get();
-  const USER_ID = user.$id;
+  const USER_ID = req.headers['x-appwrite-user-id'];
+  console.log("this is what the header is returning: ", req.headers['x-appwrite-user-id']);
+  // const user = await account.get();
+  // const USER_ID = user.$id;
 
 
   const ownerRole = Role.user(USER_ID);
@@ -106,10 +106,16 @@ export default async ({ req, res, log, error }) => {
     const aggregteRow = await tablesdb.listRows({
       databaseId: DATABASE_ID,
       tableId: AGGREGATE_ID,
-      queries: [`userId=${USER_ID}`]
+      queries: [
+        Query.equal("userId", [USER_ID])
+      ]
     });
 
+    console.log("this is aggrgateRiow: ", aggregteRow);
+
     const aggregateRowId = aggregteRow.rows[0].$id;
+
+    console.log("this is it after format: ", aggregateRowId);
 
     const form = JSON.parse(req.body);
     const type = req.headers["x-action-type"];
@@ -160,7 +166,7 @@ export default async ({ req, res, log, error }) => {
           databaseId: DATABASE_ID,
           tableId: AGGREGATE_ID,
           rowId: aggregateRowId,
-          column: 'TotalDistance',
+          column: 'totalDistance',
           value: Number(distance) || 0,
         });
 
