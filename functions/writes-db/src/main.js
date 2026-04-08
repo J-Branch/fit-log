@@ -161,7 +161,7 @@ export default async ({ req, res, log, error }) => {
           tableId: AGGREGATE_ID,
           rowId: aggregateRowId,
           column: 'TotalDistance',
-          value: Number(distance),
+          value: Number(distance) || 0,
         });
 
       } else {
@@ -179,12 +179,9 @@ export default async ({ req, res, log, error }) => {
 
         const exercises = form.exercises;
 
-        const exercisePromises = exercises.map(async (exercise) => {
+        for (const exercise of exercises) {
 
-          if (!exercise.exerciseName) return;
-
-          // adds up all of the exercises total weight
-          exerciseWeight += Number(exercise.totalWeight)
+          if (!exercise.exerciseName) continue;
 
           const eid = ID.unique();
 
@@ -201,14 +198,15 @@ export default async ({ req, res, log, error }) => {
 
           let setWeight = 0;
 
-          const setPromises = exercise.sets.map(set => {
+          for (const set of exercise.sets) {
 
-            if (!set.reps && !set.weight) return;
+            if (!set.reps && !set.weight) continue;
 
-            // adds up each set's weight
-            setWeight += Number(set.weight);
+            const weight = Number(set.weight) || 0;
 
-            return tablesdb.createRow({
+            setWeight += weight;
+
+            await tablesdb.createRow({
               databaseId: DATABASE_ID,
               tableId: SETS_ID,
               rowId: ID.unique(),
@@ -217,14 +215,11 @@ export default async ({ req, res, log, error }) => {
                 wid: wid,
                 setCounter: Number(set.setCounter),
                 reps: Number(set.reps),
-                weight: Number(set.weight)
+                weight: weight
               },
               permissions: ownerPermissions
             });
-
-          });
-
-          await Promise.all(setPromises);
+          };
 
           // updates the exercise totalWeight after all the sets have been created and added up
           await tablesdb.updateRow({
@@ -236,9 +231,9 @@ export default async ({ req, res, log, error }) => {
             }
           });
 
-        });
+          exerciseWeight += setWeight;
+        };
 
-        await Promise.all(exercisePromises);
 
         // updates the workout totalWeight after all of the exercise's total weight has been added up
         await tablesdb.updateRow({
