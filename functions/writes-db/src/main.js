@@ -35,7 +35,7 @@ export default async ({ req, res, log, error }) => {
   async function deleteWorkoutRow(node) {
 
     // base case for if the workout is marked, delete and return
-    if (node.table === "workouts" && node.toDelete === true) {
+    if (node.table === WORKOUTS_ID && node.toDelete === true) {
       await tablesdb.deleteRow({
         databaseId: DATABASE_ID,
         tableId: WORKOUTS_ID,
@@ -260,6 +260,38 @@ export default async ({ req, res, log, error }) => {
           value: exerciseWeight
         })
       }
+    }
+
+    if (type === "delete") {
+      const { id, workoutType, updateNumber} = body;
+
+      if (workoutType === "Distance/Time") {
+
+        await tablesdb.decrementRowColumn({
+          databaseId: DATABASE_ID,
+          tableId: AGGREGATE_ID,
+          rowId: aggregateRowId,
+          column: 'totalDistance',
+          value: Number(updateNumber)
+        })
+      } else if (workoutType === "Weightlifting") {
+
+        await tablesdb.decrementRowColumn({
+          databaseId: DATABASE_ID,
+          tableId: AGGREGATE_ID,
+          rowId: aggregateRowId,
+          column: 'totalWeight',
+          value: Number(updateNumber)
+        })
+      }
+
+      await tablesdb.deleteRow({
+        databaseId: DATABASE_ID,
+        tableId: WORKOUTS_ID,
+        rowId: id
+      });
+
+      return res.json({ success: true });
     }
 
     if (type === "edit") {

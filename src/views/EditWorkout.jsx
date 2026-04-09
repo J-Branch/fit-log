@@ -1,4 +1,4 @@
-import { Link, useParams, Form, useActionData, useLoaderData, useRouteLoaderData} from "react-router-dom";
+import { Link, useParams, Form, useActionData, useLoaderData, useRouteLoaderData, useSubmit, useNavigation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useWorkoutForm } from "../hooks/workouts/useWorkoutForm";
 import Weightlifting from "../components/editWorkout/Weightlifting";
@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 function EditWorkout() {
     const params = useParams();
     const workoutId = params.id;
+    const submit = useSubmit();
 
     const { userWorkouts } = useRouteLoaderData("AppLayout");
     const exercises = useLoaderData();
@@ -24,6 +25,9 @@ function EditWorkout() {
     const [backupForm, setBackupForm] = useState(null);
 
     const actionData = useActionData();
+
+    const navigation = useNavigation();
+    const isDeleting = navigation.state === "submitting" && navigation.formData?.get("intent");
 
     useEffect(() => {
         if (actionData?.error) {
@@ -66,6 +70,41 @@ function EditWorkout() {
         );
     }
     // console.log(form);
+    
+    function handleDelete() {
+        toast((t) => (
+            <div className="space-y-2">
+                <p>Are you sure you want to delete this workout?</p>
+    
+                <div className="flex gap-2">
+                    <button
+                        className="px-3 py-1 bg-red-600 text-white rounded"
+                        onClick={() => {
+                            submit(
+                                {
+                                    intent: "delete",
+                                    id: form.$id,
+                                    workoutType: form.workoutType,
+                                    updateNumber: form.workoutType === "Weightlifting" ? form.totalWeight : form.distance
+                                },
+                                { method: "post" }
+                            );
+                            toast.dismiss(t.id);
+                        }}
+                    >
+                        Are you sure you want to delete?
+                    </button>
+    
+                    <button
+                        className="px-3 py-1 bg-gray-300 rounded"
+                        onClick={() => toast.dismiss(t.id)}
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        ));
+    }
 
     // -----------------------------
     // RENDER
@@ -93,7 +132,7 @@ function EditWorkout() {
                             }}
                         />
 
-                        <Form method="post">
+                        {/* <Form method="post">
                             <input type="hidden" name="payload" value={JSON.stringify(form)}/>
 
                             <button
@@ -102,7 +141,16 @@ function EditWorkout() {
                             >
                                 Delete Workout
                             </button>
-                        </Form>
+                        </Form> */}
+
+                        <button
+                            type="button"
+                            onClick={handleDelete}
+                            disabled={isDeleting}
+                            className="px-4 py-2 bg-gray-800 text-white rounded"
+                        >
+                            {isDeleting ? "Deleting..." : "Delete workout"}
+                        </button>
                     </div>
                 ) : (
                     <h1 className="text-2xl font-semibold">{form.workoutName}</h1>
