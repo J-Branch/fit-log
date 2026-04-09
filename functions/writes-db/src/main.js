@@ -263,7 +263,7 @@ export default async ({ req, res, log, error }) => {
     }
 
     if (type === "delete") {
-      const { id, workoutType, updateNumber} = body;
+      const { id, workoutType, updateNumber} = form;
 
       if (workoutType === "Distance/Time") {
 
