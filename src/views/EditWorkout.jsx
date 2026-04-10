@@ -15,8 +15,8 @@ function EditWorkout() {
     const exercises = useLoaderData();
     const workout = userWorkouts.find(workout => workout.$id === workoutId);
 
-    console.log("workout structure: ", workout);
-    console.log("exercises: ", exercises);
+    // console.log("workout structure: ", workout);
+    // console.log("exercises: ", exercises);
 
 
     // const fetchedWorkout = useFetchWorkout(workoutId);
@@ -39,7 +39,7 @@ function EditWorkout() {
     useEffect(() => {
         if (workout && exercises && !form.$id) {
             setForm({ ...workout, exercises});
-            console.log("full form: ", form)
+            // console.log("full form: ", form)
         }
     }, [workout, exercises, form.$id]);
 
