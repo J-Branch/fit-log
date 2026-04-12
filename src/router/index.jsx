@@ -46,10 +46,10 @@ export const router = createBrowserRouter([
                 id: "AppLayout",
                 element: <AppLayout />,
                 loader: protectedLoader,
-                shouldRevalidate: ({ nextUrl }) => {
-                    const success = nextUrl.searchParams.get("success");
-                    return success === "true";
-                },
+                // shouldRevalidate: ({ nextUrl }) => {
+                //     const success = nextUrl.searchParams.get("success");
+                //     return success === "true";
+                // },
                 children: [
                     { path: "logout", action: logoutAction },
                     {
