@@ -49,7 +49,7 @@ export async function editSubmit({ request, params }) {
 
         return redirect("../workouts?toast=edited");
  
-    } catch (error) {
-        return {error: error.message};
+    } catch (err) {
+        console.error("edit action error: ", err);
     }
 }

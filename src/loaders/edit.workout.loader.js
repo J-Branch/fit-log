@@ -7,10 +7,7 @@ export async function editWorkoutLoader({ params }) {
 
     try {
 
-        const workout = await getRow({
-            tableId: "workouts",
-            rowId: workoutId,
-        });
+        const workout = await getRow("workouts", workoutId);
 
         if (workout.workoutType === "Weightlifting") {
 
@@ -31,12 +28,20 @@ export async function editWorkoutLoader({ params }) {
                 sets: sets.filter(set => set.eid === ex.$id)
             }));
 
-            return fullExercises;
+            return {
+                workout,
+                exercises: fullExercises
+            };
         } else {
-            return workout;
+            return {
+                workout,
+                exercises: []
+            };
         }
     
     } catch (err) {
-        return err.message;
+        console.error("Loader error: ", err)
+        console.error("Message: ", err?.message)
+        console.error("Stack: ", err?.stack)
     }
 }
