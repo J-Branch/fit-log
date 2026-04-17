@@ -32,23 +32,33 @@ export default async ({ req, res, log, error }) => {
     Permission.delete(ownerRole),
   ];
 
+  function getTableId(node) {
+    if (node.workoutName) return WORKOUTS_ID;
+
+    if (node.exerciseName) return EXERCISES_ID;
+
+    if (node.reps !== undefined && node.weight !== undefined) return SETS_ID;
+  }
+
+
   async function deleteWorkoutRow(node) {
+    const tableId = getTableId(node);
 
     // base case for if the workout is marked, delete and return
-    if (node.table === WORKOUTS_ID && node.toDelete === true) {
-      await tablesdb.deleteRow({
-        databaseId: DATABASE_ID,
-        tableId: WORKOUTS_ID,
-        rowId: node.$id
-      });
-      return;
-    }
+    // if (node.table === WORKOUTS_ID && node.toDelete === true) {
+    //   await tablesdb.deleteRow({
+    //     databaseId: DATABASE_ID,
+    //     tableId: WORKOUTS_ID,
+    //     rowId: node.$id
+    //   });
+    //   return;
+    // }
 
     // base case for anything else marked for delete
     if (node.toDelete === true) {
       await tablesdb.deleteRow({
         databaseId: DATABASE_ID,
-        tableId: node.table,
+        tableId,
         rowId: node.$id
       });
       return;
@@ -72,16 +82,18 @@ export default async ({ req, res, log, error }) => {
   }
 
   async function updateWorkoutRow(node) {
+    const tableId = getTableId(node);
 
     const promises = [];
 
     if (node.isDirty && node.$id) {
+      const {exercises, sets, table, isDirty, toDelete, ...cleanData} = node
       promises.push(
         tablesdb.updateRow({
           databaseId: DATABASE_ID,
-          tableId: node.table,
+          tableId,
           rowId: node.$id,
-          data: node
+          data: cleanData
         })
       );
     }
@@ -206,11 +218,12 @@ export default async ({ req, res, log, error }) => {
 
           for (const set of exercise.sets) {
 
-            if (!set.reps && !set.weight) continue;
+            if (!set.reps || !set.weight) continue;
 
             const weight = Number(set.weight) || 0;
+            const reps = Number(set.reps) || 0;
 
-            setWeight += weight;
+            setWeight += weight * reps;
 
             await tablesdb.createRow({
               databaseId: DATABASE_ID,
@@ -296,8 +309,16 @@ export default async ({ req, res, log, error }) => {
 
     if (type === "edit") {
 
-      await deleteWorkoutRow(form);
+      const oldWorkout = await tablesdb.getRow({
+        databaseId: DATABASE_ID,
+        tableId: WORKOUTS_ID,
+        rowId: form.$id
+      });
 
+      const oldTotalWeight = oldWorkout.totalWeight || 0;
+      const oldTotalDistance = oldWorkout.distance || 0;
+
+      await deleteWorkoutRow(form);
       await updateWorkoutRow(form);
 
       const wid = form.$id;
@@ -369,6 +390,59 @@ export default async ({ req, res, log, error }) => {
 
         await Promise.all(setPromises);
 
+      }
+
+      let newTotalWeight = 0;
+      if (form.workoutType === "Weightlifting") {
+        for (const exercise of form.exercises) {
+          if (exercise.toDelete) continue;
+
+          for (const set of exercise.sets) {
+            if (set.toDelete) continue;
+
+            newTotalWeight += Number(set.weight) || 0;
+          }
+        }
+      }
+
+      const newTotalDistance = form.workoutType === "Distance/Time" ? Number(form.distance) || 0 : 0
+
+      await tablesdb.updateRow({
+        databaseId: DATABASE_ID,
+        tableId: WORKOUTS_ID,
+        rowId: wid,
+        data: {
+          totalWeight: newTotalWeight,
+          distance: newTotalDistance,
+        }
+      });
+
+      if (form.workoutType === "Weightlifting") {
+        const diff = newTotalWeight - oldTotalWeight;
+
+        if (diff !== 0) {
+          await tablesdb.incrementRowColumn({
+            databaseId: DATABASE_ID,
+            tableId: AGGREGATE_ID,
+            rowId: aggregateRowId,
+            column: "totalWeight",
+            value: diff
+          });
+        }
+      }
+
+      if (form.workoutType === "Distance/Time") {
+        const diff = newTotalDistance - oldTotalDistance;
+
+        if (diff !== 0) {
+          await tablesdb.incrementRowColumn({
+            databaseId: DATABASE_ID,
+            tableId: AGGREGATE_ID,
+            rowId: aggregateRowId,
+            column: "totalDistance",
+            value: diff
+          });
+        }
       }
     }
 

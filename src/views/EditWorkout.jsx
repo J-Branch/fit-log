@@ -7,8 +7,8 @@ import toast from "react-hot-toast";
 import { produce } from "immer";
 
 function EditWorkout() {
-    const params = useParams();
-    const workoutId = params.id;
+    // const params = useParams();
+    // const workoutId = params.id;
     const submit = useSubmit();
 
     const {workout, exercises} = useLoaderData();
