@@ -9,6 +9,7 @@ import ViewWorkouts from "../views/ViewWorkouts";
 import CreateWorkout from "../views/CreateWorkout";
 import EditWorkout from "../views/EditWorkout";
 import Analytics from "../views/Analytics";
+import Achievements from "../views/Achievements";
 import NotFoundPage from "../views/NotFoundPage";
 
 // Layouts 
@@ -57,8 +58,9 @@ export const router = createBrowserRouter([
                         path: "home",
                         element: <MainPage />,
                         children: [
-                            { index: true, element: <Dashboard /> },
+                            { index: true, element: <Navigate to="Dashboard" /> },
                             { path: "dashboard", element: <Dashboard /> },
+                            { path: "dashboard/achievements", element: <Achievements />},
                             { path: "workouts", element: <ViewWorkouts />, loader: workoutsLoader },
                             { path: "workouts/create", element: <CreateWorkout />, action: workoutSubmit },
                             { path: "workout/:id", element: <EditWorkout />, action: editSubmit, loader: editWorkoutLoader },
