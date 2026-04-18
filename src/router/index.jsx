@@ -20,6 +20,7 @@ import AppLayout from "../views/layouts/AppLayout";
 import { protectedLoader } from "../loaders/protected.loader";
 import { authLoader } from "../loaders/auth.loader";
 import { editWorkoutLoader } from "../loaders/edit.workout.loader";
+import { workoutsLoader } from "../loaders/workouts.loader";
 
 // Actions 
 import { authAction } from "../actions/auth.action";
@@ -46,10 +47,10 @@ export const router = createBrowserRouter([
                 id: "AppLayout",
                 element: <AppLayout />,
                 loader: protectedLoader,
-                shouldRevalidate: ({ nextUrl }) => {
-                    const success = nextUrl.searchParams.get("success");
-                    return success === "true";
-                },
+                // shouldRevalidate: ({ nextUrl }) => {
+                //     const success = nextUrl.searchParams.get("success");
+                //     return success === "true";
+                // },
                 children: [
                     { path: "logout", action: logoutAction },
                     {
@@ -60,7 +61,7 @@ export const router = createBrowserRouter([
                             { index: true, element: <Navigate to="Dashboard" /> },
                             { path: "dashboard", element: <Dashboard /> },
                             { path: "dashboard/achievements", element: <Achievements />},
-                            { path: "workouts", element: <ViewWorkouts /> },
+                            { path: "workouts", element: <ViewWorkouts />, loader: workoutsLoader },
                             { path: "workouts/create", element: <CreateWorkout />, action: workoutSubmit },
                             { path: "workout/:id", element: <EditWorkout />, action: editSubmit, loader: editWorkoutLoader },
                             { path: "analytics", element: <Analytics /> },

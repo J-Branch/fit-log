@@ -6,7 +6,6 @@ export function useWorkoutForm() {
         $id: null,
         toDelete: false,
         isDirty: false,
-        table: "workouts",
         workoutName: "",
         workoutType: "",
         date: {month: "", day: "", year: ""},
@@ -17,14 +16,12 @@ export function useWorkoutForm() {
                 $id: null,
                 toDelete: false,
                 isDirty: false,
-                table: "exercises",
                 exerciseName: "",
                 sets: [
                     {
                         $id: null,
                         toDelete: false,
                         isDirty: false,
-                        table: "sets",
                         eid: null,
                         setCounter: 1,
                         reps: "",

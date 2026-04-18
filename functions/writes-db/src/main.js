@@ -1,4 +1,4 @@
-import { Client, TablesDB, ID, Permission, Role } from "node-appwrite";
+import { Client, TablesDB, ID, Permission, Role, Query } from "node-appwrite";
 
 export default async ({ req, res, log, error }) => {
 
@@ -14,9 +14,15 @@ export default async ({ req, res, log, error }) => {
   const EXERCISES_ID = process.env.APPWRITE_EXERCISES_ID;
   const SETS_ID = process.env.APPWRITE_SETS_ID;
 
+  const AGGREGATE_ID = process.env.APPWRITE_AGGREGATE_ID;
+
   // const USER_ID = process.env.APPWRITE_FUNCTION_USER_ID;
 
   const USER_ID = req.headers['x-appwrite-user-id'];
+  console.log("this is what the header is returning: ", req.headers['x-appwrite-user-id']);
+  // const user = await account.get();
+  // const USER_ID = user.$id;
+
 
   const ownerRole = Role.user(USER_ID);
 
@@ -26,23 +32,33 @@ export default async ({ req, res, log, error }) => {
     Permission.delete(ownerRole),
   ];
 
+  function getTableId(node) {
+    if (node.workoutName) return WORKOUTS_ID;
+
+    if (node.exerciseName) return EXERCISES_ID;
+
+    if (node.reps !== undefined && node.weight !== undefined) return SETS_ID;
+  }
+
+
   async function deleteWorkoutRow(node) {
+    const tableId = getTableId(node);
 
     // base case for if the workout is marked, delete and return
-    if (node.table === "workouts" && node.toDelete === true) {
-      await tablesdb.deleteRow({
-        databaseId: DATABASE_ID,
-        tableId: WORKOUTS_ID,
-        rowId: node.$id
-      });
-      return;
-    }
+    // if (node.table === WORKOUTS_ID && node.toDelete === true) {
+    //   await tablesdb.deleteRow({
+    //     databaseId: DATABASE_ID,
+    //     tableId: WORKOUTS_ID,
+    //     rowId: node.$id
+    //   });
+    //   return;
+    // }
 
     // base case for anything else marked for delete
     if (node.toDelete === true) {
       await tablesdb.deleteRow({
         databaseId: DATABASE_ID,
-        tableId: node.table,
+        tableId,
         rowId: node.$id
       });
       return;
@@ -66,16 +82,18 @@ export default async ({ req, res, log, error }) => {
   }
 
   async function updateWorkoutRow(node) {
+    const tableId = getTableId(node);
 
     const promises = [];
 
     if (node.isDirty && node.$id) {
+      const {exercises, sets, table, isDirty, toDelete, ...cleanData} = node
       promises.push(
         tablesdb.updateRow({
           databaseId: DATABASE_ID,
-          tableId: node.table,
+          tableId,
           rowId: node.$id,
-          data: node
+          data: cleanData
         })
       );
     }
@@ -96,6 +114,20 @@ export default async ({ req, res, log, error }) => {
   }
 
   try {
+
+    const aggregteRow = await tablesdb.listRows({
+      databaseId: DATABASE_ID,
+      tableId: AGGREGATE_ID,
+      queries: [
+        Query.equal("userId", [USER_ID])
+      ]
+    });
+
+    console.log("this is aggrgateRiow: ", aggregteRow);
+
+    const aggregateRowId = aggregteRow.rows[0].$id;
+
+    console.log("this is it after format: ", aggregateRowId);
 
     const form = JSON.parse(req.body);
     const type = req.headers["x-action-type"];
@@ -142,6 +174,14 @@ export default async ({ req, res, log, error }) => {
           permissions: ownerPermissions
         });
 
+        await tablesdb.incrementRowColumn({
+          databaseId: DATABASE_ID,
+          tableId: AGGREGATE_ID,
+          rowId: aggregateRowId,
+          column: 'totalDistance',
+          value: Number(distance) || 0,
+        });
+
       } else {
 
         // if not distance/time then it is weightlifting 
@@ -153,11 +193,13 @@ export default async ({ req, res, log, error }) => {
           permissions: ownerPermissions
         });
 
+        let exerciseWeight = 0;
+
         const exercises = form.exercises;
 
-        const exercisePromises = exercises.map(async (exercise) => {
+        for (const exercise of exercises) {
 
-          if (!exercise.exerciseName) return;
+          if (!exercise.exerciseName) continue;
 
           const eid = ID.unique();
 
@@ -172,37 +214,111 @@ export default async ({ req, res, log, error }) => {
             permissions: ownerPermissions
           });
 
-          const setPromises = exercise.sets.map(set => {
+          let setWeight = 0;
 
-            if (!set.reps && !set.weight) return;
+          for (const set of exercise.sets) {
 
-            return tablesdb.createRow({
+            if (!set.reps || !set.weight) continue;
+
+            const weight = Number(set.weight) || 0;
+            const reps = Number(set.reps) || 0;
+
+            setWeight += weight * reps;
+
+            await tablesdb.createRow({
               databaseId: DATABASE_ID,
               tableId: SETS_ID,
               rowId: ID.unique(),
               data: {
-                eid,
+                eid: eid,
+                wid: wid,
                 setCounter: Number(set.setCounter),
                 reps: Number(set.reps),
-                weight: Number(set.weight)
+                weight: weight
               },
               permissions: ownerPermissions
             });
+          };
 
+          // updates the exercise totalWeight after all the sets have been created and added up
+          await tablesdb.updateRow({
+            databaseId: DATABASE_ID,
+            tableId: EXERCISES_ID,
+            rowId: eid,
+            data: {
+              totalWeight: setWeight
+            }
           });
 
-          await Promise.all(setPromises);
+          exerciseWeight += setWeight;
+        };
 
+
+        // updates the workout totalWeight after all of the exercise's total weight has been added up
+        await tablesdb.updateRow({
+          databaseId: DATABASE_ID,
+          tableId: WORKOUTS_ID,
+          rowId: wid,
+          data: {
+            totalWeight: exerciseWeight
+          }
         });
 
-        await Promise.all(exercisePromises);
+        // add the workout total weight to the current aggregate table weight
+        await tablesdb.incrementRowColumn({
+          databaseId: DATABASE_ID,
+          tableId: AGGREGATE_ID,
+          rowId: aggregateRowId,
+          column: 'totalWeight',
+          value: exerciseWeight
+        })
       }
+    }
+
+    if (type === "delete") {
+      const { id, workoutType, updateNumber} = form;
+
+      if (workoutType === "Distance/Time") {
+
+        await tablesdb.decrementRowColumn({
+          databaseId: DATABASE_ID,
+          tableId: AGGREGATE_ID,
+          rowId: aggregateRowId,
+          column: 'totalDistance',
+          value: Number(updateNumber)
+        })
+      } else if (workoutType === "Weightlifting") {
+
+        await tablesdb.decrementRowColumn({
+          databaseId: DATABASE_ID,
+          tableId: AGGREGATE_ID,
+          rowId: aggregateRowId,
+          column: 'totalWeight',
+          value: Number(updateNumber)
+        })
+      }
+
+      await tablesdb.deleteRow({
+        databaseId: DATABASE_ID,
+        tableId: WORKOUTS_ID,
+        rowId: id
+      });
+
+      return res.json({ success: true });
     }
 
     if (type === "edit") {
 
-      await deleteWorkoutRow(form);
+      const oldWorkout = await tablesdb.getRow({
+        databaseId: DATABASE_ID,
+        tableId: WORKOUTS_ID,
+        rowId: form.$id
+      });
 
+      const oldTotalWeight = oldWorkout.totalWeight || 0;
+      const oldTotalDistance = oldWorkout.distance || 0;
+
+      await deleteWorkoutRow(form);
       await updateWorkoutRow(form);
 
       const wid = form.$id;
@@ -274,6 +390,59 @@ export default async ({ req, res, log, error }) => {
 
         await Promise.all(setPromises);
 
+      }
+
+      let newTotalWeight = 0;
+      if (form.workoutType === "Weightlifting") {
+        for (const exercise of form.exercises) {
+          if (exercise.toDelete) continue;
+
+          for (const set of exercise.sets) {
+            if (set.toDelete) continue;
+
+            newTotalWeight += Number(set.weight) || 0;
+          }
+        }
+      }
+
+      const newTotalDistance = form.workoutType === "Distance/Time" ? Number(form.distance) || 0 : 0
+
+      await tablesdb.updateRow({
+        databaseId: DATABASE_ID,
+        tableId: WORKOUTS_ID,
+        rowId: wid,
+        data: {
+          totalWeight: newTotalWeight,
+          distance: newTotalDistance,
+        }
+      });
+
+      if (form.workoutType === "Weightlifting") {
+        const diff = newTotalWeight - oldTotalWeight;
+
+        if (diff !== 0) {
+          await tablesdb.incrementRowColumn({
+            databaseId: DATABASE_ID,
+            tableId: AGGREGATE_ID,
+            rowId: aggregateRowId,
+            column: "totalWeight",
+            value: diff
+          });
+        }
+      }
+
+      if (form.workoutType === "Distance/Time") {
+        const diff = newTotalDistance - oldTotalDistance;
+
+        if (diff !== 0) {
+          await tablesdb.incrementRowColumn({
+            databaseId: DATABASE_ID,
+            tableId: AGGREGATE_ID,
+            rowId: aggregateRowId,
+            column: "totalDistance",
+            value: diff
+          });
+        }
       }
     }
 
