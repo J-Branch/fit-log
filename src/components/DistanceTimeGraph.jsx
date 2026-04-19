@@ -7,7 +7,7 @@ function DistanceTimeGraph({ workouts }) {
     const [workoutVariety, setWorkoutVariety] = useState('all');
     const [selectedWorkout, setSelectedWorkout] = useState('');
     const [distOrTime, setDistOrTime] = useState('');
-    const [selectedRange, setSelectedRange] = useState('all');
+    const [selectedRange, setSelectedRange] = useState('1m');
     const [graphName, setGraphName] = useState('Total Distance');
 
     const workoutOptions = useUniqueWorkoutNames(workouts);
@@ -74,13 +74,13 @@ function DistanceTimeGraph({ workouts }) {
                 <option value="mileTime">Average Mile Time</option>
             </select>
             
-            <label>Time Range:</label>
-            <select value={selectedRange} onChange={(e) => setSelectedRange(e.target.value)}>
-                <option value="all">All Time</option>
-                <option value="1m">1 Month</option>
-                <option value="6m">6 Months</option>
-                <option value="1y">1 Year</option>
-            </select>
+            <label>Time Range: 1 Month</label>
+            {/* <select value={selectedRange} onChange={(e) => setSelectedRange(e.target.value)}> */}
+                {/* <option value="all">All Time</option> */}
+                {/* <option value="1m">1 Month</option> */}
+                {/* <option value="6m">6 Months</option> */}
+                {/* <option value="1y">1 Year</option> */}
+            {/* </select> */}
 
             {percentageGrowth !== null && (
             <div style={{ margin: '0.5rem 0', fontWeight: 'bold', color: percentageGrowth > 0 ? 'green' : '#800020' }}>

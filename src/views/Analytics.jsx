@@ -1,10 +1,18 @@
 import WeightliftingGraph from '../components/WeightliftingGraph';
 import DistanceTimeGraph from '../components/DistanceTimeGraph';
-import { useRouteLoaderData } from 'react-router-dom';
+import { useLoaderData } from 'react-router-dom';
 import { useMemo } from 'react';
 
+// NEED -
+// Workouts 
+// Exercises 
+
+// ON LOAD - 
+// Load ALL Workouts 
+
 function Analytics() {
-    const { userWorkouts, userExercises, userSets } = useRouteLoaderData("AppLayout");
+    // const { userWorkouts, userExercises, userSets } = useRouteLoaderData("AppLayout");
+    const { userWorkouts, userExercises } = useLoaderData();
 
     const weightliftingWorkouts = useMemo(() =>
         userWorkouts.filter(w => w.workoutType === 'Weightlifting'),
@@ -17,7 +25,7 @@ function Analytics() {
     return (
         <div className="w-full min-h-screen bg-primary-white-two p-4">
             <div className="bg-primary-white p-4 rounded-md shadow-md mb-6">
-                <WeightliftingGraph workouts={weightliftingWorkouts} exercises={userExercises} sets={userSets} />
+                <WeightliftingGraph workouts={weightliftingWorkouts} exercises={userExercises} />
             </div>
         
 
