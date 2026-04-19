@@ -21,6 +21,7 @@ import { protectedLoader } from "../loaders/protected.loader";
 import { authLoader } from "../loaders/auth.loader";
 import { editWorkoutLoader } from "../loaders/edit.workout.loader";
 import { workoutsLoader } from "../loaders/workouts.loader";
+import { analyticsLoader } from "../loaders/analytics.loader";
 
 // Actions 
 import { authAction } from "../actions/auth.action";
@@ -64,7 +65,7 @@ export const router = createBrowserRouter([
                             { path: "workouts", element: <ViewWorkouts />, loader: workoutsLoader },
                             { path: "workouts/create", element: <CreateWorkout />, action: workoutSubmit },
                             { path: "workout/:id", element: <EditWorkout />, action: editSubmit, loader: editWorkoutLoader },
-                            { path: "analytics", element: <Analytics /> },
+                            { path: "analytics", element: <Analytics />, loader: analyticsLoader },
                         ],
                     },
                 ],

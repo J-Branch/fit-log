@@ -1,18 +1,23 @@
 // Returns - One Workouts Date & Weight Total
-export function getWorkoutTotal({workout, exercises, sets }) {
+export function getWorkoutTotal({ workout }) {
+
+    console.log("workout.totalWeight", workout.totalWeight);
+    return {
+        date: new Date(workout.date + 'T12:00:00').toLocaleDateString(),
+        total: workout.totalWeight
+    }
+}
+// Returns - One Exercises Date & Weight Total
+export function getExerciseTotal({ workout, exercises }) {
     let total = 0;
 
     // Loop through Exercises
     for (const exercise of exercises) {
         if (exercise.wid === workout.$id) {
-            // Loop through sets
-            for (const set of sets) {
-                if (set.eid === exercise.$id) {
-                    total += (set.reps * set.weight);
-                }
-            }
+            total += exercise.totalWeight;
         }
     }
+
     return {
         date: new Date(workout.date + 'T12:00:00').toLocaleDateString(),
         total

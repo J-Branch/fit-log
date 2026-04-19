@@ -1,13 +1,13 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useState, useMemo, useEffect } from 'react';
 import { useUniqueWorkoutNames, useUniqueExerciseNames } from '../hooks/useAnalyticsHooks';
-import { getWorkoutTotal, filterWorkoutsByDateRange, getPercentageGrowth } from '../utils/analytics'
+import { getWorkoutTotal, getExerciseTotal, filterWorkoutsByDateRange, getPercentageGrowth } from '../utils/analytics'
 
-function WeightliftingGraph({ workouts, exercises, sets }) {
+function WeightliftingGraph({ workouts, exercises }) {
     const [workoutVariety, setWorkoutVariety] = useState('all');
     const [selectedWorkout, setSelectedWorkout] = useState('');
     const [selectedExercise, setSelectedExercise] = useState('');
-    const [selectedRange, setSelectedRange] = useState('all');
+    const [selectedRange, setSelectedRange] = useState('1m');
 
     const workoutOptions = useUniqueWorkoutNames(workouts);
     const exerciseOptions = useUniqueExerciseNames(exercises);
@@ -21,7 +21,7 @@ function WeightliftingGraph({ workouts, exercises, sets }) {
         // For all workouts
         if (workoutVariety === 'all') {
             chartDataArray = filteredWorkouts.map(workout => {
-                const { date, total } = getWorkoutTotal({ workout, exercises, sets });
+                const { date, total } = getWorkoutTotal({ workout });
                 return { date, value: total };
             });
         }
@@ -31,7 +31,7 @@ function WeightliftingGraph({ workouts, exercises, sets }) {
             const specificWorkout = filteredWorkouts.filter(w => w.workoutName === selectedWorkout);
 
             chartDataArray = specificWorkout.map(workout => {
-                const { date, total } = getWorkoutTotal({ workout, exercises, sets });
+                const { date, total } = getWorkoutTotal({ workout });
                 return { date, value: total };
             });
         }
@@ -41,13 +41,13 @@ function WeightliftingGraph({ workouts, exercises, sets }) {
             filteredExercises = exercises.filter(e => e.exerciseName === selectedExercise);
 
             chartDataArray = filteredWorkouts.map(workout => {
-                const { date, total } = getWorkoutTotal({ workout, exercises: filteredExercises, sets});
+                const { date, total } = getExerciseTotal({ workout, exercises: filteredExercises });
                 return { date, value: total };
-            });
+            }).filter(point => point.value > 0);
         }
 
         return chartDataArray.sort((a, b) => new Date(a.date) - new Date(b.date));
-    }, [workouts, exercises, sets, workoutVariety, selectedWorkout, selectedExercise, selectedRange]);
+    }, [workouts, exercises,  workoutVariety, selectedWorkout, selectedExercise, selectedRange]);
 
     const percentageGrowth = useMemo(() => {
         return getPercentageGrowth(chartData);
@@ -87,13 +87,13 @@ function WeightliftingGraph({ workouts, exercises, sets }) {
                     </>
                 )}
 
-                <label>Time Range:</label>
-                <select value={selectedRange} onChange={(e) => setSelectedRange(e.target.value)}>
-                    <option value="all">All Time</option>
-                    <option value="1m">1 Month</option>
-                    <option value="6m">6 Months</option>
-                    <option value="1y">1 Year</option>
-                </select>
+                <label>Time Range: 1 Month</label>
+                {/* <select value={selectedRange} onChange={(e) => setSelectedRange(e.target.value)}> */}
+                    {/* <option value="all">All Time</option> */}
+                    {/* <option value="1m">1 Month</option> */}
+                    {/* <option value="6m">6 Months</option> */}
+                    {/* <option value="1y">1 Year</option> */}
+                {/* </select> */}
             </div>
 
             {percentageGrowth !== null && (
