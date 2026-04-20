@@ -30,11 +30,34 @@ import { logoutAction } from "../actions/logout.action";
 import { workoutSubmit } from "../actions/workoutSubmit.action";
 import { editSubmit } from "../actions/editSubmit.action"; 
 
+
+
 export const router = createBrowserRouter([
     {
         path: "/",
         element: <App />,
         errorElement: <NotFoundPage />,
+        HydrateFallback: () => {
+            return (
+                <div className="h-screen w-full flex items-center justify-center bg-zinc-950">
+                    <div className="flex flex-col items-center gap-4">
+                        
+                        {/* Animated pulse logo */}
+                        <div className="h-10 w-10 rounded-full bg-indigo-500 animate-pulse" />
+        
+                        {/* Loading text */}
+                        <div className="text-sm text-zinc-300 tracking-wide">
+                            Loading app...
+                        </div>
+        
+                        {/* Thin loading bar */}
+                        <div className="w-48 h-1 bg-zinc-800 overflow-hidden rounded">
+                            <div className="h-full w-1/3 bg-indigo-500 animate-loading" />
+                        </div>
+                    </div>
+                </div>
+            );
+        },
         children: [
             {
                 element: <AuthLayout />,
