@@ -19,9 +19,6 @@ export async function analyticsLoader () {
         const formattedToday = `${yyyy}-${mm}-${dd}`;
         const formattedPrevMonth = `${y}-${m}-${d}`;
 
-        console.log("Today: ", formattedToday);
-        console.log("Previous Month: ", formattedPrevMonth);
-
         const w = await listRows(
             "workouts",
             [
@@ -31,8 +28,12 @@ export async function analyticsLoader () {
         );
 
         const workoutIds = w.rows.map(workout => workout.$id);
+
         if (workoutIds.length === 0) {
-            return [];
+            return {
+                userWorkouts: [],
+                userExercises: []
+            };
         }
 
         const e = await listRows(
@@ -43,10 +44,10 @@ export async function analyticsLoader () {
             ]
         );
 
-        const userWorkouts = w.rows;
-        const userExercises = e.rows;
+        const userWorkouts = w?.rows || [];
+        const userExercises = e?.rows || [];
 
-        console.log("printing workouts")
+        console.log("PRINTING USER WORKOUTS")
         console.log(userWorkouts);
 
         return {
