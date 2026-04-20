@@ -1,26 +1,25 @@
-import { useEffect, useMemo } from 'react';
-import { Link, useRouteLoaderData } from "react-router-dom";
+import { useMemo } from 'react';
+import { useRouteLoaderData, useLoaderData } from "react-router-dom";
 import { ProgressBar } from '../components/dashboard/LevelBar';
 import { calculateLevel } from "../utils/dashboardUtils/levelCalculator";
 import { WEIGHT_MILESTONES, DISTANCE_MILESTONES } from "../utils/dashboardUtils/gamificationConstants";
-import { getCurrentMilestone } from "../utils/dashboardUtils/achievementCalculator";
-import { WorkoutRow } from '../utils/workoutPageUtils/workoutPageTable';
 import { AchievementItem } from '../components/dashboard/AchievementItem';
 import AchievementIcon from "../assets/icons/achievementIcon.svg";
 import { AchievementPageLink } from "../components/dashboard/AchievementButton.jsx";
 
-
 function Dashboard() {
-    const { dailyQuote, userSets, userWorkouts } = useRouteLoaderData("AppLayout");
+    const { dailyQuote, userAggregate } = useRouteLoaderData("AppLayout");
+    const { lastWeightliftingWorkout, lastDistanceWorkout } = useLoaderData();
     const quote = dailyQuote?.[0];
 
-    const totalWeight = useMemo(() => {
-        return userSets.reduce(( sum, set ) => sum + (set.reps * set.weight), 0);
-    }, [userSets]);
+    console.log("aggregate data: ", userAggregate);
 
-    const totalDistance = useMemo(() => {
-        return userWorkouts.reduce(( sum, workout ) => sum + workout.distance, 0);
-    }, [userWorkouts]);
+    const totalWeight = userAggregate[0].totalWeight;
+
+    const totalDistance = userAggregate[0].totalDistance;
+
+    console.log("totalWeight:", totalWeight);
+    console.log("totalDistance:", totalDistance);
 
     const { level, progress } = useMemo(() => {
         return calculateLevel(totalWeight, totalDistance)
@@ -28,6 +27,8 @@ function Dashboard() {
 
     const nextWeightGoal = WEIGHT_MILESTONES.find(m => m.threshold > totalWeight);
     const nextDistanceGoal = DISTANCE_MILESTONES.find(m => m.threshold > totalDistance);
+
+    console.log("nextWeightGoal:", nextWeightGoal);
 
     return (
         <>
