@@ -3,13 +3,6 @@ import DistanceTimeGraph from '../components/DistanceTimeGraph';
 import { useLoaderData } from 'react-router-dom';
 import { useMemo } from 'react';
 
-// NEED -
-// Workouts 
-// Exercises 
-
-// ON LOAD - 
-// Load ALL Workouts 
-
 function Analytics() {
     const { userWorkouts, userExercises } = useLoaderData();
 
