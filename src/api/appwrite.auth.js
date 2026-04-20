@@ -25,7 +25,7 @@ export function createAggregateRow(userId) {
     const ownerRole = Role.user(userId);
     return tablesdb.createRow({
         databaseId,
-        tableId: aggregate,
+        tableId: "aggregate",
         rowId: ID.unique(),
         data: {
             totalWeight: 0,
