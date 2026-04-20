@@ -22,6 +22,7 @@ import { authLoader } from "../loaders/auth.loader";
 import { editWorkoutLoader } from "../loaders/edit.workout.loader";
 import { workoutsLoader } from "../loaders/workouts.loader";
 import { analyticsLoader } from "../loaders/analytics.loader";
+import { dashboardLoader } from "../loaders/dashboard.loader"
 
 // Actions 
 import { authAction } from "../actions/auth.action";
@@ -56,7 +57,7 @@ export const router = createBrowserRouter([
                         element: <MainPage />,
                         children: [
                             { index: true, element: <Navigate to="Dashboard" /> },
-                            { path: "dashboard", element: <Dashboard /> },
+                            { path: "dashboard", element: <Dashboard />, loader: dashboardLoader },
                             { path: "dashboard/achievements", element: <Achievements />},
                             { path: "workouts", element: <ViewWorkouts />, loader: workoutsLoader },
                             { path: "workouts/create", element: <CreateWorkout />, action: workoutSubmit },

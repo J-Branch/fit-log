@@ -1,6 +1,5 @@
 import { listRows } from "../api/appwrite.workout";
 import { Query } from "appwrite";
-import { useRouteLoaderData } from "react-router-dom";
 
 export async function analyticsLoader () {
 
