@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-export function AchievementPageLink({ to, icon}) {
+export function AchievementPageLink({ to, icon }) {
     return (
         <Link 
         to={to} 
