@@ -1,4 +1,4 @@
-import {Outlet, Link, Form} from "react-router-dom"
+import {Outlet, useFetcher} from "react-router-dom"
 import DashboardIcon from "../assets/icons/dashboardIcon.svg";
 import WorkoutsIcon from "../assets/icons/workoutsIcon.svg";
 import AnalyticsIcon from "../assets/icons/analyticsIcon.svg";
@@ -6,6 +6,14 @@ import { SidebarLink, NavWrapper } from "../components/Sidebar";
 
 
 function MainPage() {
+    const fetcher = useFetcher();
+
+    function handleLogout() {
+        fetcher.submit(null, {
+            method: "post",
+            action: "/logout"
+        });
+    }
 
     return (
         <div style={{display: "flex", minHeight: "100vh" }}>
@@ -20,11 +28,9 @@ function MainPage() {
                 </div>
 
                 <div className="mt-auto">
-                    <Form method="post" action="/logout">
-                        <button type="submit" className="w-full text-center mt-auto py-16">
-                            Logout
-                        </button>
-                    </Form>
+                    <button onClick={handleLogout} className="w-full text-center mt-auto py-16">
+                        {fetcher.state === "submitting" ? "Logging out..." : "Logout"}
+                    </button>
                 </div>
             </NavWrapper>
 
