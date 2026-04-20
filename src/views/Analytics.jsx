@@ -11,7 +11,6 @@ import { useMemo } from 'react';
 // Load ALL Workouts 
 
 function Analytics() {
-    // const { userWorkouts, userExercises, userSets } = useRouteLoaderData("AppLayout");
     const { userWorkouts, userExercises } = useLoaderData();
 
     const weightliftingWorkouts = useMemo(() =>
