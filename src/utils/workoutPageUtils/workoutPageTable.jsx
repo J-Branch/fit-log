@@ -1,45 +1,48 @@
 import { Link } from "react-router-dom";
-{/* 
-export function ColumnHeader({ text }) {
-    return (
-        <span className="w-28 font-semibold text-primary-red-one">
-            { text }
-        </span>
-    );
-}
-*/}
+import dumbellIcon from "../../assets/icons/dumbell.png";
+import runIcon from "../../assets/icons/run.png";
 
 export function WorkoutRow({ workout }) {
     const { $id, workoutName, workoutType, date } = workout;
 
+    const iconMap = {
+        "Weightlifting": dumbellIcon,
+        "Distance/Time": runIcon
+    }
+
+    const icon = iconMap[workoutType]
+
     return (
-        <li className="px-4 py-2 lg:p-0 max-lg:my-4 max-lg:bg-primary-white-two/60">
+        <li className="list-none border-b border-gray-100 last:border-b-0 even:bg-gray-50/40">
             <Link
                 to={`../workout/${$id}`}
-                className="block h-full rounded-xl
-                    border border-primary-white-two
-                    bg-primary-gray-one
-                    p-6
-                    shadow-sm
-                    hover:shadow-md
-                    hover:-translate-y-0.5
-                    transition
-                "
+                className="grid grid-cols-3 items-center px-4 py-3 hover:bg-gray-50 active:scale-[0.99] transition relative group"
             >
-                <div className="space-y-2">
-                    <h2 className="text-lg font-semibold text-primary-black">
-                        {workoutName}
-                    </h2>
+                {/* Left accent bar */}
+                <div className="absolute left-0 top-0 w-1 h-0 bg-primary-red-one group-hover:h-full transition-all" />
 
-                    <p className="text-sm text-primary-red-one">
-                        {workoutType}
-                    </p>
-
-                    <p className="text-sm text-primary-gray">
-                        {date}
-                    </p>
+                {/* Left: Name */}
+                <div className="text-sm font-semibold text-gray-900">
+                    {workoutName}
                 </div>
-                
+
+                {/* Middle: Date */}
+                <div className="text-xs text-gray-400 font-mono text-center">
+                    {new Date(date).toLocaleDateString()}
+                </div>
+
+                {/* Right: Type + Icon */}
+                <div className="flex items-center justify-end gap-2">
+                    <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600">
+                        {workoutType}
+                    </span>
+
+                    <img
+                        src={icon}
+                        alt={workoutType}
+                        className="w-5 h-5 object-contain opacity-80"
+                    />
+                </div>
             </Link>
         </li>
     );

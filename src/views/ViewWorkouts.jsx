@@ -1,4 +1,4 @@
-import { Link, useLoaderData, useNavigate, useSearchParams} from "react-router-dom";
+import { Link, useLoaderData, useNavigate, useSearchParams } from "react-router-dom";
 import { WorkoutRow } from "../utils/workoutPageUtils/workoutPageTable";
 import { useEffect, useRef } from "react";
 import toast from "react-hot-toast";
@@ -6,9 +6,8 @@ import toast from "react-hot-toast";
 function getPagination(currentPage, totalPages) {
     const delta = 2;
 
-    // If total pages is small enough, show everything
-    const maxVisible = delta * 2 + 5; 
-    // explanation: first + last + current ± delta + 2 possible "..."
+    const maxVisible = delta * 2 + 5;
+
     if (totalPages <= maxVisible) {
         return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
@@ -25,27 +24,18 @@ function getPagination(currentPage, totalPages) {
 
     result.push(1);
 
-    // Left ellipsis
-    if (start > 2) {
-        result.push("...");
-    }
+    if (start > 2) result.push("...");
 
-    // Middle pages
     result.push(...range);
 
-    // Right ellipsis
-    if (end < totalPages - 1) {
-        result.push("...");
-    }
+    if (end < totalPages - 1) result.push("...");
 
-    // Always include last page
     result.push(totalPages);
 
     return result;
 }
 
 function ViewWorkouts() {
-
     const { workouts, page, totalPages, total, error } = useLoaderData();
     const pages = getPagination(page, totalPages);
     const [searchParams] = useSearchParams();
@@ -64,62 +54,89 @@ function ViewWorkouts() {
         const toastType = searchParams.get("toast");
         if (!toastType) return;
 
-        // toast message if user created new workout
-        if (toastType === "created") {
-            toast.success("Workout Created!");
-        }
-
-        // toast message if user edited workout
-        if (toastType === "edited") {
-            toast.success("Workout Updated!");
-        }
-
-        // toast message if user deleted workout
-        if (toastType === "deleted") {
-            toast.success("Workout Deleted!");
-        }
+        if (toastType === "created") toast.success("Workout Created!");
+        if (toastType === "edited") toast.success("Workout Updated!");
+        if (toastType === "deleted") toast.success("Workout Deleted!");
 
         toastShown.current = true;
-
-        navigate(".", {replace: true});
+        navigate(".", { replace: true });
     }, [searchParams, navigate]);
 
     return (
-        <div>
-            <div>
-                <h1></h1>
-                <Link to="../workouts/create">Create Workout</Link>
-            </div>
+        <div className="w-full min-h-screen bg-gray-50 py-4 px-2">
+            <div className="max-w-3xl mx-auto">
 
-            {workouts.length ? (
-                <>
-                    <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6 pr-3">
-                        {workouts.map(workout => (
-                            <WorkoutRow key={workout.$id} workout={workout} />
-                        ))}
-                    </ul>
+                <div className="bg-white border border-gray-100 overflow-hidden">
 
-                    <div className="flex justify-center gap-2 mt-8">
-                        {pages.map((p,i) =>
-                            p === "..." ? (
-                                <span key={i}>...</span>
-                            ) : (
-                                <Link
-                                    key={i}
-                                    to={`?page=${p}`}
-                                    className={`px-3 py-1 border rounded ${
-                                        p === page ? "bg-indigo-500 text-white" : ""
-                                    }`}
-                                >
-                                    {p}
-                                </Link>
-                            )
-                        )}
+                    {/* Header with total */}
+                    <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                        
+                        <div>
+                            <h2 className="text-xl font-bold text-gray-800">
+                                Your Workouts
+                            </h2>
+
+                            <p className="text-sm text-gray-500 mt-1">
+                                {total} total workout{total === 1 ? "" : "s"}
+                            </p>
+                        </div>
+
+                        <Link
+                            to="../workouts/create"
+                            className="text-sm text-indigo-600 hover:underline"
+                        >
+                            + Create Workout
+                        </Link>
                     </div>
-                </>
-            ) : (
-                <Link to="../workouts/create">You have no workouts. Create one!</Link>
-            )}
+
+                    {/* Table Header */}
+                    <div className="grid grid-cols-3 px-4 py-3 border-b border-gray-200 bg-gray-50 text-xs font-semibold text-gray-500 uppercase tracking-wider sticky top-0 z-10">
+                        <div>Workout Name</div>
+                        <div className="text-center">Date</div>
+                        <div className="text-right">Type</div>
+                    </div>
+
+                    {/* List */}
+                    {workouts.length ? (
+                        <>
+                            <ul className="flex flex-col">
+                                {workouts.map(workout => (
+                                    <WorkoutRow key={workout.$id} workout={workout} />
+                                ))}
+                            </ul>
+
+                            {/* Pagination */}
+                            <div className="flex justify-center gap-2 py-4 border-t border-gray-100">
+                                {pages.map((p, i) =>
+                                    p === "..." ? (
+                                        <span key={i} className="px-2">...</span>
+                                    ) : (
+                                        <Link
+                                            key={i}
+                                            to={`?page=${p}`}
+                                            className={`px-3 py-1 border rounded text-sm ${
+                                                p === page
+                                                    ? "bg-primary-red-one text-white"
+                                                    : "bg-white hover:bg-gray-100"
+                                            }`}
+                                        >
+                                            {p}
+                                        </Link>
+                                    )
+                                )}
+                            </div>
+                        </>
+                    ) : (
+                        <div className="py-10 text-center text-gray-500">
+                            <p className="text-lg font-medium">No workouts yet</p>
+                            <p className="text-sm mt-1">
+                                Create your first workout to get started
+                            </p>
+                        </div>
+                    )}
+
+                </div>
+            </div>
         </div>
     );
 }
