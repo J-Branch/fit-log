@@ -63,8 +63,18 @@ function ViewWorkouts() {
     }, [searchParams, navigate]);
 
     return (
-        <div className="w-full min-h-screen bg-gray-50 py-4 px-2">
-            <div className="max-w-3xl mx-auto">
+        <div
+            className="w-full min-h-screen bg-gray-50 py-4 px-2"
+            style={{
+                backgroundColor: "#f9fafb",
+                backgroundImage: `
+                    radial-gradient(#e5e7eb 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(255,255,255,1))
+                `,
+                backgroundSize: "20px 20px, 100% 100%",
+            }}
+        >
+            <div className="max-w-4xl mx-auto">
 
                 <div className="bg-white border border-gray-100 overflow-hidden">
 

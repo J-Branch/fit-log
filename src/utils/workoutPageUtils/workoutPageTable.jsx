@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import dumbellIcon from "../../assets/icons/dumbell.png";
 import runIcon from "../../assets/icons/run.png";
 
-export function WorkoutRow({ workout }) {
+export function WorkoutRow({ workout, index }) {
     const { $id, workoutName, workoutType, date } = workout;
 
     const iconMap = {
@@ -13,10 +13,10 @@ export function WorkoutRow({ workout }) {
     const icon = iconMap[workoutType]
 
     return (
-        <li className="list-none border-b border-gray-100 last:border-b-0 even:bg-gray-50/40">
+        <li className="list-none border-b border-gray-100 last:border-b-0 even:bg-gray-100/60">
             <Link
                 to={`../workout/${$id}`}
-                className="grid grid-cols-3 items-center px-4 py-3 hover:bg-gray-50 active:scale-[0.99] transition relative group"
+                className="grid grid-cols-3 items-center px-4 py-3 hover:bg-red-50/40 active:scale-[0.99] transition relative group"
             >
                 {/* Left accent bar */}
                 <div className="absolute left-0 top-0 w-1 h-0 bg-primary-red-one group-hover:h-full transition-all" />
