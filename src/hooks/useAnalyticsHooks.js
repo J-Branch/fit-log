@@ -19,5 +19,7 @@ export function useUniqueExerciseNames( exercises ) {
             setUniqueExercises([...new Set(names)]);
     }, [exercises]);
 
+    console.log("unique exercises", uniqueExercises);
+
     return uniqueExercises;
 }

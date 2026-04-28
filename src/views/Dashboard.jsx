@@ -50,13 +50,13 @@ function Dashboard() {
                         gap-4 md:gap-6">
 
                         <MetricCard 
-                            title="Monthly Volume" 
+                            title="Volume in the past 30 days" 
                             value={stats.monthlyWeight} 
                             unit="lbs" 
-                            label="Total weight moved this month" 
+                            label="Total weight moved in the last 30 days" 
                         />
                         <MetricCard 
-                            title="Monthly Distance" 
+                            title="Distance covered in the last 30 days" 
                             value={stats.monthlyDistance} 
                             unit="mi" 
                             label="Total distance covered" 
@@ -72,13 +72,13 @@ function Dashboard() {
                             value={stats.weightTrendDiff} 
                             unit="lbs" 
                             trend={stats.weightTrend}
-                            label="Last 3 vs. Monthly Average" 
+                            label="Last 3 vs. Last 30 days average" 
                         />
                         <MetricCard 
                             title="Peak Performance" 
                             value={stats.peakLift} 
                             unit="lbs" 
-                            label="Heaviest session this month" 
+                            label="Heaviest session in the last 30 days" 
                         />
                         <MetricCard 
                             title="Avg Session" 
