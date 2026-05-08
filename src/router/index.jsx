@@ -11,6 +11,8 @@ import EditWorkout from "../views/EditWorkout";
 import Analytics from "../views/Analytics";
 import Achievements from "../views/Achievements";
 import NotFoundPage from "../views/NotFoundPage";
+import Recovery from "../views/Recovery";
+import ResetPassword from "../views/ResetPassword";
 
 // Layouts 
 import AuthLayout from "../views/layouts/AuthLayout";
@@ -29,6 +31,8 @@ import { authAction } from "../actions/auth.action";
 import { logoutAction } from "../actions/logout.action";
 import { workoutSubmit } from "../actions/workoutSubmit.action";
 import { editSubmit } from "../actions/editSubmit.action"; 
+import { recoveryAction } from "../actions/recoveryAction";
+import { resetPasswordAction } from "../actions/resetPassword.action";
 
 
 
@@ -65,6 +69,8 @@ export const router = createBrowserRouter([
                 children: [
                     { path: "login", element: <Auth />, action: authAction },
                     { path: "register", element: <Auth />, action: authAction },
+                    { path: "recover-account", element: <Recovery />, action: recoveryAction },
+                    { path: "reset-password", element: <ResetPassword />, action: resetPasswordAction },
                     { index: true, element: <Navigate to="login" /> },
                 ],
             },
