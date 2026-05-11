@@ -16,13 +16,8 @@ export default async ({ req, res, log, error }) => {
 
   const AGGREGATE_ID = process.env.APPWRITE_AGGREGATE_ID;
 
-  // const USER_ID = process.env.APPWRITE_FUNCTION_USER_ID;
-
   const USER_ID = req.headers['x-appwrite-user-id'];
   console.log("this is what the header is returning: ", req.headers['x-appwrite-user-id']);
-  // const user = await account.get();
-  // const USER_ID = user.$id;
-
 
   const ownerRole = Role.user(USER_ID);
 
@@ -34,25 +29,13 @@ export default async ({ req, res, log, error }) => {
 
   function getTableId(node) {
     if (node.workoutName) return WORKOUTS_ID;
-
     if (node.exerciseName) return EXERCISES_ID;
-
     if (node.reps !== undefined && node.weight !== undefined) return SETS_ID;
   }
 
 
   async function deleteWorkoutRow(node) {
     const tableId = getTableId(node);
-
-    // base case for if the workout is marked, delete and return
-    // if (node.table === WORKOUTS_ID && node.toDelete === true) {
-    //   await tablesdb.deleteRow({
-    //     databaseId: DATABASE_ID,
-    //     tableId: WORKOUTS_ID,
-    //     rowId: node.$id
-    //   });
-    //   return;
-    // }
 
     // base case for anything else marked for delete
     if (node.toDelete === true) {
@@ -86,7 +69,7 @@ export default async ({ req, res, log, error }) => {
 
     const promises = [];
 
-    if (node.isDirty && node.$id) {
+    if (node.$id) {
       const {exercises, sets, table, isDirty, toDelete, ...cleanData} = node
       promises.push(
         tablesdb.updateRow({
@@ -100,13 +83,15 @@ export default async ({ req, res, log, error }) => {
 
     if (Array.isArray(node.exercises)) {
       promises.push(
-        ...node.exercises.map(ex => updateWorkoutRow(ex))
+        // ...node.exercises.map(ex => updateWorkoutRow(ex))
+        ...node.exercises.map(updateWorkoutRow)
       );
     }
 
     if (Array.isArray(node.sets)) {
       promises.push(
-        ...node.sets.map(set => updateWorkoutRow(set))
+        // ...node.sets.map(set => updateWorkoutRow(set))
+        ...node.sets.map(updateWorkoutRow)
       );
     }
 
@@ -325,7 +310,8 @@ export default async ({ req, res, log, error }) => {
 
       if (form.workoutType === "Weightlifting") {
 
-        const newExercises = form.exercises.filter(ex => ex.$id === null);
+        // const newExercises = form.exercises.filter(ex => ex.$id === null);
+        const newExercises = form.exercises.filter(ex => !ex.$id);
 
         await Promise.all(newExercises.map(async exercise => {
 
@@ -364,7 +350,6 @@ export default async ({ req, res, log, error }) => {
         const setPromises = [];
 
         for (const exercise of form.exercises) {
-
           for (const set of exercise.sets) {
 
             if (set.$id !== null) continue;
@@ -383,9 +368,7 @@ export default async ({ req, res, log, error }) => {
                 permissions: ownerPermissions
               })
             );
-
           }
-
         }
 
         await Promise.all(setPromises);
@@ -400,7 +383,10 @@ export default async ({ req, res, log, error }) => {
           for (const set of exercise.sets) {
             if (set.toDelete) continue;
 
-            newTotalWeight += Number(set.weight) || 0;
+            const weight = Number(set.weight) || 0;
+            const reps = Number(set.reps) || 0;
+            newTotalWeight += weight * reps;
+            // newTotalWeight += Number(set.weight) || 0;
           }
         }
       }

@@ -39,3 +39,7 @@ export function createAggregateRow(userId) {
         ]
     })
 };
+
+export function recoverAccount(email) {
+    return account.createRecovery({email, url: "http://localhost:5173/reset-password"});
+}

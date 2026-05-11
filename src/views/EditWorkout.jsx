@@ -1,4 +1,4 @@
-import { Link, useParams, Form, useActionData, useLoaderData, useSubmit, useNavigation } from "react-router-dom";
+import { Link, useActionData, useLoaderData, useSubmit, useNavigation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useWorkoutForm } from "../hooks/workouts/useWorkoutForm";
 import Weightlifting from "../components/editWorkout/Weightlifting";
@@ -7,12 +7,11 @@ import toast from "react-hot-toast";
 import { produce } from "immer";
 
 function EditWorkout() {
-    // const params = useParams();
-    // const workoutId = params.id;
     const submit = useSubmit();
 
-    const {workout, exercises} = useLoaderData();
+    const { workout, exercises } = useLoaderData();
     const { form, updateForm, setForm } = useWorkoutForm();
+
     const [mode, setMode] = useState("view");
     const [backupForm, setBackupForm] = useState(null);
     const [uiSelection, setUiSelection] = useState({
@@ -21,35 +20,33 @@ function EditWorkout() {
     });
 
     const actionData = useActionData();
-
     const navigation = useNavigation();
-    const isDeleting = navigation.state === "submitting" && navigation.formData?.get("intent");
-    const isSaving = navigation.state === "submitting" && navigation.formData?.get("intent");
+
+    const isDeleting =
+        navigation.state === "submitting" &&
+        navigation.formData?.get("intent");
+
+    const isSaving =
+        navigation.state === "submitting" &&
+        !navigation.formData?.get("intent");
 
     const selectedExercisesCount = Object.values(uiSelection?.exercises || {}).filter(Boolean).length;
-
     const selectedSetsCount = Object.values(uiSelection?.sets || {}).filter(Boolean).length;
 
-
-    // checking for if there was an error in submitting
     useEffect(() => {
         if (actionData?.error) {
-            toast.error(actionData.error)
+            toast.error(actionData.error);
         }
     }, [actionData]);
 
-    // used to convert date from a string to an object
     function parseDate(dateStr) {
-        if (!dateStr) return {month: "", day: "", year: ""};
-
+        if (!dateStr) return { month: "", day: "", year: "" };
         const [year, month, day] = dateStr.split("-");
-        return { month, day, year};
+        return { month, day, year };
     }
-    
-    // used to convert time from a string to an object
+
     function parseTime(totalSeconds) {
         if (!totalSeconds) return { minutes: "", seconds: "" };
-
         const secondsNum = Number(totalSeconds);
         return {
             minutes: Math.floor(secondsNum / 60),
@@ -57,7 +54,6 @@ function EditWorkout() {
         };
     }
 
-    // call setform to get the actual workout
     useEffect(() => {
         if (workout && exercises && !form.$id) {
             setForm({
@@ -69,48 +65,28 @@ function EditWorkout() {
         }
     }, [workout, exercises, form.$id]);
 
-
-    // keep a backup up of the form in case of cancel
     function handleEditToggle() {
         if (mode === "view") {
-            // ENTER edit mode keep a copy of workout
             setBackupForm(structuredClone(form));
             setMode("edit");
         } else {
-            // CANCEL edit restore copy
             setForm(backupForm);
             setMode("view");
         }
-    }   
-
-    if (!workout) {
-        return (
-            <div>
-                <h1 className="text-xl font-semibold text-red-600">
-                    Workout Not Found
-                </h1>
-                <Link className="text-blue-500" to="../workouts">
-                    Back to workouts
-                </Link>
-            </div>
-        );
     }
 
     useEffect(() => {
         const total = selectedExercisesCount + selectedSetsCount;
-    
+
         if (total === 0) {
             toast.dismiss("selection-toast");
             return;
         }
-    
-        toast(
-            `${total} item${total === 1 ? "" : "s"} selected`,
-            {
-                id: "selection-toast", // important: prevents spam
-                position: "bottom-center",
-            }
-        );
+
+        toast(`${total} item${total === 1 ? "" : "s"} selected`, {
+            id: "selection-toast",
+            position: "bottom-center",
+        });
     }, [selectedExercisesCount, selectedSetsCount]);
 
     function prepareFormDeletes(form, uiSelection) {
@@ -120,7 +96,6 @@ function EditWorkout() {
 
                 if (exerciseSelected) {
                     exercise.toDelete = true;
-
                     for (const set of exercise.sets) {
                         set.toDelete = false;
                     }
@@ -132,12 +107,12 @@ function EditWorkout() {
             }
         });
     }
-    
+
     function handleDelete() {
         toast((t) => (
             <div className="space-y-2">
                 <p>Are you sure you want to delete this workout?</p>
-    
+
                 <div className="flex gap-2">
                     <button
                         className="px-3 py-1 bg-red-600 text-white rounded"
@@ -147,16 +122,19 @@ function EditWorkout() {
                                     intent: "delete",
                                     id: form.$id,
                                     workoutType: form.workoutType,
-                                    updateNumber: form.workoutType === "Weightlifting" ? form.totalWeight : form.distance
+                                    updateNumber:
+                                        form.workoutType === "Weightlifting"
+                                            ? form.totalWeight
+                                            : form.distance
                                 },
                                 { method: "post" }
                             );
                             toast.dismiss(t.id);
                         }}
                     >
-                        Are you sure you want to delete?
+                        Confirm Delete
                     </button>
-    
+
                     <button
                         className="px-3 py-1 bg-gray-300 rounded"
                         onClick={() => toast.dismiss(t.id)}
@@ -178,95 +156,149 @@ function EditWorkout() {
         const payload = {
             ...base,
             date: `${base.date.year}-${base.date.month}-${base.date.day}`,
-            time: Number(base.time.minutes || 0) * 60 + Number(base.time.seconds || 0)
-        }
+            time:
+                Number(base.time.minutes || 0) * 60 +
+                Number(base.time.seconds || 0)
+        };
 
-        console.log("payload: ", payload)
-        
         submit(
             {
                 payload: JSON.stringify(payload)
             },
-            {method: "post"}
+            { method: "post" }
         );
     }
 
-    // -----------------------------
-    // RENDER
-    // -----------------------------
-    return (
-        <div className="space-y-4">
-            <Link to="../workouts" className="text-blue-500">
-                Back to workouts
-            </Link>
-
-            {/* Workout Name */}
-            <div className="flex justify-between">
-                {mode === "edit" ? (
-                    <div className="flex items-center space-x-4">
-                        <input
-                            className="border p-2 text-xl font-semibold"
-                            value={form.workoutName}
-                            onChange={(e) => {
-                                updateForm(["workoutName"], e.target.value);
-                            }}
-
-                            onBlur={(e) => {
-                                console.log("setting the flag for workoutName");
-                                updateForm(["isDirty"], true);
-                            }}
-                        />
-
-                        <button
-                            type="button"
-                            onClick={handleDelete}
-                            disabled={isDeleting}
-                            className="px-4 py-2 bg-gray-800 text-white rounded"
-                        >
-                            {isDeleting ? "Deleting..." : "Delete workout"}
-                        </button>
-                    </div>
-                ) : (
-                    <h1 className="text-2xl font-semibold">{form.workoutName}</h1>
-                )}
+    if (!workout) {
+        return (
+            <div className="p-6">
+                <h1 className="text-xl font-semibold text-red-600">
+                    Workout Not Found
+                </h1>
+                <Link className="text-blue-500" to="../workouts">
+                    Back to workouts
+                </Link>
             </div>
+        );
+    }
 
-            {/* Edit Mode Toggle */}
-            <button
-                onClick={handleEditToggle}
-                className="px-4 py-2 bg-gray-800 text-white rounded"
-            >
-                {mode === "edit" ? "Cancel" : "Edit Workout"}
-            </button>
+    return (
+        <div
+            className="w-full min-h-screen bg-gray-50 p-6"
+            style={{
+                backgroundColor: "#f9fafb",
+                backgroundImage: `
+                    radial-gradient(#e5e7eb 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(255,255,255,1))
+                `,
+                backgroundSize: "20px 20px, 100% 100%",
+            }}
+        >
+            <div className="max-w-4xl mx-auto">
+                <div className="bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 overflow-hidden transition-all">
 
-            {form.workoutType === "Weightlifting" && (
-                <Weightlifting
-                    form={form}
-                    updateForm={updateForm}
-                    mode={mode}
-                    uiSelection={uiSelection}
-                    setUiSelection={setUiSelection}
-                />
-            )}
+                    {/* Header */}
+                    <div className="px-8 py-6 border-b border-gray-100 flex justify-between items-center">
+                        <div>
+                            <p className="text-xs text-gray-400 uppercase tracking-wide">
+                                Workout
+                            </p>
 
-            {form.workoutType === "Distance/Time" && (
-                <DistanceTime
-                    form={form}
-                    updateForm={updateForm}
-                    mode={mode}
-                />
-            )}
+                            <h1 className="text-2xl font-bold text-gray-900 mt-1">
+                                {form.workoutName || "Untitled Workout"}
+                            </h1>
 
-            {mode === "edit" && (
-                <button
-                    onClick={handleSubmit}
-                    disabled={isSaving}
-                    className="px-4 py-2 bg-green-600 text-white rounded"
-                >
-                    {isSaving ? "Saving..." : "Save changes"}
-                </button>
-            )}
+                            <Link
+                                to="../workouts"
+                                className="inline-block mt-2 text-sm text-gray-500 hover:text-gray-700 transition"
+                            >
+                                ← Back to Workouts
+                            </Link>
+                        </div>
 
+                        <div className="flex gap-2">
+                            <button
+                                onClick={handleEditToggle}
+                                className={`px-4 py-2 text-sm rounded-lg transition ${
+                                    mode === "edit"
+                                        ? "bg-gray-200 text-gray-700"
+                                        : "bg-primary-red-one text-white hover:opacity-90"
+                                }`}
+                            >
+                                {mode === "edit" ? "Cancel" : "Edit"}
+                            </button>
+
+                            {mode === "edit" && (
+                                <button
+                                    onClick={handleDelete}
+                                    disabled={isDeleting}
+                                    className="px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+                                >
+                                    {isDeleting ? "Deleting..." : "Delete"}
+                                </button>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Body */}
+                    <div className="px-8 py-6 space-y-8">
+
+                        {mode === "edit" && (
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-gray-600">
+                                    Workout Name
+                                </label>
+
+                                <input
+                                    className="w-full px-4 py-2 text-lg font-semibold border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red-one"
+                                    value={form.workoutName}
+                                    onChange={(e) =>
+                                        updateForm(["workoutName"], e.target.value)
+                                    }
+                                />
+                            </div>
+                        )}
+
+                        <div className="bg-gray-50/60 border border-gray-100 rounded-lg p-5">
+                            {form.workoutType === "Weightlifting" && (
+                                <Weightlifting
+                                    form={form}
+                                    updateForm={updateForm}
+                                    mode={mode}
+                                    uiSelection={uiSelection}
+                                    setUiSelection={setUiSelection}
+                                />
+                            )}
+
+                            {form.workoutType === "Distance/Time" && (
+                                <DistanceTime
+                                    form={form}
+                                    updateForm={updateForm}
+                                    mode={mode}
+                                />
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Footer */}
+                    {mode === "edit" && (
+                        <div className="px-8 py-4 border-t border-gray-100 flex justify-between items-center">
+                            <p className="text-xs text-gray-400">
+                                Editing mode enabled
+                            </p>
+
+                            <button
+                                onClick={handleSubmit}
+                                disabled={isSaving}
+                                className="px-6 py-2 bg-primary-red-one text-white rounded-lg hover:opacity-90 transition-all duration-200 disabled:opacity-50"
+                            >
+                                {isSaving ? "Saving..." : "Save Changes"}
+                            </button>
+                        </div>
+                    )}
+
+                </div>
+            </div>
         </div>
     );
 }

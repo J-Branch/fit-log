@@ -1,4 +1,6 @@
 import { Form, useActionData, useLocation, Link } from "react-router-dom";
+import { useEffect } from "react";
+import toast from "react-hot-toast";
 
 const config = {
     login: {
@@ -7,6 +9,8 @@ const config = {
         toggleAuthModeLink: {
             to: "/register",
             text: "Create a new account",
+            recovery: "Forgot password?",
+            recoveryLink: "/recover-account"
         },
     },
 
@@ -29,6 +33,15 @@ function AuthPage() {
 
     const actionData = useActionData();
     const error = actionData?.error;
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+
+        if (params.get("reset") === "success") {
+            toast.success("Password reset successfully!");
+            window.history.replaceState({}, "", location.pathname);
+        }
+    }, [location]);
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-[#B23A48] via-[#972d43] to-[#800020]">
@@ -75,6 +88,15 @@ function AuthPage() {
                     >
                         {toggleAuthModeLink.text}
                     </Link>
+
+                    {!isCreateAccountPage  && 
+                        <Link
+                            className="block mt-6 text-center text-indigo-900 transition-colors duration-150 hover:text-indigo-600"
+                            to={toggleAuthModeLink.recoveryLink}
+                        >
+                            {toggleAuthModeLink.recovery}
+                        </Link>
+                    }
                 </Form>
             </div>
         </div>
