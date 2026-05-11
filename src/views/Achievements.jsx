@@ -7,7 +7,7 @@ function Achievements() {
     const [activeTab, setActiveTab] = useState('weight');
 
     const totalWeight = location.state.totalWeight;
-    const totalDistance = location.state.totalDistance0;
+    const totalDistance = location.state.totalDistance;
 
     const currentData = activeTab === 'weight' ? WEIGHT_MILESTONES : DISTANCE_MILESTONES;
     const userValue = activeTab === 'weight' ? totalWeight : totalDistance;
