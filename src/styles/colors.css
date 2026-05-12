@@ -8,4 +8,6 @@
   --color-dark-hover: #66edff;
   --color-dark-active: #99f3ff;
   --color-dark-disabled: #33e7ff;
+
+  --color-paper: hsl(42, 33%, 94%);
 }
