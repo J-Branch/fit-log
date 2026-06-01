@@ -44,18 +44,32 @@ function AuthPage() {
     }, [location]);
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-[#B23A48] via-[#972d43] to-[#800020]">
-            <div className="flex items-center justify-center w-3/4 mx-8 bg-white md:w-1/2 md:min-h-screen md:ml-auto md:mx-0 max-md:rounded-2x1">
-                <Form className="w-full p-8 md:w-96 md:p-4" method="post">
-                    <h1 className="mb-8 text-2x1 font-semibold text-center">{header}</h1>
-                    <div className="flex flex-col items-start gap-3">
+        <div className="flex min-h-screen">
+
+            <div className="hidden md:flex w-1/2 relative overflow-hidden items-center justify-center bg-gradient-to-r from-light-default via-light-hover to-light-active">
+                <div className="authImagePattern absolute inset-0 opacity-20 mix-blend-overlay" />
+                <div className="relative z-10">
+                    <div className="floatingCard w-80 h-72 rounded-3xl bg-white/90 backdrop-blur-md shadow-2xl border border-white/20 flex items-center justify-center">
+                        <h1 className="wormText text-7xl font-extrabold italic tracking-tighter uppercase">
+                            Fit-<span className="text-light-default">Log</span>
+                        </h1>
+                    </div>
+                </div>
+            </div>
+
+            <div className="flex w-full md:w-1/2 items-center justify-center bg-white">
+                <Form className="w-full max-w-md p-8" method="post">
+                    <h1 className="mb-8 text-2x1 font-semibold text-center">
+                        {header}
+                    </h1>
+
+                    <div className="flex flex-col gap-3">
                         <label>Email</label>
                         <input
                             id="email-field"
                             className="w-full px-4 py-2 rounded-md shadow"
                             name="email"
                             type="email"
-                            defaultValue=""  
                         />
 
                         <label>Password</label>
@@ -64,45 +78,38 @@ function AuthPage() {
                             className="w-full px-4 py-2 rounded-md shadow"
                             name="password"
                             type="password"
-                            defaultValue=""
-                        />
-
-                        <input
-                            type="hidden"
-                            name="mode"
-                            value={isCreateAccountPage ? "register" : "login"}
                         />
                     </div>
+                    {error && (
+                        <p className="mt-2 text-red-600">{error}</p>
+                    )}
 
-                    {error ? <p className="block mt-2 text-red-600">{error}</p> : null}
                     <button
-                        className="block w-full h-12 mt-6 text-indigo-100 transition-colors duration-150 bg-indigo-600 rounded-md hover:bg-indigo-800"
-                        type="submit"
+                        className="w-full h-12 mt-6 text-white bg-light-default rounded-md hover:bg-light-hover"
                     >
                         {submitButtonText}
                     </button>
 
                     <Link
-                        className="block mt-6 text-center text-indigo-900 transition-colors duration-150 hover:text-indigo-600"
+                        className="block mt-6 text-center text-indigo-900 hover:text-indigo-600"
                         to={toggleAuthModeLink.to}
                     >
                         {toggleAuthModeLink.text}
                     </Link>
 
-                    {!isCreateAccountPage  && 
+                    {!isCreateAccountPage && (
                         <Link
-                            className="block mt-6 text-center text-indigo-900 transition-colors duration-150 hover:text-indigo-600"
+                            className="block mt-6 text-center text-indigo-900 hover:text-indigo-600"
                             to={toggleAuthModeLink.recoveryLink}
                         >
-                            {toggleAuthModeLink.recovery}
+                        {toggleAuthModeLink.recovery}
                         </Link>
-                    }
+                    )}
                 </Form>
             </div>
         </div>
-    );
+    )
 }
-
 
 export default function Auth() {
     return <AuthPage />;
