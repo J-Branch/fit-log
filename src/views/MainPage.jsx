@@ -16,22 +16,23 @@ function MainPage() {
     }
 
     return (
-        <div style={{display: "flex", minHeight: "100vh" }}>
+        <div>
             <NavWrapper>
-                <div className="flex flex-col">
-                    <h2 className="text-center text-2xl pt-16 pb-16">Fit-Log</h2>
-                    <ul className="flex flex-col text-center">
-                        <SidebarLink to="dashboard" text="Dashboard" icon={<img src={DashboardIcon} className="w-10 h-7"></img>} />
-                        <SidebarLink to="workouts" text="Workouts" icon={<img src={WorkoutsIcon} className="w-10 h-7"></img>} />
-                        <SidebarLink to="analytics" text="Analytics" icon={<img src={AnalyticsIcon} className="w-10 h-7"></img>} />
-                    </ul>
-                </div>
+                    <h2 className="text-center text-3xl font-bold italic tracking-tighter uppercase">Fit-
+                        <span className="text-light-default">Log</span>
+                    </h2>
 
-                <div className="mt-auto">
-                    <button onClick={handleLogout} className="w-full text-center mt-auto py-16">
-                        {fetcher.state === "submitting" ? "Logging out..." : "Logout"}
-                    </button>
-                </div>
+                    <ul className="flex gap-6">
+                        <SidebarLink to="dashboard" text="Dashboard" />
+                        <SidebarLink to="workouts" text="Workouts" />
+                        <SidebarLink to="analytics" text="Analytics" />
+                    </ul>
+
+                    <div className="[border-radius:100vw_100vw_100vw_100vw] px-5 py-2 bg-black hover:bg-light-default">
+                        <button onClick={handleLogout} className="w-full text-center text-white cursor-pointer">
+                            {fetcher.state === "submitting" ? "Logging out..." : "Logout"}
+                        </button>
+                    </div>
             </NavWrapper>
 
             <main style={{ flexGrow: 1 }}>

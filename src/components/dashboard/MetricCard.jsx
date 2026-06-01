@@ -5,7 +5,7 @@ export function MetricCard({ title, value, unit, label, trend }) {
                 <h3 className="text-sm font-medium text-primary-red-one uppercase tracking-wider">{title}</h3>
                 <div className="flex items-baseline mt-2">
                     <span className="text-4xl font-bold text-gray-900">{value}</span>
-                    <span className="ml-2 text-lg font-medium text-gray-400">{unit}</span>
+                    <span className="ml-2 text-lg font-medium text-light-hover">{unit}</span>
                 </div>
             </div>
             

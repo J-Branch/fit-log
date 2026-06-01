@@ -1,0 +1,16 @@
+@theme {
+  --color-light-default: #00b4cc;
+  --color-light-hover: #008799;
+  --color-light-active: #005a66;
+  --color-light-disabled: #00b4cc;
+
+  --color-dark-default: #33e7ff;
+  --color-dark-hover: #66edff;
+  --color-dark-active: #99f3ff;
+  --color-dark-disabled: #33e7ff;
+
+  --color-lightblue: #e5fcff;
+  --color-lightblue-two: #ccf9ff;
+
+  --color-paper: hsl(42, 33%, 94%);
+}

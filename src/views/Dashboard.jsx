@@ -10,7 +10,7 @@ import { MetricCard } from "../components/dashboard/MetricCard.jsx";
 
 function Dashboard() {
     const { dailyQuote, userAggregate } = useRouteLoaderData("AppLayout");
-    const { lastWeightliftingWorkout, lastDistanceWorkout, stats } = useLoaderData();
+    const { stats } = useLoaderData();
     const quote = dailyQuote[0];
 
     const totalWeight = userAggregate[0].totalWeight;
@@ -27,7 +27,7 @@ function Dashboard() {
         <>
             <div className="flex flex-col h-screen w-full overflow-hidden">
                 {/* Container for the top part of dashboard */}
-                <div className="flex-none border-b border-gray-100 py-4 bg-slate-50 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
+                <div className="flex-none border-b border-gray-100 py-4">
                     <div className="flex flex-col items-center">
                         <div className="w-full max-w-2xl text-center px-10">
                             <span className="text-primary-red-one font-bold uppercase tracking-widest text-sm">
@@ -43,7 +43,7 @@ function Dashboard() {
                 </div>
 
                 {/* Container for the middle part of dashboard */}
-                <div className="flex-1 p-6 overflow-hidden flex flex-col bg-slate-50 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]"> 
+                <div className="flex-1 p-6 overflow-hidden flex flex-col"> 
                     <div className="grid h-full w-full 
                         grid-cols-1 md:grid-cols-2 lg:grid-cols-3 
                         grid-rows-6 md:grid-rows-3 lg:grid-rows-2 
@@ -90,8 +90,8 @@ function Dashboard() {
                 </div>
 
                 {/* Container for the bottom part of dashboard */}
-                <div className="flex-none flex flex-row pb-3 text-black bg-slate-50 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
-                    <div className="flex-1 text-center overflow-hidden">
+                <div className="flex-none flex flex-row pb-3 text-black">
+                    <div className="flex-1 text-center font-semibold overflow-hidden">
                         Next Weightlifting Achievement
 
                         <AchievementItem 
@@ -101,7 +101,7 @@ function Dashboard() {
                         />
 
                     </div>
-                    <div className="flex-1 text-center overflow-hidden">
+                    <div className="flex-1 text-center font-semibold overflow-hidden">
                         Next Distance Achievement
 
                         <AchievementItem 
@@ -110,7 +110,7 @@ function Dashboard() {
                         label={nextDistanceGoal.comparison}
                         />
                     </div>
-                    <div className="flex-1 text-center overflow-hidden">
+                    <div className="flex-1 text-center font-semibold overflow-hidden">
                         Go To Achievements
 
                         {/* Add Button to go to Achievements Page */}
