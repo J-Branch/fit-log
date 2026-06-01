@@ -9,5 +9,8 @@
   --color-dark-active: #99f3ff;
   --color-dark-disabled: #33e7ff;
 
+  --color-lightblue: #e5fcff;
+  --color-lightblue-two: #ccf9ff;
+
   --color-paper: hsl(42, 33%, 94%);
 }

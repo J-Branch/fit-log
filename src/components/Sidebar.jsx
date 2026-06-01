@@ -33,7 +33,7 @@ export function SidebarLink({ to, text }) {
 
 export function NavWrapper({ children }) {
     return (
-        <nav className="flex items-center justify-between px-10 py-5 top-0 left-0 z-50 w-full border-b border-slate-600 backdrop-blur-md">
+        <nav className="flex sticky items-center justify-between px-10 py-5 top-0 left-0 z-50 w-full border-b border-slate-600 bg-white/90 backdrop-blur-md">
             {children}
         </nav>
     );
