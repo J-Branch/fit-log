@@ -1,24 +1,27 @@
-# Fit Tracker (Work in Progress)
+# Fit Log
 
-A gamified web app to track workouts, analyze progress, and visualize fitness data.
+A web app to track workouts, analyze progress, and visualize fitness data.
 
-![Screenshot](public/Screenshot%202025-09-26%20161700.png)
-![Screenshot](public/Screenshot%202025-09-26%20161939.png)
+![Demo](public/readMe/ScreenRecording2026-06-01181830-ezgif.com-video-to-gif-converter.gif)
+
+![Screenshot](public/readMe/dashBoard.png)
+![Screenshot](public/readMe/acheivments1.png)
+![Screenshot](public/readMe/achievements2.png)
+![Screenshot](public/readMe/workout%20list.png)
+![Screenshot](public/readMe/workout.png)
+![Screenshot](public/readMe/analytics.png)
 
 ## Features
-
-
-### Current
-- User authentication (signup/logout)
-- Workout page add and view workouts
+- Login/ register
+- create, update, and delete workouts
+- acheivments 
+- analytics for workouts
 
 ### Planned
-- Ability to delete and update workouts, exercises, and sets
-- Analytics and charts for progress
-- Groups, invite friends or family and set challenges 
+- add more styling for a modern look
+- Find somewhere to host
 
 ## Tech Stack
 - React 
 - Tailwind CSS
 - Appwrite (backend)
-- Vercel (hosting in progress)
