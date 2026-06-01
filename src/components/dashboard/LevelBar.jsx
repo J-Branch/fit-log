@@ -3,9 +3,9 @@ export const ProgressBar = ({ progress }) => {
 
   return (
     <div className="w-full">
-      <div className="h-4 bg-primary-gray-two rounded-full overflow-hidden border border-primary-black ">
+      <div className="h-4 bg-gray-200 rounded-full overflow-hidden border border-primary-black ">
         <div 
-          className="h-full bg-primary-red-one transition-all duration-700" 
+          className="h-full bg-light-default transition-all duration-700" 
           style={{ width: `${displayValue}%` }} 
         />
       </div>

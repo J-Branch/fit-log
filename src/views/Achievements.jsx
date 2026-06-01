@@ -15,12 +15,12 @@ function Achievements() {
     const tabClass = (tab) => 
         `px-6 py-2 text-sm font-medium transition-all duration-200 border-b-2 ${
             activeTab === tab 
-            ? 'border-primary-red-one text-primary-red-one'
-            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            ? 'border-light-default text-light-default'
+            : 'border-transparent text-gray-500 hover:text-light-active hover:border-light-active'
         }`;
 
     return (
-        <div className="w-full min-h-screen p-6 bg-slate-50 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
+        <div className="w-full min-h-screen p-6">
             <div className="max-w-4xl mx-auto">
                 <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                     {/* The Headers & Tabs */}
@@ -56,7 +56,7 @@ function Achievements() {
                                             key={index} 
                                             className={`transition-colors duration-300 
                                                 ${isUnlocked 
-                                                    ? 'bg-red-50 hover:bg-red-100/70'
+                                                    ? 'bg-lightblue hover:bg-lightblue-two'
                                                     : 'opacity-60'
                                                 }`
                                             }
@@ -64,7 +64,7 @@ function Achievements() {
                                             <td className="px-8 py-5">
                                                 <span className={`inline-flex items-center justify-center px-3 py-1 rounded-full text-xs font-bold uppercase ${
                                                     isUnlocked 
-                                                    ? 'bg-red-100 text-primary-red-one'
+                                                    ? 'bg-dark-active text-light-active'
                                                     : 'bg-gray-200 text-gray-500'
                                                 }`}>
                                                     Lv. {item.level}
@@ -95,7 +95,7 @@ function Achievements() {
                 <div className="flex justify-end mt-4">
                     <Link 
                         to="/home/dashboard" 
-                        className="px-6 py-2 bg-secondary-gray-two text-primary-red-one rounded-lg border border-transparent hover:shadow-md hover:-translate-y-1 transition-all duration-200 flex items-center gap-2"
+                        className="px-6 py-2 bg-secondary-gray-two text-light-default rounded-lg border border-transparent hover:shadow-md hover:-translate-y-1 transition-all duration-200 flex items-center gap-2"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />

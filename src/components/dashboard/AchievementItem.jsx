@@ -11,8 +11,8 @@ export const AchievementItem = ({ threshold, total, label }) => {
                 <CircularProgressbarWithChildren
                     value={rawPercentage}
                     styles={buildStyles({
-                        pathColor: '#800020', 
-                        trailColor: '#989595', 
+                        pathColor: '#00b4cc', 
+                        trailColor: '#e5e7eb', 
                         strokeLinecap: 'round',
                         pathTransitionDuration: 0.5,
                     })}
