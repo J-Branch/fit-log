@@ -46,7 +46,7 @@ function AuthPage() {
     return (
         <div className="flex min-h-screen">
 
-            <div className="hidden md:flex w-1/2 relative overflow-hidden items-center justify-center bg-gradient-to-r from-light-default via-light-hover to-light-active items-center justify-center">
+            <div className="hidden md:flex w-1/2 relative overflow-hidden items-center justify-center bg-gradient-to-r from-light-default via-light-hover to-light-active">
                 <div className="authImagePattern absolute inset-0 opacity-20 mix-blend-overlay" />
                 <div className="relative z-10">
                     <div className="floatingCard w-80 h-72 rounded-3xl bg-white/90 backdrop-blur-md shadow-2xl border border-white/20 flex items-center justify-center">
