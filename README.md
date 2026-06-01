@@ -13,6 +13,7 @@ A web app to track workouts, analyze progress, and visualize fitness data.
 
 ## Features
 - Login/ register
+- ability to reset password
 - create, update, and delete workouts
 - acheivments 
 - analytics for workouts
