@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import dumbellIcon from "../../assets/icons/dumbell.png";
-import runIcon from "../../assets/icons/run.png";
+import dumbellIcon from "/dumbell.png";
+import runIcon from "/run.png";
 
 export function WorkoutRow({ workout, index }) {
     const { $id, workoutName, workoutType, date } = workout;
