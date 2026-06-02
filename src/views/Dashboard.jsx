@@ -25,7 +25,17 @@ function Dashboard() {
 
     return (
         <>
-            <div className="flex flex-col h-screen w-full overflow-hidden">
+            <div 
+                className="flex flex-col h-screen w-full overflow-hidden"
+                style={{
+                    backgroundColor: "#f9fafb",
+                    backgroundImage: `
+                        radial-gradient(#e5e7eb 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(255,255,255,1))
+                    `,
+                    backgroundSize: "20px 20px, 100% 100%",
+                }}
+            >
                 {/* Container for the top part of dashboard */}
                 <div className="flex-none border-b border-gray-100 py-4">
                     <div className="flex flex-col items-center">
