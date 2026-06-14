@@ -7,7 +7,7 @@ export function SidebarLink({ to, text }) {
         font-semibold
         tracking-[0.1em]
         uppercase
-        text-slate-600
+        text-slate-700
         hover:text-light-default
         transition-colors
 
