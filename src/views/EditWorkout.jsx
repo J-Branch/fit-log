@@ -222,7 +222,7 @@ function EditWorkout() {
                                 className={`px-4 py-2 text-sm rounded-lg transition ${
                                     mode === "edit"
                                         ? "bg-gray-200 text-gray-700"
-                                        : "bg-primary-red-one text-white hover:opacity-90"
+                                        : "bg-light-default text-white hover:opacity-90"
                                 }`}
                             >
                                 {mode === "edit" ? "Cancel" : "Edit"}
